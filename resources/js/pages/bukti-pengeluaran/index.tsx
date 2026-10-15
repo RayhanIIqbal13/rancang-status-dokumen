@@ -1,0 +1,364 @@
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem, BuktiPengeluaran, PaginatedData } from '@/types';
+import { Head, Link, router } from '@inertiajs/react';
+import {
+    AlertCircle,
+    ArrowUpRight,
+    CheckCircle2,
+    FileCheck,
+    FileText,
+    Receipt,
+    Scale,
+    Search,
+    ShieldCheck,
+    X,
+} from 'lucide-react';
+import React, { useState } from 'react';
+
+interface BuktiIndexProps {
+    buktiList: PaginatedData<BuktiPengeluaran>;
+    filters: {
+        search: string;
+        status_validasi: string;
+    };
+    stats: {
+        total_bukti: number;
+        total_nominal: number;
+        sesuai_sbm: number;
+        perlu_verifikasi: number;
+    };
+}
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Dashboard', href: '/dashboard' },
+    { title: 'Bukti Pengeluaran', href: '/bukti-pengeluaran' },
+];
+
+export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: BuktiIndexProps) {
+    const [searchTerm, setSearchTerm] = useState(filters.search || '');
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        router.get(
+            route('bukti-pengeluaran.index'),
+            { search: searchTerm, status_validasi: filters.status_validasi },
+            { preserveState: true }
+        );
+    };
+
+    const handleStatusFilter = (val: string) => {
+        router.get(
+            route('bukti-pengeluaran.index'),
+            { search: filters.search, status_validasi: val },
+            { preserveState: true }
+        );
+    };
+
+    const formatCurrency = (val: number | string) => {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            maximumFractionDigits: 0,
+        }).format(Number(val));
+    };
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Bukti Pengeluaran & SPJ - Studio Admin SAK ITK" />
+
+            <div className="flex flex-col gap-5 p-4 md:p-6">
+                {/* Header (Studio Admin style) */}
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <h1 className="text-xl font-semibold tracking-tight text-foreground">
+                                Bukti Pengeluaran & Validasi SBM
+                            </h1>
+                            <span className="rounded-4xl border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                                SPJ Keuangan
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                            Arsip kuitansi, faktur belanja, dan rekonsiliasi kesesuaian pagu terhadap Standar Biaya Masukan (SBM) ITK
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+                            <Link href={route('dokumen-pengajuan.index')}>
+                                <FileText className="size-3.5" />
+                                <span>Daftar Dokumen</span>
+                            </Link>
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Studio Admin KPI Stat Tiles */}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {/* Total Bukti */}
+                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-muted-foreground">Total Bukti SPJ</span>
+                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                                <Receipt className="size-3.5" />
+                            </div>
+                        </div>
+                        <div className="mt-2 flex items-baseline justify-between">
+                            <span className="text-2xl font-medium tabular-nums text-foreground">
+                                {stats.total_bukti}
+                            </span>
+                            <span className="text-[11px] text-muted-foreground">kuitansi</span>
+                        </div>
+                    </div>
+
+                    {/* Total Nominal */}
+                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-muted-foreground">Total Nominal Bukti</span>
+                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                                <Scale className="size-3.5" />
+                            </div>
+                        </div>
+                        <div className="mt-2">
+                            <span className="text-xl font-medium tabular-nums text-foreground">
+                                {formatCurrency(stats.total_nominal)}
+                            </span>
+                            <p className="text-[11px] text-muted-foreground mt-0.5">Seluruh kuitansi SPJ</p>
+                        </div>
+                    </div>
+
+                    {/* Sesuai Standar SBM */}
+                    <div className="rounded-xl bg-linear-to-t from-emerald-500/10 to-card p-4 ring-1 ring-emerald-500/30 shadow-xs">
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                                Sesuai Standar SBM
+                            </span>
+                            <div className="flex size-7 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                                <ShieldCheck className="size-3.5" />
+                            </div>
+                        </div>
+                        <div className="mt-2 flex items-baseline justify-between">
+                            <span className="text-2xl font-medium tabular-nums text-emerald-700 dark:text-emerald-400">
+                                {stats.sesuai_sbm}
+                            </span>
+                            <span className="text-[11px] text-emerald-600/80">valid 100%</span>
+                        </div>
+                    </div>
+
+                    {/* Perlu Verifikasi */}
+                    <div className="rounded-xl bg-linear-to-t from-amber-500/10 to-card p-4 ring-1 ring-amber-500/30 shadow-xs">
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-amber-700 dark:text-amber-400">
+                                Perlu Verifikasi
+                            </span>
+                            <div className="flex size-7 items-center justify-center rounded-lg border bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                                <AlertCircle className="size-3.5" />
+                            </div>
+                        </div>
+                        <div className="mt-2 flex items-baseline justify-between">
+                            <span className="text-2xl font-medium tabular-nums text-amber-700 dark:text-amber-400">
+                                {stats.perlu_verifikasi}
+                            </span>
+                            <span className="text-[11px] text-amber-600/80">dalam review</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Main Card with Toolbar & Table */}
+                <div className="rounded-xl border bg-card shadow-2xs overflow-hidden">
+                    {/* Studio Admin Toolbar */}
+                    <div className="flex flex-col gap-3 p-4 border-b sm:flex-row sm:items-center sm:justify-between">
+                        <form onSubmit={handleSearch} className="relative flex-1 max-w-sm">
+                            <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                placeholder="Cari jenis bukti, nomor dokumen, uraian..."
+                                className="h-8 pl-8 pr-8 text-xs"
+                            />
+                            {searchTerm && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setSearchTerm('');
+                                        router.get(
+                                            route('bukti-pengeluaran.index'),
+                                            { search: '', status_validasi: filters.status_validasi },
+                                            { preserveState: true }
+                                        );
+                                    }}
+                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                >
+                                    <X className="size-3.5" />
+                                </button>
+                            )}
+                        </form>
+
+                        <div className="flex items-center gap-1.5">
+                            <button
+                                type="button"
+                                onClick={() => handleStatusFilter('all')}
+                                className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    filters.status_validasi === 'all' || !filters.status_validasi
+                                        ? 'bg-primary text-primary-foreground shadow-xs'
+                                        : 'bg-muted/70 text-muted-foreground hover:bg-muted'
+                                }`}
+                            >
+                                Semua ({stats.total_bukti})
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleStatusFilter('Sesuai SBM')}
+                                className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    filters.status_validasi === 'Sesuai SBM'
+                                        ? 'bg-primary text-primary-foreground shadow-xs'
+                                        : 'bg-muted/70 text-muted-foreground hover:bg-muted'
+                                }`}
+                            >
+                                Sesuai SBM
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleStatusFilter('Perlu Verifikasi')}
+                                className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    filters.status_validasi === 'Perlu Verifikasi'
+                                        ? 'bg-primary text-primary-foreground shadow-xs'
+                                        : 'bg-muted/70 text-muted-foreground hover:bg-muted'
+                                }`}
+                            >
+                                Perlu Verifikasi
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Table */}
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs">
+                            <thead className="border-b bg-muted/50 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                                <tr>
+                                    <th className="px-4 py-3">Uraian Bukti SPJ</th>
+                                    <th className="px-4 py-3">Terkait Dokumen Pengajuan</th>
+                                    <th className="px-4 py-3 text-right">Nominal Kuitansi</th>
+                                    <th className="px-4 py-3">Acuan Batas SBM</th>
+                                    <th className="px-4 py-3">Status Fisik & Validasi</th>
+                                    <th className="px-4 py-3 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y">
+                                {buktiList.data.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                                            Tidak ada bukti pengeluaran yang sesuai filter.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    buktiList.data.map((b) => (
+                                        <tr key={b.id} className="hover:bg-muted/30 transition-colors">
+                                            <td className="px-4 py-3.5 font-medium text-foreground max-w-xs">
+                                                <div className="line-clamp-2">{b.jenis_bukti}</div>
+                                            </td>
+
+                                            <td className="px-4 py-3.5">
+                                                {b.dokumen_pengajuan ? (
+                                                    <div className="space-y-0.5">
+                                                        <span className="font-mono text-xs font-semibold text-primary">
+                                                            {b.dokumen_pengajuan.nomor_pengajuan}
+                                                        </span>
+                                                        <p className="text-[11px] text-muted-foreground truncate max-w-xs">
+                                                            {b.dokumen_pengajuan.nama_kegiatan}
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-muted-foreground">-</span>
+                                                )}
+                                            </td>
+
+                                            <td className="px-4 py-3.5 text-right font-medium tabular-nums text-foreground">
+                                                {formatCurrency(b.nominal)}
+                                            </td>
+
+                                            <td className="px-4 py-3.5">
+                                                {b.standar_biaya ? (
+                                                    <div className="text-[11px] space-y-0.5">
+                                                        <p className="font-medium text-foreground">
+                                                            {b.standar_biaya.uraian_belanja}
+                                                        </p>
+                                                        <p className="text-muted-foreground">
+                                                            Maks: {formatCurrency(b.standar_biaya.batas_tarif)}
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-muted-foreground italic">-</span>
+                                                )}
+                                            </td>
+
+                                            <td className="px-4 py-3.5">
+                                                <div className="flex flex-wrap items-center gap-1.5">
+                                                    <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                                        {b.status_fisik}
+                                                    </span>
+                                                    <span
+                                                        className={`rounded-4xl px-2 py-0.5 text-[10px] font-medium ${
+                                                            b.status_validasi_sbm === 'Sesuai SBM'
+                                                                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-300'
+                                                                : 'bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300'
+                                                        }`}
+                                                    >
+                                                        {b.status_validasi_sbm}
+                                                    </span>
+                                                </div>
+                                            </td>
+
+                                            <td className="px-4 py-3.5 text-right">
+                                                {b.dokumen_pengajuan && (
+                                                    <Button asChild size="icon" variant="ghost" className="size-7">
+                                                        <Link href={`/dokumen-pengajuan/${b.dokumen_pengajuan.id}`}>
+                                                            <ArrowUpRight className="size-3.5" />
+                                                        </Link>
+                                                    </Button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Pagination */}
+                    {buktiList.links && buktiList.links.length > 3 && (
+                        <div className="flex items-center justify-between p-3 border-t bg-muted/20 text-xs">
+                            <span className="text-muted-foreground">
+                                Halaman {buktiList.current_page} dari {buktiList.last_page}
+                            </span>
+                            <div className="flex items-center gap-1">
+                                {buktiList.links.map((link, idx) => (
+                                    <Button
+                                        key={idx}
+                                        asChild={Boolean(link.url)}
+                                        variant={link.active ? 'default' : 'outline'}
+                                        size="sm"
+                                        disabled={!link.url}
+                                        className="h-7 min-w-7 px-2 text-xs"
+                                    >
+                                        {link.url ? (
+                                            <Link
+                                                href={link.url}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                            />
+                                        ) : (
+                                            <span dangerouslySetInnerHTML={{ __html: link.label }} />
+                                        )}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </AppLayout>
+    );
+}

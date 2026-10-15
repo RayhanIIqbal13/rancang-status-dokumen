@@ -1,0 +1,474 @@
+import { StatusBadge } from '@/components/dokumen/status-badge';
+import { StatusUpdateDialog } from '@/components/dokumen/status-update-dialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem, DokumenPengajuan, PaginatedData, StandarBiaya, StatusStageInfo } from '@/types';
+import { Head, Link, router } from '@inertiajs/react';
+import {
+    AlertTriangle,
+    ArrowUpRight,
+    Building2,
+    Calendar,
+    CheckCircle2,
+    CheckSquare,
+    Clock,
+    FileCheck,
+    FileSearch,
+    FileText,
+    Filter,
+    Inbox,
+    Layers,
+    MapPin,
+    Receipt,
+    Search,
+    User,
+    X,
+} from 'lucide-react';
+import React, { useState } from 'react';
+
+interface VerifikasiIndexProps {
+    documents: PaginatedData<DokumenPengajuan>;
+    filters: {
+        search: string;
+        status: string;
+    };
+    stats: {
+        total_queue: number;
+        menunggu_verifikasi: number;
+        perlu_revisi: number;
+        menunggu_sk: number;
+        spj_masuk: number;
+    };
+    stages: StatusStageInfo[];
+    standarBiayaList: StandarBiaya[];
+}
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Dashboard', href: '/dashboard' },
+    { title: 'Verifikasi Dokumen', href: '/verifikasi-dokumen' },
+];
+
+export default function VerifikasiIndex({
+    documents,
+    filters,
+    stats,
+    stages,
+}: VerifikasiIndexProps) {
+    const [searchTerm, setSearchTerm] = useState(filters.search || '');
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        router.get(
+            route('verifikasi-dokumen.index'),
+            { search: searchTerm, status: filters.status },
+            { preserveState: true }
+        );
+    };
+
+    const handleStatusFilter = (statusVal: string) => {
+        router.get(
+            route('verifikasi-dokumen.index'),
+            { search: filters.search, status: statusVal },
+            { preserveState: true }
+        );
+    };
+
+    const formatCurrency = (amount: number | string) => {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            maximumFractionDigits: 0,
+        }).format(Number(amount));
+    };
+
+    const formatDate = (dateStr: string) => {
+        return new Intl.DateTimeFormat('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        }).format(new Date(dateStr));
+    };
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Meja Verifikasi Dokumen Keuangan - Studio Admin SAK ITK" />
+
+            <div className="flex flex-col gap-5 p-4 md:p-6">
+                {/* Header (Studio Admin style) */}
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <h1 className="text-xl font-semibold tracking-tight text-foreground">
+                                Meja Verifikasi Dokumen & SBM
+                            </h1>
+                            <span className="rounded-4xl border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                                Staf Keuangan
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                            Pemeriksaan kelengkapan berkas usulan, kepatuhan pagu SBM ITK 2026, dan penetapan status alur
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+                            <Link href={route('standar-biaya.index')}>
+                                <FileSearch className="size-3.5" />
+                                <span>Katalog SBM</span>
+                            </Link>
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Studio Admin KPI Stat Tiles */}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {/* All queue */}
+                    <div
+                        onClick={() => handleStatusFilter('all')}
+                        className={`cursor-pointer rounded-xl p-4 transition-all ${
+                            filters.status === 'all' || !filters.status
+                                ? 'bg-linear-to-t from-primary/10 to-card ring-2 ring-primary shadow-xs'
+                                : 'bg-linear-to-t from-primary/5 to-card ring-1 ring-foreground/10 hover:ring-primary/40'
+                        }`}
+                    >
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-muted-foreground">Total Antrean</span>
+                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                                <Inbox className="size-3.5" />
+                            </div>
+                        </div>
+                        <div className="mt-2 flex items-baseline justify-between">
+                            <span className="text-2xl font-medium tabular-nums text-foreground">
+                                {stats.total_queue}
+                            </span>
+                            <span className="text-[11px] text-muted-foreground">berkas aktif</span>
+                        </div>
+                    </div>
+
+                    {/* Menunggu Verifikasi */}
+                    <div
+                        onClick={() => handleStatusFilter('Verifikasi Fakultas')}
+                        className={`cursor-pointer rounded-xl p-4 transition-all ${
+                            filters.status === 'Verifikasi Fakultas'
+                                ? 'bg-linear-to-t from-amber-500/10 to-card ring-2 ring-amber-500 shadow-xs'
+                                : 'bg-linear-to-t from-primary/5 to-card ring-1 ring-foreground/10 hover:ring-amber-500/40'
+                        }`}
+                    >
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-amber-700 dark:text-amber-400">
+                                Verifikasi Fakultas
+                            </span>
+                            <div className="flex size-7 items-center justify-center rounded-lg border bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                                <FileCheck className="size-3.5" />
+                            </div>
+                        </div>
+                        <div className="mt-2 flex items-baseline justify-between">
+                            <span className="text-2xl font-medium tabular-nums text-amber-700 dark:text-amber-400">
+                                {stats.menunggu_verifikasi}
+                            </span>
+                            <span className="text-[11px] text-amber-600/80">perlu diperiksa</span>
+                        </div>
+                    </div>
+
+                    {/* Perlu Revisi */}
+                    <div
+                        onClick={() => handleStatusFilter('Perlu Revisi')}
+                        className={`cursor-pointer rounded-xl p-4 transition-all ${
+                            filters.status === 'Perlu Revisi'
+                                ? 'bg-linear-to-t from-rose-500/10 to-card ring-2 ring-rose-500 shadow-xs'
+                                : 'bg-linear-to-t from-primary/5 to-card ring-1 ring-foreground/10 hover:ring-rose-500/40'
+                        }`}
+                    >
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-rose-700 dark:text-rose-400">
+                                Perlu Revisi
+                            </span>
+                            <div className="flex size-7 items-center justify-center rounded-lg border bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                                <AlertTriangle className="size-3.5" />
+                            </div>
+                        </div>
+                        <div className="mt-2 flex items-baseline justify-between">
+                            <span className="text-2xl font-medium tabular-nums text-rose-700 dark:text-rose-400">
+                                {stats.perlu_revisi}
+                            </span>
+                            <span className="text-[11px] text-rose-600/80">di pengusul</span>
+                        </div>
+                    </div>
+
+                    {/* SPJ Masuk */}
+                    <div
+                        onClick={() => handleStatusFilter('SPJ Diterima & Diverifikasi')}
+                        className={`cursor-pointer rounded-xl p-4 transition-all ${
+                            filters.status === 'SPJ Diterima & Diverifikasi'
+                                ? 'bg-linear-to-t from-purple-500/10 to-card ring-2 ring-purple-500 shadow-xs'
+                                : 'bg-linear-to-t from-primary/5 to-card ring-1 ring-foreground/10 hover:ring-purple-500/40'
+                        }`}
+                    >
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-purple-700 dark:text-purple-400">
+                                Verifikasi SPJ
+                            </span>
+                            <div className="flex size-7 items-center justify-center rounded-lg border bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                                <Receipt className="size-3.5" />
+                            </div>
+                        </div>
+                        <div className="mt-2 flex items-baseline justify-between">
+                            <span className="text-2xl font-medium tabular-nums text-purple-700 dark:text-purple-400">
+                                {stats.spj_masuk}
+                            </span>
+                            <span className="text-[11px] text-purple-600/80">kuitansi masuk</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Main Card with Toolbar & Table */}
+                <div className="rounded-xl border bg-card shadow-2xs overflow-hidden">
+                    {/* Studio Admin Toolbar */}
+                    <div className="flex flex-col gap-3 p-4 border-b">
+                        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+                            <form onSubmit={handleSearch} className="relative flex-1 max-w-sm">
+                                <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    placeholder="Cari nomor pengajuan, nama usulan, pengusul..."
+                                    className="h-8 pl-8 pr-8 text-xs"
+                                />
+                                {searchTerm && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setSearchTerm('');
+                                            router.get(
+                                                route('verifikasi-dokumen.index'),
+                                                { search: '', status: filters.status },
+                                                { preserveState: true }
+                                            );
+                                        }}
+                                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    >
+                                        <X className="size-3.5" />
+                                    </button>
+                                )}
+                            </form>
+
+                            <div className="text-xs text-muted-foreground">
+                                Menampilkan <strong className="text-foreground">{documents.data.length}</strong> dari{' '}
+                                <strong className="text-foreground">{stats.total_queue}</strong> antrean
+                            </div>
+                        </div>
+
+                        {/* Status Pills */}
+                        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                            <button
+                                type="button"
+                                onClick={() => handleStatusFilter('all')}
+                                className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    filters.status === 'all' || !filters.status
+                                        ? 'bg-primary text-primary-foreground shadow-xs'
+                                        : 'bg-muted/70 text-muted-foreground hover:bg-muted'
+                                }`}
+                            >
+                                Semua Antrean ({stats.total_queue})
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleStatusFilter('Diajukan')}
+                                className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    filters.status === 'Diajukan'
+                                        ? 'bg-primary text-primary-foreground shadow-xs'
+                                        : 'bg-muted/70 text-muted-foreground hover:bg-muted'
+                                }`}
+                            >
+                                Diajukan Baru
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleStatusFilter('Verifikasi Fakultas')}
+                                className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    filters.status === 'Verifikasi Fakultas'
+                                        ? 'bg-primary text-primary-foreground shadow-xs'
+                                        : 'bg-muted/70 text-muted-foreground hover:bg-muted'
+                                }`}
+                            >
+                                Verifikasi Fakultas
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleStatusFilter('Perlu Revisi')}
+                                className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    filters.status === 'Perlu Revisi'
+                                        ? 'bg-primary text-primary-foreground shadow-xs'
+                                        : 'bg-muted/70 text-muted-foreground hover:bg-muted'
+                                }`}
+                            >
+                                Perlu Revisi
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleStatusFilter('Menunggu SK / Penetapan Universitas')}
+                                className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    filters.status === 'Menunggu SK / Penetapan Universitas'
+                                        ? 'bg-primary text-primary-foreground shadow-xs'
+                                        : 'bg-muted/70 text-muted-foreground hover:bg-muted'
+                                }`}
+                            >
+                                Menunggu SK
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleStatusFilter('SPJ Diterima & Diverifikasi')}
+                                className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    filters.status === 'SPJ Diterima & Diverifikasi'
+                                        ? 'bg-primary text-primary-foreground shadow-xs'
+                                        : 'bg-muted/70 text-muted-foreground hover:bg-muted'
+                                }`}
+                            >
+                                Verifikasi SPJ
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Queue Items */}
+                    {documents.data.length === 0 ? (
+                        <div className="p-12 text-center text-muted-foreground">
+                            <div className="mx-auto flex size-10 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                                <FileCheck className="size-5" />
+                            </div>
+                            <h3 className="mt-3 text-sm font-semibold text-foreground">Antrean Bersih</h3>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                                Tidak ada dokumen yang memerlukan verifikasi pada kriteria filter saat ini.
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="divide-y">
+                            {documents.data.map((doc) => (
+                                <div
+                                    key={doc.id}
+                                    className="p-4 transition-colors hover:bg-muted/30"
+                                >
+                                    <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                                        <div className="space-y-1.5 flex-1 min-w-0">
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                <span className="font-mono text-xs font-semibold text-primary">
+                                                    {doc.nomor_pengajuan}
+                                                </span>
+                                                <span className="text-muted-foreground text-xs">•</span>
+                                                <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                                    {doc.jenis_anggaran}
+                                                </span>
+                                                <StatusBadge status={doc.status_terkini} size="sm" />
+                                            </div>
+
+                                            <h3 className="text-sm font-semibold text-foreground">
+                                                <Link
+                                                    href={`/dokumen-pengajuan/${doc.id}`}
+                                                    className="hover:text-primary transition-colors"
+                                                >
+                                                    {doc.nama_kegiatan}
+                                                </Link>
+                                            </h3>
+
+                                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                                                <div className="flex items-center gap-1.5">
+                                                    <User className="size-3" />
+                                                    <span>{doc.user?.name}</span>
+                                                </div>
+                                                {doc.user?.unit && (
+                                                    <div className="flex items-center gap-1.5">
+                                                        <Building2 className="size-3" />
+                                                        <span>{doc.user.unit}</span>
+                                                    </div>
+                                                )}
+                                                <div className="flex items-center gap-1.5">
+                                                    <Calendar className="size-3" />
+                                                    <span>Pelaksanaan: {formatDate(doc.tgl_pelaksanaan)}</span>
+                                                </div>
+                                                {doc.latest_status_tracking?.posisi_berkas && (
+                                                    <div className="flex items-center gap-1.5 text-primary/80">
+                                                        <MapPin className="size-3" />
+                                                        <span>Posisi: {doc.latest_status_tracking.posisi_berkas}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {doc.latest_status_tracking?.catatan && (
+                                                <div className="mt-1.5 rounded-md border border-muted bg-muted/30 px-2.5 py-1 text-[11px] text-muted-foreground italic">
+                                                    Catatan: "{doc.latest_status_tracking.catatan}"
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Actions and Amount */}
+                                        <div className="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-2.5 border-t pt-2.5 lg:border-t-0 lg:pt-0 shrink-0">
+                                            <div className="text-left lg:text-right">
+                                                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                                                    Usulan Anggaran
+                                                </span>
+                                                <p className="text-sm font-semibold tabular-nums text-foreground">
+                                                    {formatCurrency(doc.total_usulan)}
+                                                </p>
+                                            </div>
+
+                                            <div className="flex flex-wrap items-center gap-1.5">
+                                                <StatusUpdateDialog
+                                                    document={doc}
+                                                    stages={stages}
+                                                    triggerButton={
+                                                        <Button size="sm" className="h-7 gap-1 text-xs shadow-xs">
+                                                            <FileCheck className="size-3" />
+                                                            <span>Verifikasi</span>
+                                                        </Button>
+                                                    }
+                                                />
+
+                                                <Button asChild size="sm" variant="outline" className="h-7 gap-1 text-xs">
+                                                    <Link href={`/dokumen-pengajuan/${doc.id}`}>
+                                                        <span>Detail</span>
+                                                        <ArrowUpRight className="size-3" />
+                                                    </Link>
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Pagination */}
+                    {documents.links && documents.links.length > 3 && (
+                        <div className="flex items-center justify-between p-3 border-t bg-muted/20 text-xs">
+                            <span className="text-muted-foreground">
+                                Halaman {documents.current_page} dari {documents.last_page}
+                            </span>
+                            <div className="flex items-center gap-1">
+                                {documents.links.map((link, idx) => (
+                                    <Button
+                                        key={idx}
+                                        asChild={Boolean(link.url)}
+                                        variant={link.active ? 'default' : 'outline'}
+                                        size="sm"
+                                        disabled={!link.url}
+                                        className="h-7 min-w-7 px-2 text-xs"
+                                    >
+                                        {link.url ? (
+                                            <Link
+                                                href={link.url}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                            />
+                                        ) : (
+                                            <span dangerouslySetInnerHTML={{ __html: link.label }} />
+                                        )}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </AppLayout>
+    );
+}
