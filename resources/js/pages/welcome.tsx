@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Activity, ArrowRight, Building2, ChevronRight, FileCheck, Landmark, Shield, Sparkles, UserCheck } from 'lucide-react';
+import { Activity, ArrowRight, ChevronRight, Command, FileCheck, Landmark, Shield, Sparkles, UserCheck } from 'lucide-react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -19,17 +19,17 @@ export default function Welcome() {
 
     return (
         <div className="bg-background text-foreground selection:bg-primary selection:text-primary-foreground min-h-screen antialiased">
-            <Head title="SAK ITK — Sistem Layanan Keuangan & Pelacakan Dokumen" />
+            <Head title="SIM-KEUANGAN SBM — Pelacakan Dokumen & SAKTI" />
 
-            {/* Studio Admin Header Navigation */}
+            {/* Header Navigation */}
             <header className="bg-background/80 sticky top-0 z-50 flex h-12 w-full items-center justify-between border-b px-4 backdrop-blur-md md:px-8">
                 <div className="flex items-center gap-3">
                     <div className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-lg shadow-xs">
-                        <Building2 className="size-4" />
+                        <Command className="size-4" />
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="text-foreground text-xs font-semibold tracking-tight">SAK ITK</span>
-                        <span className="bg-muted text-muted-foreground rounded-md px-1.5 py-0.5 text-[10px] font-medium">Studio Admin</span>
+                        <span className="text-foreground text-xs font-semibold tracking-tight">SIM-KEUANGAN SBM</span>
+                        <span className="bg-muted text-muted-foreground rounded-md px-1.5 py-0.5 text-[10px] font-medium">SAK ITK</span>
                     </div>
                 </div>
 

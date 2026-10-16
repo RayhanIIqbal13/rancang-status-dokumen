@@ -1,14 +1,14 @@
+import { Command } from 'lucide-react';
+
 export default function AppLogo() {
     return (
-        <div className="flex items-center gap-2">
-            <div className="bg-foreground text-background flex size-6 shrink-0 items-center justify-center rounded-md text-xs font-semibold shadow-xs">
-                ⌘
+        <div className="flex items-center gap-2.5">
+            <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg shadow-xs">
+                <Command className="size-4" />
             </div>
-            <div className="flex items-center gap-1.5 overflow-hidden">
-                <span className="text-foreground truncate text-sm font-semibold tracking-tight">Studio Admin</span>
-                <span className="border-border/80 bg-muted/60 py-0.2 text-muted-foreground rounded-[4px] border px-1 font-mono text-[9px] font-medium uppercase">
-                    SAK ITK
-                </span>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="text-foreground truncate font-semibold tracking-tight">SIM-KEUANGAN SBM</span>
+                <span className="text-muted-foreground truncate text-xs">Pelacakan Dokumen & SAKTI</span>
             </div>
         </div>
     );

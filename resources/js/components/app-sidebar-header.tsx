@@ -16,7 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { SharedData, type BreadcrumbItem as BreadcrumbItemType } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BadgeCheck, Check, Github, LogOut, Moon, Search, Shield, Sun, User as UserIcon } from 'lucide-react';
+import { BadgeCheck, Check, LogOut, Moon, Search, Shield, Sun, User as UserIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrumbs?: BreadcrumbItemType[] }) {
@@ -113,20 +113,7 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                         {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
                     </Button>
 
-                    {/* GitHub Link */}
-                    <Button
-                        asChild
-                        variant="ghost"
-                        size="icon"
-                        className="text-muted-foreground hover:text-foreground hover:bg-muted size-8 rounded-lg"
-                        title="GitHub Reference"
-                    >
-                        <a href="https://github.com/arhamkhnz/next-shadcn-admin-dashboard" target="_blank" rel="noopener noreferrer">
-                            <Github className="size-4" />
-                        </a>
-                    </Button>
-
-                    {/* Account Switcher Dropdown matching next-shadcn-admin-dashboard */}
+                    {/* Account Switcher Dropdown */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <button
