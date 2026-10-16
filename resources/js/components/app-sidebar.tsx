@@ -53,7 +53,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     active: currentUrl === '/dashboard',
                 },
                 {
-                    title: 'Status Tracking (8 Tahap)',
+                    title: 'Status Tracking',
                     url: '/status-tracking',
                     icon: GitCommitHorizontal,
                     active: currentUrl.startsWith('/status-tracking'),
