@@ -87,7 +87,10 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                         <Search className="size-3.5" />
                         <span className="hidden sm:inline">Search documents, SBM, SPJ...</span>
                         <span className="sm:hidden">Search</span>
-                        <Kbd className="ml-1 text-[10px]">⌘K</Kbd>
+                        <Kbd className="ml-1 gap-1 px-1.5 text-[10px]">
+                            <span className="text-xs leading-none">⌘</span>
+                            <span className="leading-none">K</span>
+                        </Kbd>
                     </button>
                 </div>
 
