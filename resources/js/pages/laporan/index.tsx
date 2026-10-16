@@ -57,9 +57,9 @@ export default function LaporanIndex({ summary, anggaranByType, statusDistributi
                 {/* Header (Studio Admin style) */}
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between print:hidden">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-foreground text-xl font-semibold tracking-tight">Laporan Realisasi & Pelacakan Dokumen</h1>
-                            <span className="border-primary/20 bg-primary/10 text-primary rounded-4xl border px-2 py-0.5 text-[11px] font-medium">
+                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
+                            <h1 className="text-foreground text-lg sm:text-xl font-semibold tracking-tight">Laporan Realisasi & Pelacakan Dokumen</h1>
+                            <span className="border-primary/20 bg-primary/10 text-primary inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium whitespace-nowrap">
                                 TA 2026
                             </span>
                         </div>

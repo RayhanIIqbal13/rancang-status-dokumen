@@ -75,9 +75,9 @@ export default function DokumenIndex({ documents, filters, stats, stages: _stage
                 {/* Header */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
                             <h1 className="text-foreground font-heading text-xl font-bold tracking-tight md:text-2xl">Pengajuan Dokumen Keuangan</h1>
-                            <Badge variant="outline" className="border-border bg-muted/40 text-xs font-medium">
+                            <Badge variant="outline" className="border-border bg-muted/40 text-xs font-medium shrink-0 whitespace-nowrap">
                                 Total: {stats.total}
                             </Badge>
                         </div>

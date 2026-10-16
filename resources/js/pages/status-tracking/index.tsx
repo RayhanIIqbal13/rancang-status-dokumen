@@ -144,9 +144,9 @@ export default function StatusTrackingIndex({ activeDocument, accessibleDocument
                 {/* 1. Page Header */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-foreground text-2xl font-bold tracking-tight">Status Tracking Dokumen</h1>
-                            <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary text-xs font-semibold">
+                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
+                            <h1 className="text-foreground text-xl sm:text-2xl font-bold tracking-tight">Status Tracking Dokumen</h1>
+                            <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary text-xs font-semibold shrink-0 whitespace-nowrap">
                                 Pelacakan Berkas
                             </Badge>
                         </div>
