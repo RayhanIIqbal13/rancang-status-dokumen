@@ -26,7 +26,7 @@ import {
     Landmark,
     LayoutGrid,
     Mail,
-    PlusCircle,
+    Plus,
     Receipt,
     Scale,
     Users,
@@ -132,7 +132,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     <Command className="size-4" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="text-foreground truncate font-semibold text-base tracking-tight">Studio Admin</span>
+                                    <span className="text-foreground truncate font-semibold tracking-tight">SIM-KEUANGAN SBM</span>
+                                    <span className="text-muted-foreground truncate text-xs">Pelacakan Dokumen & SAKTI</span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>
@@ -141,19 +142,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
 
             <SidebarContent>
-                {/* Quick Create Group matching next-shadcn-admin-dashboard */}
+                {/* Quick Action Group */}
                 <SidebarGroup className="pt-0">
                     <SidebarGroupContent className="flex flex-col gap-2">
                         <SidebarMenu>
                             <SidebarMenuItem className="flex items-center gap-2">
                                 <SidebarMenuButton
                                     asChild
-                                    tooltip="Quick Create"
+                                    tooltip="Ajukan Dokumen"
                                     className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground font-medium rounded-lg"
                                 >
                                     <Link href="/dokumen-pengajuan/create">
-                                        <PlusCircle className="size-4 shrink-0" />
-                                        <span>Quick Create</span>
+                                        <Plus className="size-4 shrink-0" />
+                                        <span>Ajukan Dokumen</span>
                                     </Link>
                                 </SidebarMenuButton>
                                 <Button
