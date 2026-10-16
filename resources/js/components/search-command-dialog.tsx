@@ -272,6 +272,9 @@ export function SearchCommandDialog({ open, onOpenChange }: SearchCommandDialogP
             if (flatItems[selectedIndex]) {
                 flatItems[selectedIndex].onSelect();
             }
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            onOpenChange(false);
         }
     };
 
@@ -305,34 +308,68 @@ export function SearchCommandDialog({ open, onOpenChange }: SearchCommandDialogP
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent
-                className="border-border/80 bg-background/95 top-[18%] max-h-[85vh] w-[95vw] max-w-2xl -translate-y-0 overflow-hidden rounded-2xl p-0 shadow-2xl backdrop-blur-md transition-all sm:rounded-2xl"
+                hideCloseButton={true}
+                overlayClassName="backdrop-blur-md bg-black/60 dark:bg-black/75"
+                className="border-border/80 bg-background/95 top-[18%] max-h-[85vh] w-[95vw] max-w-2xl -translate-y-0 overflow-hidden rounded-2xl p-0 shadow-2xl backdrop-blur-xl transition-all sm:rounded-2xl"
                 onKeyDown={handleKeyDown}
             >
                 <DialogTitle className="sr-only">Search documents, dashboards, and SBM</DialogTitle>
 
                 {/* Top Search Input Box */}
-                <div className="border-border/70 relative flex items-center border-b px-3.5 py-2.5">
-                    <Search className="text-muted-foreground mr-2.5 size-4.5 shrink-0" />
+                <div className="border-border/70 relative flex items-center border-b px-4 py-3">
+                    <Search className="text-muted-foreground mr-3 size-4.5 shrink-0" />
                     <input
                         ref={inputRef}
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Escape') {
+                                e.preventDefault();
+                                onOpenChange(false);
+                            }
+                        }}
                         placeholder="Search dashboards, documents, SBM, and more..."
                         className="placeholder:text-muted-foreground/60 text-foreground flex-1 bg-transparent text-sm outline-hidden"
                         autoFocus
                     />
-                    {isLoading && <Loader2 className="text-muted-foreground/80 mr-2 size-4 animate-spin" />}
-                    {query && (
+                    {isLoading && <Loader2 className="text-muted-foreground/80 mr-2 size-4 animate-spin shrink-0" />}
+
+                    {/* Right-side Action Group: Clear query button (if typed), ESC badge button, and X close button */}
+                    <div className="flex items-center gap-1.5 shrink-0 pl-1">
+                        {query && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setQuery('');
+                                    inputRef.current?.focus();
+                                }}
+                                title="Hapus teks pencarian"
+                                aria-label="Hapus teks pencarian"
+                                className="flex size-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground cursor-pointer"
+                            >
+                                <X className="size-3.5" />
+                            </button>
+                        )}
                         <button
                             type="button"
-                            onClick={() => setQuery('')}
-                            className="text-muted-foreground hover:text-foreground mr-1.5 rounded p-0.5"
+                            onClick={() => onOpenChange(false)}
+                            title="Tutup dialog (Esc)"
+                            aria-label="Tutup dialog pencarian (Esc)"
+                            className="hidden sm:inline-flex items-center gap-1 rounded-md border border-border/80 bg-muted/60 px-2 py-0.5 text-[10px] font-mono font-medium text-muted-foreground shadow-2xs transition-colors hover:bg-muted hover:text-foreground cursor-pointer"
                         >
-                            <X className="size-3.5" />
+                            <span>ESC</span>
                         </button>
-                    )}
-                    <Kbd className="border-border/60 text-muted-foreground hidden text-[10px] sm:inline-block">ESC</Kbd>
+                        <button
+                            type="button"
+                            onClick={() => onOpenChange(false)}
+                            title="Tutup pencarian"
+                            aria-label="Tutup dialog pencarian"
+                            className="flex size-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground cursor-pointer"
+                        >
+                            <X className="size-4" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Results List Container */}
@@ -567,10 +604,15 @@ export function SearchCommandDialog({ open, onOpenChange }: SearchCommandDialogP
                             <Kbd className="text-[9px]">↵</Kbd>
                             <span>buka</span>
                         </span>
-                        <span className="flex items-center gap-1">
+                        <button
+                            type="button"
+                            onClick={() => onOpenChange(false)}
+                            title="Tutup dialog (Esc)"
+                            className="flex items-center gap-1 transition-colors hover:text-foreground cursor-pointer"
+                        >
                             <Kbd className="text-[9px]">esc</Kbd>
                             <span>tutup</span>
-                        </span>
+                        </button>
                     </div>
                     <div className="hidden items-center gap-1 sm:flex">
                         <Clock className="size-3" />
