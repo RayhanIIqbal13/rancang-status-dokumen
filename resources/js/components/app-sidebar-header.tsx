@@ -1,3 +1,4 @@
+import { NotificationDropdown } from '@/components/notification-dropdown';
 import { SearchCommandDialog } from '@/components/search-command-dialog';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -97,6 +98,9 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                                   : 'Pengaju (Dosen)'}
                         </strong>
                     </div>
+
+                    {/* Notifications Dropdown for Newly Submitted Proposals */}
+                    <NotificationDropdown />
 
                     {/* Theme Switcher Button */}
                     <Button

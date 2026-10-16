@@ -21,10 +21,31 @@ export interface NavItem {
     isActive?: boolean;
 }
 
+export interface NotificationItem {
+    id: number;
+    type: 'new_proposal' | 'status_action';
+    title: string;
+    nomor_pengajuan: string;
+    nama_kegiatan: string;
+    jenis_anggaran: string;
+    total_usulan: number;
+    status_terkini: DocumentStatusType;
+    user_name: string;
+    user_unit: string;
+    time_ago: string;
+    created_at: string | null;
+    url: string;
+}
+
 export interface SharedData {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
+    notifications?: NotificationItem[];
+    flash?: {
+        success?: string | null;
+        error?: string | null;
+    };
     [key: string]: unknown;
 }
 

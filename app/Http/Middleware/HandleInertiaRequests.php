@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\DocumentStatus;
+use App\Models\DokumenPengajuan;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -44,6 +46,55 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
+            ],
+            'notifications' => function () use ($request) {
+                $user = $request->user();
+                if (! $user) {
+                    return [];
+                }
+
+                $query = DokumenPengajuan::query()
+                    ->with(['user:id,name,unit']);
+
+                if ($user->isPengusul()) {
+                    $query->where('user_id', $user->id)
+                        ->whereIn('status_terkini', [
+                            DocumentStatus::Diajukan->value,
+                            DocumentStatus::PerluRevisi->value,
+                        ]);
+                } else {
+                    $query->whereIn('status_terkini', [
+                        DocumentStatus::Diajukan->value,
+                        DocumentStatus::VerifikasiFakultas->value,
+                    ]);
+                }
+
+                return $query->latest()
+                    ->limit(10)
+                    ->get()
+                    ->map(function ($doc) {
+                        $isNew = $doc->status_terkini === DocumentStatus::Diajukan;
+
+                        return [
+                            'id' => $doc->id,
+                            'type' => $isNew ? 'new_proposal' : 'status_action',
+                            'title' => $isNew ? 'Proposal Baru Diajukan' : 'Verifikasi Dibutuhkan',
+                            'nomor_pengajuan' => $doc->nomor_pengajuan,
+                            'nama_kegiatan' => $doc->nama_kegiatan,
+                            'jenis_anggaran' => $doc->jenis_anggaran,
+                            'total_usulan' => (float) $doc->total_usulan,
+                            'status_terkini' => $doc->status_terkini->value ?? (string) $doc->status_terkini,
+                            'user_name' => $doc->user->name ?? 'Pengusul',
+                            'user_unit' => $doc->user->unit ?? 'Fakultas',
+                            'time_ago' => $doc->created_at ? $doc->created_at->diffForHumans() : 'Baru saja',
+                            'created_at' => $doc->created_at ? $doc->created_at->toISOString() : null,
+                            'url' => route('status-tracking.show', $doc->id),
+                        ];
+                    });
+            },
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
             ],
         ]);
     }
