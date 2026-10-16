@@ -104,7 +104,7 @@ export default function Dashboard({
 
             <div className="@container/main flex w-full flex-col gap-4 p-4 md:gap-6 md:p-6">
                 {/* 1. MetricCards - Exact match with next-shadcn-admin-dashboard */}
-                <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs xl:grid-cols-4">
+                <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs sm:grid-cols-2 xl:grid-cols-4">
                     {/* Card 1: Total Revenue / Pagu Usulan */}
                     <Card>
                         <CardHeader>
@@ -221,20 +221,20 @@ export default function Dashboard({
                         <CardDescription>
                             Daftar berkas usulan kegiatan, status tahapan verifikasi, unit kerja pengusul, dan pagu anggaran.
                         </CardDescription>
-                        <CardAction>
-                            <div className="flex items-center gap-2">
-                                <div className="relative">
+                        <CardAction className="w-full sm:w-auto">
+                            <div className="flex w-full flex-wrap sm:flex-nowrap items-center gap-2">
+                                <div className="relative flex-1 sm:flex-initial">
                                     <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
                                     <Input
                                         type="text"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         placeholder="Cari kegiatan..."
-                                        className="h-8 w-44 pl-8 text-xs lg:w-56"
+                                        className="h-8 w-full sm:w-44 pl-8 text-xs lg:w-56"
                                     />
                                 </div>
 
-                                <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+                                <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs shrink-0">
                                     <Link href="/laporan">
                                         <Download className="size-3" />
                                         <span>Export</span>
@@ -245,8 +245,8 @@ export default function Dashboard({
                     </CardHeader>
 
                     <CardContent className="pt-0">
-                        <div className="border-border/70 overflow-hidden rounded-lg border">
-                            <Table>
+                        <div className="border-border/70 overflow-x-auto scrollbar-thin rounded-lg border">
+                            <Table className="min-w-[700px]">
                                 <TableHeader>
                                     <TableRow className="bg-muted/30">
                                         <TableHead className="w-10">

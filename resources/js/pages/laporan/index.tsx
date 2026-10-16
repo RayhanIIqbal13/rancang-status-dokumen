@@ -263,8 +263,8 @@ export default function LaporanIndex({ summary, anggaranByType, statusDistributi
                         </div>
                     </div>
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs">
+                    <div className="overflow-x-auto scrollbar-thin">
+                        <table className="w-full min-w-[700px] text-left text-xs">
                             <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
                                 <tr>
                                     <th className="px-4 py-3">Nama Usulan Kegiatan</th>

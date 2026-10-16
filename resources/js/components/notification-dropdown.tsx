@@ -77,7 +77,7 @@ export function NotificationDropdown() {
                 align="end"
                 side="bottom"
                 sideOffset={6}
-                className="border-border/80 bg-background/95 w-80 rounded-2xl p-0 shadow-2xl backdrop-blur-md sm:w-96"
+                className="border-border/80 bg-background/95 w-[calc(100vw-2rem)] max-w-sm rounded-2xl p-0 shadow-2xl backdrop-blur-md sm:w-96"
             >
                 {/* Header */}
                 <div className="border-border/70 flex items-center justify-between border-b px-3.5 py-2.5">

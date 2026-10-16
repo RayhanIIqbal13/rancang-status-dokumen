@@ -76,18 +76,18 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                 {/* Left section: Sidebar Trigger, Separator, Search Dialog Button */}
                 <div className="flex items-center gap-1 lg:gap-2">
                     <SidebarTrigger className="text-muted-foreground hover:text-foreground -ml-1 size-7" />
-                    <Separator orientation="vertical" className="mx-2 h-4 self-center" />
+                    <Separator orientation="vertical" className="mx-1 sm:mx-2 h-4 self-center" />
 
                     <button
                         type="button"
                         onClick={() => setIsSearchOpen(true)}
-                        className="border-border/80 bg-background/60 text-muted-foreground hover:bg-muted/50 hover:text-foreground flex h-8 cursor-pointer items-center gap-2 rounded-lg border px-3 text-xs shadow-2xs transition-all"
+                        className="border-border/80 bg-background/60 text-muted-foreground hover:bg-muted/50 hover:text-foreground flex h-8 cursor-pointer items-center gap-1.5 sm:gap-2 rounded-lg border px-2 sm:px-3 text-xs shadow-2xs transition-all"
                         title="Cari Dokumen, Halaman & SBM (⌘K)"
                     >
                         <Search className="size-3.5" />
                         <span className="hidden sm:inline">Search documents, SBM, SPJ...</span>
-                        <span className="sm:hidden">Search</span>
-                        <Kbd className="ml-1 gap-1 px-1.5 text-[10px]">
+                        <span className="sm:hidden text-xs">Search</span>
+                        <Kbd className="hidden sm:inline-flex ml-1 gap-1 px-1.5 text-[10px]">
                             <span className="text-xs leading-none">⌘</span>
                             <span className="leading-none">K</span>
                         </Kbd>
@@ -95,7 +95,7 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                 </div>
 
                 {/* Right section: Theme Switcher, GitHub, Account Switcher */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                     {/* Role Indicator Badge */}
                     <div className="border-border/70 bg-muted/30 hidden items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs md:flex">
                         <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />

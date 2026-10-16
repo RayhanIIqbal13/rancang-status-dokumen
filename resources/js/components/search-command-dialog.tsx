@@ -310,7 +310,7 @@ export function SearchCommandDialog({ open, onOpenChange }: SearchCommandDialogP
             <DialogContent
                 hideCloseButton={true}
                 overlayClassName="backdrop-blur-md bg-black/60 dark:bg-black/75"
-                className="border-border/80 bg-background/95 top-[18%] max-h-[85vh] w-[95vw] max-w-2xl -translate-y-0 overflow-hidden rounded-2xl p-0 shadow-2xl backdrop-blur-xl transition-all sm:rounded-2xl"
+                className="border-border/80 bg-background/95 top-[8%] sm:top-[18%] max-h-[85vh] w-[95vw] max-w-2xl -translate-y-0 overflow-hidden rounded-2xl p-0 shadow-2xl backdrop-blur-xl transition-all sm:rounded-2xl"
                 onKeyDown={handleKeyDown}
             >
                 <DialogTitle className="sr-only">Search documents, dashboards, and SBM</DialogTitle>
@@ -595,12 +595,12 @@ export function SearchCommandDialog({ open, onOpenChange }: SearchCommandDialogP
                 {/* Footer keyboard hints */}
                 <div className="border-border/60 bg-muted/30 text-muted-foreground flex items-center justify-between border-t px-3.5 py-2 text-[10px]">
                     <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1">
+                        <span className="hidden sm:flex items-center gap-1">
                             <Kbd className="text-[9px]">↑</Kbd>
                             <Kbd className="text-[9px]">↓</Kbd>
                             <span>navigasi</span>
                         </span>
-                        <span className="flex items-center gap-1">
+                        <span className="hidden sm:flex items-center gap-1">
                             <Kbd className="text-[9px]">↵</Kbd>
                             <span>buka</span>
                         </span>

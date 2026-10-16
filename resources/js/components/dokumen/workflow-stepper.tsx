@@ -91,6 +91,9 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
 
                     {/* Animated current status pill with calm, slow pulse matching StatusTimeline */}
                     <div className="flex items-center gap-2">
+                        <span className="md:hidden inline-flex items-center gap-1 rounded-md bg-muted/70 border border-border/80 px-2 py-0.5 text-[10px] text-muted-foreground font-medium">
+                            Geser alur ➔
+                        </span>
                         {isRevision ? (
                             <Badge
                                 variant="destructive"
@@ -122,7 +125,7 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                 </div>
 
                 {/* Stepper Horizontal Trail with Increased Width & Calming Smooth Animations */}
-                <div className="scrollbar-thin relative overflow-x-auto pt-2 pb-4">
+                <div className="scrollbar-thin touch-pan-x relative overflow-x-auto pt-2 pb-4">
                     <ol className="relative flex w-full min-w-[1040px] items-start justify-between px-2">
                         {allStages.map((stepName, index) => {
                             const stageInfo = stages.find((s) => s.value === stepName);

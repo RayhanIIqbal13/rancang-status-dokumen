@@ -13,6 +13,7 @@ import {
     SidebarMenuBadge,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar,
 } from '@/components/ui/sidebar';
 import { usePreferences } from '@/hooks/use-preferences';
 import { SharedData } from '@/types';
@@ -38,6 +39,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const currentUrl = page.url;
     const userRole = page.props.auth?.user?.role;
     const { preferences } = usePreferences();
+    const { isMobile, setOpenMobile } = useSidebar();
+
+    const closeMobileSidebar = () => {
+        if (isMobile) {
+            setOpenMobile(false);
+        }
+    };
 
     const variant = props.variant || preferences.sidebarVariant;
     const collapsible = props.collapsible || preferences.sidebarCollapsible;
@@ -127,7 +135,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild className="hover:bg-sidebar-accent transition-colors">
-                            <Link href="/dashboard">
+                            <Link href="/dashboard" onClick={closeMobileSidebar}>
                                 <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg shadow-xs">
                                     <Command className="size-4" />
                                 </div>
@@ -152,7 +160,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     tooltip="Ajukan Dokumen"
                                     className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground font-medium rounded-lg"
                                 >
-                                    <Link href="/dokumen-pengajuan/create">
+                                    <Link href="/dokumen-pengajuan/create" onClick={closeMobileSidebar}>
                                         <Plus className="size-4 shrink-0" />
                                         <span>Ajukan Dokumen</span>
                                     </Link>
@@ -164,7 +172,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     asChild
                                     title="Semua Dokumen"
                                 >
-                                    <Link href="/dokumen-pengajuan">
+                                    <Link href="/dokumen-pengajuan" onClick={closeMobileSidebar}>
                                         <Mail className="size-4 text-muted-foreground" />
                                         <span className="sr-only">Semua Dokumen</span>
                                     </Link>
@@ -197,7 +205,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                     isActive={item.active}
                                                     tooltip={item.title}
                                                 >
-                                                    <Link href={item.url}>
+                                                    <Link href={item.url} onClick={closeMobileSidebar}>
                                                         <IconComponent className="size-4 shrink-0" />
                                                         <span>{item.title}</span>
                                                     </Link>

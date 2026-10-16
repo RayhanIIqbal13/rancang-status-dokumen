@@ -176,7 +176,7 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                 <div className="bg-card overflow-hidden rounded-xl border shadow-2xs">
                     {/* Studio Admin Toolbar */}
                     <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
-                        <form onSubmit={handleSearch} className="relative max-w-sm flex-1">
+                        <form onSubmit={handleSearch} className="relative w-full sm:max-w-sm flex-1">
                             <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
                             <Input
                                 value={searchTerm}
@@ -204,8 +204,8 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                     </div>
 
                     {/* Table */}
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs">
+                    <div className="overflow-x-auto scrollbar-thin">
+                        <table className="w-full min-w-[700px] text-left text-xs">
                             <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
                                 <tr>
                                     <th className="px-4 py-3">Nomor & Usulan</th>

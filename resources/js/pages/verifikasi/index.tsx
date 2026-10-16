@@ -179,7 +179,7 @@ export default function VerifikasiIndex({ documents, filters, stats, stages }: V
                     {/* Studio Admin Toolbar */}
                     <div className="flex flex-col gap-3 border-b p-4">
                         <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-                            <form onSubmit={handleSearch} className="relative max-w-sm flex-1">
+                            <form onSubmit={handleSearch} className="relative w-full sm:max-w-sm flex-1">
                                 <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
                                 <Input
                                     value={searchTerm}

@@ -254,7 +254,7 @@ export function PerformanceOverview({ initialData }: { initialData?: Performance
                     <span className="@[540px]/card:hidden">Realisasi pencarian sakti TA 2026</span>
                 </CardDescription>
 
-                <CardAction className="flex items-center gap-2">
+                <CardAction className="flex flex-wrap items-center gap-2">
                     <Select value={period} onValueChange={setPeriod}>
                         <SelectTrigger className="h-8 w-28 text-xs">
                             <SelectValue placeholder="Period" />

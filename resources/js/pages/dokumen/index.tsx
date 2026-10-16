@@ -152,16 +152,16 @@ export default function DokumenIndex({ documents, filters, stats, stages: _stage
                     <CardHeader>
                         <CardTitle className="leading-none">Berkas Pengajuan Dokumen</CardTitle>
                         <CardDescription>Kelola usulan, cek posisi berkas fisik, dan pantau status realisasi anggaran SBM</CardDescription>
-                        <CardAction>
-                            <form onSubmit={handleSearch} className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
-                                <div className="relative">
+                        <CardAction className="w-full sm:w-auto">
+                            <form onSubmit={handleSearch} className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:flex-row sm:items-center">
+                                <div className="relative flex-1 sm:flex-initial">
                                     <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
                                     <input
                                         type="text"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         placeholder="Cari kegiatan atau pengusul..."
-                                        className="border-border/80 bg-background text-foreground placeholder:text-muted-foreground focus:ring-ring h-8 w-44 rounded-lg border pr-2.5 pl-8 text-xs focus:ring-1 focus:outline-none lg:w-56"
+                                        className="border-border/80 bg-background text-foreground placeholder:text-muted-foreground focus:ring-ring h-8 w-full rounded-lg border pr-2.5 pl-8 text-xs focus:ring-1 focus:outline-none sm:w-44 lg:w-56"
                                     />
                                 </div>
                                 <Button type="submit" variant="secondary" size="sm" className="h-8 gap-1 text-xs">
@@ -214,8 +214,8 @@ export default function DokumenIndex({ documents, filters, stats, stages: _stage
                     </div>
 
                     <CardContent className="pt-0">
-                        <div className="border-border/70 overflow-hidden rounded-lg border">
-                            <Table>
+                        <div className="border-border/70 overflow-x-auto scrollbar-thin rounded-lg border">
+                            <Table className="min-w-[720px]">
                                 <TableHeader>
                                     <TableRow className="bg-muted/30">
                                         <TableHead>Nomor & Nama Kegiatan</TableHead>

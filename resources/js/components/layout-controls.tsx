@@ -33,7 +33,7 @@ export function LayoutControls() {
                     <span className="sr-only">Dashboard Preferences</span>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent align="end" className="w-80 p-4 shadow-xl">
+            <PopoverContent align="end" className="w-[calc(100vw-2rem)] max-w-xs sm:w-80 p-4 shadow-xl">
                 <div className="flex flex-col gap-4">
                     <div className="space-y-1">
                         <h4 className="text-sm font-semibold leading-none">Preferences</h4>

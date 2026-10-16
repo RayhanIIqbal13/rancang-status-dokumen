@@ -156,7 +156,7 @@ export default function StatusTrackingIndex({ activeDocument, accessibleDocument
                     </div>
 
                     {/* View mode toggle (Focused tracker vs Global audit) */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                         <div className="border-border/80 bg-muted/40 inline-flex rounded-lg border p-1 text-xs">
                             <button
                                 type="button"
@@ -531,8 +531,8 @@ export default function StatusTrackingIndex({ activeDocument, accessibleDocument
                         </CardContent>
 
                         {/* Audit Trail Table */}
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm">
+                        <div className="overflow-x-auto scrollbar-thin">
+                            <table className="w-full min-w-[720px] text-left text-sm">
                                 <thead className="bg-muted/40 border-border/60 text-muted-foreground border-b text-xs font-medium uppercase">
                                     <tr>
                                         <th className="px-4 py-3">Dokumen</th>

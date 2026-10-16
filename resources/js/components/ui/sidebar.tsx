@@ -1,3 +1,4 @@
+import { router } from '@inertiajs/react';
 import { Slot } from '@radix-ui/react-slot';
 import { VariantProps, cva } from 'class-variance-authority';
 import { PanelLeft } from 'lucide-react';
@@ -75,7 +76,7 @@ const SidebarProvider = React.forwardRef<
         return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
     }, [isMobile, setOpen, setOpenMobile]);
 
-    // Listen for mobile navigation events
+    // Listen for mobile navigation events & Inertia page navigation
     React.useEffect(() => {
         const handleMobileNavigation = () => {
             if (isMobile) {
@@ -83,8 +84,17 @@ const SidebarProvider = React.forwardRef<
             }
         };
 
+        const unregisterRouter = router.on('navigate', () => {
+            if (isMobile) {
+                setOpenMobile(false);
+            }
+        });
+
         window.addEventListener('mobile-navigation', handleMobileNavigation);
-        return () => window.removeEventListener('mobile-navigation', handleMobileNavigation);
+        return () => {
+            unregisterRouter();
+            window.removeEventListener('mobile-navigation', handleMobileNavigation);
+        };
     }, [isMobile, setOpenMobile]);
 
     // Adds a keyboard shortcut to toggle the sidebar.
@@ -281,8 +291,7 @@ const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main
         <main
             ref={ref}
             className={cn(
-                'relative flex min-h-svh flex-1 flex-col bg-background',
-                'peer-data-[variant=inset]:min-h-[calc(100svh-(--spacing(4)))] md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:border-border/80 overflow-hidden',
+                'relative flex w-full flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:border md:peer-data-[variant=inset]:border-border/80',
                 className,
             )}
             {...props}

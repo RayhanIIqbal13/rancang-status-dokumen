@@ -171,11 +171,11 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                         </Card>
 
                         {/* Interactive Tabs Header */}
-                        <div className="border-border flex border-b">
+                        <div className="border-border flex border-b overflow-x-auto no-scrollbar whitespace-nowrap">
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('timeline')}
-                                className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
+                                className={`flex shrink-0 items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
                                     activeTab === 'timeline'
                                         ? 'border-primary text-primary'
                                         : 'text-muted-foreground hover:text-foreground border-transparent'
@@ -187,7 +187,7 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('spj')}
-                                className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
+                                className={`flex shrink-0 items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
                                     activeTab === 'spj'
                                         ? 'border-primary text-primary'
                                         : 'text-muted-foreground hover:text-foreground border-transparent'
@@ -199,7 +199,7 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('realisasi')}
-                                className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
+                                className={`flex shrink-0 items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
                                     activeTab === 'realisasi'
                                         ? 'border-primary text-primary'
                                         : 'text-muted-foreground hover:text-foreground border-transparent'
