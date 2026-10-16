@@ -12,11 +12,13 @@ function AppSidebarLayoutContent({ children, breadcrumbs = [] }: { children: Rea
 
     return (
         <AppShell variant="sidebar">
-            <AppSidebar variant={preferences.sidebarVariant} collapsible={preferences.sidebarCollapsible} />
-            <AppContent variant="sidebar">
-                <AppSidebarHeader breadcrumbs={breadcrumbs} />
-                <FlashBanner />
-                <div className={preferences.contentLayout === 'centered' ? 'mx-auto w-full max-w-7xl' : 'w-full'}>
+            <AppSidebar variant={preferences.sidebarVariant} collapsible={preferences.sidebarCollapsible} className="print:hidden" />
+            <AppContent variant="sidebar" className="print:p-0 print:m-0 print:border-none print:w-full print:bg-white print:shadow-none">
+                <div className="print:hidden">
+                    <AppSidebarHeader breadcrumbs={breadcrumbs} />
+                    <FlashBanner />
+                </div>
+                <div className={preferences.contentLayout === 'centered' ? 'mx-auto w-full max-w-7xl print:max-w-none print:w-full' : 'w-full print:max-w-none'}>
                     {children}
                 </div>
             </AppContent>
