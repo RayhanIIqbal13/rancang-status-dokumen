@@ -5,7 +5,7 @@ import { UserMenuContent } from '@/components/user-menu-content';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { MoreVertical } from 'lucide-react';
+import { EllipsisVertical } from 'lucide-react';
 
 export function NavUser() {
     const { auth } = usePage<SharedData>().props;
@@ -17,9 +17,9 @@ export function NavUser() {
             <SidebarMenuItem>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton size="lg" className="text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent hover:bg-sidebar-accent/80 group rounded-xl transition-colors">
+                        <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group">
                             <UserInfo user={auth.user} showEmail={true} />
-                            <MoreVertical className="ml-auto size-4 text-muted-foreground group-hover:text-foreground shrink-0" />
+                            <EllipsisVertical className="ml-auto size-4 text-muted-foreground" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent

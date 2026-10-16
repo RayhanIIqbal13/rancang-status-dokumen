@@ -1,5 +1,6 @@
 import { NavUser } from '@/components/nav-user';
 import { SupportCard } from '@/components/support-card';
+import { Button } from '@/components/ui/button';
 import {
     Sidebar,
     SidebarContent,
@@ -25,17 +26,21 @@ import {
     Landmark,
     LayoutGrid,
     Mail,
-    Plus,
+    PlusCircle,
     Receipt,
     Scale,
     Users,
 } from 'lucide-react';
+import * as React from 'react';
 
-export function AppSidebar() {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const page = usePage<SharedData>();
     const currentUrl = page.url;
     const userRole = page.props.auth?.user?.role;
     const { preferences } = usePreferences();
+
+    const variant = props.variant || preferences.sidebarVariant;
+    const collapsible = props.collapsible || preferences.sidebarCollapsible;
 
     const navGroups = [
         {
@@ -116,12 +121,9 @@ export function AppSidebar() {
     ];
 
     return (
-        <Sidebar
-            collapsible={preferences.sidebarCollapseMode}
-            variant={preferences.sidebarStyle}
-            className="border-sidebar-border bg-sidebar border-r"
-        >
-            <SidebarHeader className="p-3">
+        <Sidebar {...props} variant={variant} collapsible={collapsible}>
+            {/* Header Brand */}
+            <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild className="hover:bg-sidebar-accent transition-colors">
@@ -130,45 +132,61 @@ export function AppSidebar() {
                                     <Command className="size-4" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="text-foreground truncate font-semibold tracking-tight">SIM-KEUANGAN SBM</span>
-                                    <span className="text-muted-foreground truncate text-xs">Pelacakan Dokumen & SAKTI</span>
+                                    <span className="text-foreground truncate font-semibold text-base tracking-tight">Studio Admin</span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
-
-                {/* Quick Action Button matching next-shadcn-admin-dashboard */}
-                <div className="flex items-center gap-1.5 px-0.5 pt-1 group-data-[collapsible=icon]:hidden">
-                    <Link
-                        href="/dokumen-pengajuan/create"
-                        className="bg-primary text-primary-foreground hover:bg-primary/90 flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium shadow-xs transition-colors"
-                    >
-                        <Plus className="size-3.5 shrink-0" />
-                        <span className="truncate">Ajukan Dokumen</span>
-                    </Link>
-                    <Link
-                        href="/dokumen-pengajuan"
-                        className="border-border/80 bg-background text-muted-foreground hover:bg-muted hover:text-foreground flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors"
-                        title="Semua Dokumen"
-                    >
-                        <Mail className="size-3.5" />
-                    </Link>
-                </div>
             </SidebarHeader>
 
-            <SidebarContent className="space-y-1 px-2 py-1">
+            <SidebarContent>
+                {/* Quick Create Group matching next-shadcn-admin-dashboard */}
+                <SidebarGroup className="pt-0">
+                    <SidebarGroupContent className="flex flex-col gap-2">
+                        <SidebarMenu>
+                            <SidebarMenuItem className="flex items-center gap-2">
+                                <SidebarMenuButton
+                                    asChild
+                                    tooltip="Quick Create"
+                                    className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground font-medium rounded-lg"
+                                >
+                                    <Link href="/dokumen-pengajuan/create">
+                                        <PlusCircle className="size-4 shrink-0" />
+                                        <span>Quick Create</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                                <Button
+                                    size="icon"
+                                    className="h-9 w-9 shrink-0 group-data-[collapsible=icon]:hidden rounded-lg border-border"
+                                    variant="outline"
+                                    asChild
+                                    title="Semua Dokumen"
+                                >
+                                    <Link href="/dokumen-pengajuan">
+                                        <Mail className="size-4 text-muted-foreground" />
+                                        <span className="sr-only">Semua Dokumen</span>
+                                    </Link>
+                                </Button>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                {/* Nav Groups */}
                 {navGroups.map((group) => {
                     const visibleItems = group.items.filter((item) => item.show !== false);
                     if (visibleItems.length === 0) return null;
 
                     return (
-                        <SidebarGroup key={group.label} className="p-0 py-1">
-                            <SidebarGroupLabel className="text-muted-foreground h-6 px-2 text-[11px] font-normal group-data-[collapsible=icon]:hidden">
-                                {group.label}
-                            </SidebarGroupLabel>
+                        <SidebarGroup key={group.label}>
+                            {group.label && (
+                                <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none text-muted-foreground text-xs font-normal">
+                                    {group.label}
+                                </SidebarGroupLabel>
+                            )}
                             <SidebarGroupContent>
-                                <SidebarMenu className="gap-0.5">
+                                <SidebarMenu>
                                     {visibleItems.map((item) => {
                                         const IconComponent = item.icon;
                                         return (
@@ -177,11 +195,10 @@ export function AppSidebar() {
                                                     asChild
                                                     isActive={item.active}
                                                     tooltip={item.title}
-                                                    className="text-foreground/80 hover:bg-sidebar-accent hover:text-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-foreground h-8 gap-2.5 rounded-lg px-2.5 text-xs font-normal transition-colors data-[active=true]:font-medium"
                                                 >
                                                     <Link href={item.url}>
-                                                        <IconComponent className="text-muted-foreground group-data-[active=true]:text-foreground size-4 shrink-0" />
-                                                        <span className="truncate">{item.title}</span>
+                                                        <IconComponent className="size-4 shrink-0" />
+                                                        <span>{item.title}</span>
                                                     </Link>
                                                 </SidebarMenuButton>
                                                 {item.badge && (
@@ -199,7 +216,7 @@ export function AppSidebar() {
                 })}
             </SidebarContent>
 
-            <SidebarFooter className="border-sidebar-border/80 space-y-2 border-t p-2">
+            <SidebarFooter>
                 <SupportCard />
                 <NavUser />
             </SidebarFooter>

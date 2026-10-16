@@ -1,5 +1,5 @@
+import { LayoutControls } from '@/components/layout-controls';
 import { NotificationDropdown } from '@/components/notification-dropdown';
-import { PreferencesPopover } from '@/components/preferences-popover';
 import { SearchCommandDialog } from '@/components/search-command-dialog';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,6 @@ import { Kbd } from '@/components/ui/kbd';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { usePreferences } from '@/hooks/use-preferences';
-import { cn } from '@/lib/utils';
 import { SharedData, type BreadcrumbItem as BreadcrumbItemType } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BadgeCheck, Check, LogOut, Moon, Search, Shield, Sun, User as UserIcon } from 'lucide-react';
@@ -25,7 +24,7 @@ import { useEffect, useState } from 'react';
 export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrumbs?: BreadcrumbItemType[] }) {
     const { auth } = usePage<SharedData>().props;
     const user = auth?.user;
-    const { preferences, setPreference } = usePreferences();
+    const { preferences } = usePreferences();
 
     const [isDark, setIsDark] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -46,9 +45,15 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
     }, []);
 
     const toggleTheme = () => {
-        const nextMode = isDark ? 'light' : 'dark';
-        setIsDark(!isDark);
-        setPreference('themeMode', nextMode);
+        const nextDark = !isDark;
+        setIsDark(nextDark);
+        if (nextDark) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('appearance', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('appearance', 'light');
+        }
     };
 
     const getInitials = (name?: string) => {
@@ -63,10 +68,9 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
 
     return (
         <header
-            className={cn(
-                'border-border/80 bg-background/80 flex h-12 shrink-0 items-center border-b px-4 backdrop-blur-md transition-all lg:px-6',
-                preferences.navbarBehavior === 'sticky' ? 'sticky top-0 z-40' : 'relative z-10',
-            )}
+            className={`border-border/80 bg-background/50 flex h-12 shrink-0 items-center border-b px-4 backdrop-blur-md transition-[width,height] ease-linear lg:px-6 ${
+                preferences.navbarStyle === 'sticky' ? 'sticky top-0 z-40' : 'relative z-10'
+            }`}
         >
             <div className="flex w-full items-center justify-between">
                 {/* Left section: Sidebar Trigger, Separator, Search Dialog Button */}
@@ -87,8 +91,8 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                     </button>
                 </div>
 
-                {/* Right section: Preferences, Theme Switcher, GitHub, Account Switcher */}
-                <div className="flex items-center gap-1.5 sm:gap-2">
+                {/* Right section: Theme Switcher, GitHub, Account Switcher */}
+                <div className="flex items-center gap-2">
                     {/* Role Indicator Badge */}
                     <div className="border-border/70 bg-muted/30 hidden items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs md:flex">
                         <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
@@ -105,8 +109,8 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                     {/* Notifications Dropdown for Newly Submitted Proposals */}
                     <NotificationDropdown />
 
-                    {/* Preferences Popover matching next-shadcn-admin-dashboard */}
-                    <PreferencesPopover />
+                    {/* Preferences Controls (Theme, Font, Layout, Sidebar style) */}
+                    <LayoutControls />
 
                     {/* Theme Switcher Button */}
                     <Button
@@ -119,43 +123,12 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                         {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
                     </Button>
 
-                    {/* GitHub Repository Link Button */}
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        asChild
-                        className="text-muted-foreground hover:text-foreground hover:bg-muted size-8 rounded-lg"
-                        title="View GitHub Repository"
-                    >
-                        <a
-                            href="https://github.com/RayhanIIqbal13/rancang-status-dokumen"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="GitHub Repository"
-                        >
-                            <svg
-                                viewBox="0 0 24 24"
-                                width="16"
-                                height="16"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="size-4"
-                            >
-                                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                                <path d="M9 18c-4.51 2-5-2-7-2" />
-                            </svg>
-                        </a>
-                    </Button>
-
                     {/* Account Switcher Dropdown */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <button
                                 type="button"
-                                className="hover:bg-muted/60 flex items-center gap-2 rounded-lg p-1 transition-colors focus:outline-hidden cursor-pointer"
+                                className="hover:bg-muted/60 flex items-center gap-2 rounded-lg p-1 transition-colors focus:outline-hidden"
                             >
                                 <Avatar className="ring-border size-8 rounded-lg ring-1">
                                     <AvatarFallback className="bg-primary/10 text-primary rounded-lg text-xs font-semibold">
