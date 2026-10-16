@@ -10,6 +10,7 @@ use App\Http\Controllers\StandarBiayaController;
 use App\Http\Controllers\StatusTrackingController;
 use App\Http\Controllers\VerifikasiDokumenController;
 use App\Models\DokumenPengajuan;
+use App\Services\DashboardAnalyticsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -72,7 +73,7 @@ Route::middleware(['auth'])->group(function () {
             'dana_cair' => (clone $query)->where('status_terkini', DocumentStatus::DanaCair->value)->count(),
         ];
 
-        $analyticsService = app(\App\Services\DashboardAnalyticsService::class);
+        $analyticsService = app(DashboardAnalyticsService::class);
         $performanceChartData = $analyticsService->getPerformanceChartData($user, 90);
 
         return Inertia::render('dashboard', [

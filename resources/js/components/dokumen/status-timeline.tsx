@@ -1,12 +1,9 @@
 import { StatusBadge } from '@/components/dokumen/status-badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { DokumenPengajuan, DocumentStatusType, StatusStageInfo, StatusTracking } from '@/types';
+import { DocumentStatusType, DokumenPengajuan, StatusStageInfo, StatusTracking } from '@/types';
 import {
     AlertTriangle,
-    ArrowUpRight,
-    Building2,
     Calendar,
     Check,
     CheckCircle2,
@@ -29,12 +26,7 @@ interface StatusTimelineProps {
     onUploadRevision?: () => void;
 }
 
-export function StatusTimeline({
-    document,
-    stages,
-    className = '',
-    onUploadRevision,
-}: StatusTimelineProps) {
+export function StatusTimeline({ document, stages, className = '', onUploadRevision }: StatusTimelineProps) {
     const statusTrackings = document.status_trackings || document.status_timeline || [];
     const currentStatus = document.status_terkini;
     const isRevisionCurrent = currentStatus === 'Perlu Revisi';
@@ -134,7 +126,7 @@ export function StatusTimeline({
 
     return (
         <div className={`space-y-6 ${className}`}>
-            <div className="relative pl-7 sm:pl-8 before:absolute before:left-3.5 before:top-4 before:h-[calc(100%-32px)] before:w-0.5 before:bg-border/80">
+            <div className="before:bg-border/80 relative pl-7 before:absolute before:top-4 before:left-3.5 before:h-[calc(100%-32px)] before:w-0.5 sm:pl-8">
                 {stageOrder.map((stageName, idx) => {
                     const stageMeta = stages.find((s) => s.value === stageName);
                     const state = getStageState(stageName);
@@ -182,7 +174,7 @@ export function StatusTimeline({
                         <div key={stageName} className="relative mb-6 last:mb-0">
                             {/* Step Node Pin */}
                             <div
-                                className={`absolute -left-7 sm:-left-8 top-3 flex size-7 items-center justify-center rounded-full border-2 transition-all ${nodeStyle} ${ringStyle}`}
+                                className={`absolute top-3 -left-7 flex size-7 items-center justify-center rounded-full border-2 transition-all sm:-left-8 ${nodeStyle} ${ringStyle}`}
                                 title={`Tahap ${idx + 1}: ${stageName}`}
                             >
                                 {isCompleted ? (
@@ -201,31 +193,33 @@ export function StatusTimeline({
                                 {/* Header: Stage Name, Badge & Status Pill */}
                                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                     <div className="flex flex-wrap items-center gap-2">
-                                        <span className="font-mono text-xs font-semibold text-muted-foreground">
-                                            Tahap {idx + 1}.
-                                        </span>
-                                        <h4 className="text-sm font-bold text-foreground">
-                                            {stageName}
-                                        </h4>
+                                        <span className="text-muted-foreground font-mono text-xs font-semibold">Tahap {idx + 1}.</span>
+                                        <h4 className="text-foreground text-sm font-bold">{stageName}</h4>
                                         <StatusBadge status={stageName} size="sm" />
                                     </div>
 
                                     {/* Visual State Pill */}
                                     <div className="flex items-center gap-2">
                                         {isCompleted && (
-                                            <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] font-medium gap-1">
+                                            <Badge
+                                                variant="outline"
+                                                className="gap-1 border-emerald-300 bg-emerald-50 text-[10px] font-medium text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+                                            >
                                                 <CheckCircle2 className="size-3" />
                                                 Selesai
                                             </Badge>
                                         )}
                                         {isCurrent && (
-                                            <Badge variant="outline" className="border-primary/30 bg-primary/10 text-primary text-[10px] font-semibold gap-1 animate-pulse">
+                                            <Badge
+                                                variant="outline"
+                                                className="border-primary/30 bg-primary/10 text-primary animate-pulse gap-1 text-[10px] font-semibold"
+                                            >
                                                 <Clock className="size-3" />
                                                 Sedang Berjalan
                                             </Badge>
                                         )}
                                         {isRevision && (
-                                            <Badge variant="destructive" className="bg-rose-600 text-white text-[10px] font-bold gap-1 shadow-xs">
+                                            <Badge variant="destructive" className="gap-1 bg-rose-600 text-[10px] font-bold text-white shadow-xs">
                                                 <AlertTriangle className="size-3" />
                                                 Tindakan Perlu Diambil
                                             </Badge>
@@ -239,40 +233,36 @@ export function StatusTimeline({
                                 </div>
 
                                 {/* Official SOP Description */}
-                                <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                                <p className="text-muted-foreground mt-2 text-xs leading-relaxed">
                                     {stageMeta?.description || 'Proses tahapan administrasi dan pengelolaan dokumen.'}
                                 </p>
 
                                 {/* Metadata Footer: Actor, Date, Posisi Berkas */}
-                                <div className="mt-3.5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border/60 pt-2.5 text-xs text-muted-foreground">
+                                <div className="border-border/60 text-muted-foreground mt-3.5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t pt-2.5 text-xs">
                                     {/* Updater / Designated Actor */}
                                     <div className="flex items-center gap-1.5">
-                                        <UserIcon className="size-3.5 text-muted-foreground shrink-0" />
+                                        <UserIcon className="text-muted-foreground size-3.5 shrink-0" />
                                         <span>Petugas:</span>
-                                        <span className="font-medium text-foreground">
+                                        <span className="text-foreground font-medium">
                                             {record?.updater_name || stageMeta?.updated_by || 'Staf Keuangan'}
                                         </span>
-                                        {record?.updater_role && (
-                                            <span className="text-[10px] text-muted-foreground">
-                                                ({record.updater_role})
-                                            </span>
-                                        )}
+                                        {record?.updater_role && <span className="text-muted-foreground text-[10px]">({record.updater_role})</span>}
                                     </div>
 
                                     {/* Posisi Berkas */}
                                     <div className="flex items-center gap-1.5">
-                                        <MapPin className="size-3.5 text-primary shrink-0" />
+                                        <MapPin className="text-primary size-3.5 shrink-0" />
                                         <span>Posisi Berkas:</span>
-                                        <span className="font-semibold text-foreground">
+                                        <span className="text-foreground font-semibold">
                                             {record?.posisi_berkas || stageMeta?.default_posisi || 'Subbag Keuangan Fakultas'}
                                         </span>
                                     </div>
 
                                     {/* Timestamp */}
-                                    <div className="flex items-center gap-1.5 ml-auto">
-                                        <Calendar className="size-3.5 text-muted-foreground shrink-0" />
+                                    <div className="ml-auto flex items-center gap-1.5">
+                                        <Calendar className="text-muted-foreground size-3.5 shrink-0" />
                                         <span>Waktu:</span>
-                                        <span className="font-mono text-foreground">
+                                        <span className="text-foreground font-mono">
                                             {record ? formatDate(record.waktu_update) : 'Menunggu tahapan sebelumnya'}
                                         </span>
                                     </div>
@@ -284,13 +274,15 @@ export function StatusTimeline({
                                         className={`mt-3 rounded-lg p-3 text-xs leading-relaxed ${
                                             isRevision
                                                 ? 'border border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-200'
-                                                : 'border border-border/70 bg-muted/40 text-foreground'
+                                                : 'border-border/70 bg-muted/40 text-foreground border'
                                         }`}
                                     >
                                         <div className="flex items-start gap-2">
-                                            <MessageSquare className={`size-4 mt-0.5 shrink-0 ${isRevision ? 'text-rose-600' : 'text-muted-foreground'}`} />
+                                            <MessageSquare
+                                                className={`mt-0.5 size-4 shrink-0 ${isRevision ? 'text-rose-600' : 'text-muted-foreground'}`}
+                                            />
                                             <div>
-                                                <span className="font-semibold block mb-0.5">
+                                                <span className="mb-0.5 block font-semibold">
                                                     {isRevision ? 'Catatan Perbaikan dari Verifikator:' : 'Catatan Pembaruan:'}
                                                 </span>
                                                 <p className="whitespace-pre-line">{record.catatan}</p>
@@ -301,14 +293,14 @@ export function StatusTimeline({
 
                                 {/* Revision Required Quick Action Banner for Applicant */}
                                 {isRevision && onUploadRevision && (
-                                    <div className="mt-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-rose-200 dark:border-rose-900/60">
-                                        <p className="text-xs text-rose-700 dark:text-rose-300 font-medium">
+                                    <div className="mt-3.5 flex flex-col gap-3 border-t border-rose-200 pt-3 sm:flex-row sm:items-center sm:justify-between dark:border-rose-900/60">
+                                        <p className="text-xs font-medium text-rose-700 dark:text-rose-300">
                                             Silakan perbaiki berkas proposal sesuai catatan dan unggah revisi agar verifikasi dapat dilanjutkan.
                                         </p>
                                         <Button
                                             size="sm"
                                             onClick={onUploadRevision}
-                                            className="bg-rose-600 hover:bg-rose-700 text-white gap-1.5 shadow-xs shrink-0"
+                                            className="shrink-0 gap-1.5 bg-rose-600 text-white shadow-xs hover:bg-rose-700"
                                         >
                                             <FileEdit className="size-3.5" />
                                             Perbaiki Dokumen

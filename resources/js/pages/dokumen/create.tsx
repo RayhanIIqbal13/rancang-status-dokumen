@@ -1,30 +1,11 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import {
-    ArrowLeft,
-    Building2,
-    Calendar,
-    CheckCircle2,
-    FileSpreadsheet,
-    FileText,
-    FileUp,
-    Info,
-    Send,
-    ShieldAlert,
-    Sparkles,
-} from 'lucide-react';
+import { ArrowLeft, CheckCircle2, FileText, FileUp, Send, Sparkles } from 'lucide-react';
 import React from 'react';
 
 interface CreateProps {
@@ -65,7 +46,7 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Pengajuan Dokumen Anggaran - Studio Admin SAK ITK" />
 
-            <div className="flex flex-col gap-5 p-4 md:p-6 max-w-5xl">
+            <div className="flex max-w-5xl flex-col gap-5 p-4 md:p-6">
                 {/* Page Header (Studio Admin style) */}
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
@@ -76,14 +57,12 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                         </Button>
                         <div>
                             <div className="flex items-center gap-2">
-                                <h1 className="text-xl font-semibold tracking-tight text-foreground">
-                                    Pengajuan Usulan Anggaran
-                                </h1>
-                                <span className="rounded-4xl border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                                <h1 className="text-foreground text-xl font-semibold tracking-tight">Pengajuan Usulan Anggaran</h1>
+                                <span className="border-primary/20 bg-primary/10 text-primary rounded-4xl border px-2 py-0.5 text-[11px] font-medium">
                                     Form Baru
                                 </span>
                             </div>
-                            <p className="text-xs text-muted-foreground mt-0.5">
+                            <p className="text-muted-foreground mt-0.5 text-xs">
                                 Formulir pendaftaran usulan kegiatan dan anggaran fakultas/unit kerja ITK
                             </p>
                         </div>
@@ -93,13 +72,7 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                         <Button asChild variant="outline" size="sm" className="h-8 text-xs">
                             <Link href={route('dokumen-pengajuan.index')}>Batal</Link>
                         </Button>
-                        <Button
-                            type="button"
-                            size="sm"
-                            onClick={submit}
-                            disabled={processing}
-                            className="h-8 gap-1.5 text-xs shadow-xs"
-                        >
+                        <Button type="button" size="sm" onClick={submit} disabled={processing} className="h-8 gap-1.5 text-xs shadow-xs">
                             <Send className="size-3.5" />
                             <span>{processing ? 'Menyimpan...' : 'Kirim Pengajuan'}</span>
                         </Button>
@@ -109,14 +82,10 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                 <div className="grid gap-5 lg:grid-cols-3">
                     {/* Main Form (2 cols) */}
                     <form onSubmit={submit} className="space-y-5 lg:col-span-2">
-                        <div className="rounded-xl border bg-card p-5 shadow-2xs space-y-4">
+                        <div className="bg-card space-y-4 rounded-xl border p-5 shadow-2xs">
                             <div className="border-b pb-3">
-                                <h2 className="text-sm font-semibold tracking-tight text-foreground">
-                                    Informasi Kegiatan & Anggaran
-                                </h2>
-                                <p className="text-xs text-muted-foreground mt-0.5">
-                                    Rincian identitas kegiatan dan estimasi kebutuhan dana belanja
-                                </p>
+                                <h2 className="text-foreground text-sm font-semibold tracking-tight">Informasi Kegiatan & Anggaran</h2>
+                                <p className="text-muted-foreground mt-0.5 text-xs">Rincian identitas kegiatan dan estimasi kebutuhan dana belanja</p>
                             </div>
 
                             {/* Nama Kegiatan */}
@@ -132,9 +101,7 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                                     className="h-8 text-xs"
                                     required
                                 />
-                                {errors.nama_kegiatan && (
-                                    <p className="text-[11px] text-destructive">{errors.nama_kegiatan}</p>
-                                )}
+                                {errors.nama_kegiatan && <p className="text-destructive text-[11px]">{errors.nama_kegiatan}</p>}
                             </div>
 
                             {/* Jenis Anggaran */}
@@ -142,10 +109,7 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                                 <Label htmlFor="jenis_anggaran" className="text-xs font-medium">
                                     Mata Anggaran / Sumber Pendanaan <span className="text-destructive">*</span>
                                 </Label>
-                                <Select
-                                    value={data.jenis_anggaran}
-                                    onValueChange={(val) => setData('jenis_anggaran', val)}
-                                >
+                                <Select value={data.jenis_anggaran} onValueChange={(val) => setData('jenis_anggaran', val)}>
                                     <SelectTrigger id="jenis_anggaran" className="h-8 text-xs">
                                         <SelectValue placeholder="Pilih jenis anggaran" />
                                     </SelectTrigger>
@@ -157,9 +121,7 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.jenis_anggaran && (
-                                    <p className="text-[11px] text-destructive">{errors.jenis_anggaran}</p>
-                                )}
+                                {errors.jenis_anggaran && <p className="text-destructive text-[11px]">{errors.jenis_anggaran}</p>}
                             </div>
 
                             {/* Tanggal Pelaksanaan & Total Usulan */}
@@ -176,9 +138,7 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                                         className="h-8 text-xs"
                                         required
                                     />
-                                    {errors.tgl_pelaksanaan && (
-                                        <p className="text-[11px] text-destructive">{errors.tgl_pelaksanaan}</p>
-                                    )}
+                                    {errors.tgl_pelaksanaan && <p className="text-destructive text-[11px]">{errors.tgl_pelaksanaan}</p>}
                                 </div>
 
                                 <div className="space-y-1.5">
@@ -197,16 +157,10 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                                         required
                                     />
                                     <div className="flex items-center justify-between">
-                                        <p className="text-[11px] text-muted-foreground">
-                                            Konversi nominal:
-                                        </p>
-                                        <p className="text-[11px] font-semibold text-primary tabular-nums">
-                                            {formatCurrency(data.total_usulan)}
-                                        </p>
+                                        <p className="text-muted-foreground text-[11px]">Konversi nominal:</p>
+                                        <p className="text-primary text-[11px] font-semibold tabular-nums">{formatCurrency(data.total_usulan)}</p>
                                     </div>
-                                    {errors.total_usulan && (
-                                        <p className="text-[11px] text-destructive">{errors.total_usulan}</p>
-                                    )}
+                                    {errors.total_usulan && <p className="text-destructive text-[11px]">{errors.total_usulan}</p>}
                                 </div>
                             </div>
 
@@ -218,38 +172,29 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                                 <textarea
                                     id="uraian"
                                     rows={4}
-                                    className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-xs shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                    className="border-input placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded-md border bg-transparent px-3 py-2 text-xs shadow-xs transition-colors focus-visible:ring-1 focus-visible:outline-none"
                                     placeholder="Jelaskan latar belakang, tujuan kegiatan, jumlah peserta/narasumber, dan indikator output capaian..."
                                     value={data.uraian}
                                     onChange={(e) => setData('uraian', e.target.value)}
                                     required
                                 />
-                                {errors.uraian && (
-                                    <p className="text-[11px] text-destructive">{errors.uraian}</p>
-                                )}
+                                {errors.uraian && <p className="text-destructive text-[11px]">{errors.uraian}</p>}
                             </div>
                         </div>
 
                         {/* File Upload Card */}
-                        <div className="rounded-xl border bg-card p-5 shadow-2xs space-y-3">
+                        <div className="bg-card space-y-3 rounded-xl border p-5 shadow-2xs">
                             <div className="border-b pb-3">
-                                <h2 className="text-sm font-semibold tracking-tight text-foreground">
-                                    Lampiran Berkas Proposal & RAB
-                                </h2>
-                                <p className="text-xs text-muted-foreground mt-0.5">
-                                    Format berkas: .PDF, .DOCX, atau .ZIP (maksimal 10MB)
-                                </p>
+                                <h2 className="text-foreground text-sm font-semibold tracking-tight">Lampiran Berkas Proposal & RAB</h2>
+                                <p className="text-muted-foreground mt-0.5 text-xs">Format berkas: .PDF, .DOCX, atau .ZIP (maksimal 10MB)</p>
                             </div>
 
-                            <div className="rounded-xl border-2 border-dashed border-input p-6 text-center transition-colors hover:border-primary/50 bg-muted/20">
-                                <div className="mx-auto flex size-10 items-center justify-center rounded-lg border bg-card text-muted-foreground">
+                            <div className="border-input hover:border-primary/50 bg-muted/20 rounded-xl border-2 border-dashed p-6 text-center transition-colors">
+                                <div className="bg-card text-muted-foreground mx-auto flex size-10 items-center justify-center rounded-lg border">
                                     <FileUp className="size-5" />
                                 </div>
-                                <div className="mt-3 text-xs text-muted-foreground">
-                                    <label
-                                        htmlFor="file_proposal"
-                                        className="cursor-pointer font-medium text-primary hover:underline"
-                                    >
+                                <div className="text-muted-foreground mt-3 text-xs">
+                                    <label htmlFor="file_proposal" className="text-primary cursor-pointer font-medium hover:underline">
                                         Klik untuk memilih file dokumen
                                     </label>
                                     <span className="text-muted-foreground"> atau seret ke area ini</span>
@@ -265,23 +210,21 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                                         }}
                                     />
                                     {data.file_proposal ? (
-                                        <div className="mt-3 inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary">
+                                        <div className="border-primary/20 bg-primary/5 text-primary mt-3 inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium">
                                             <FileText className="size-3.5" />
                                             <span>{data.file_proposal.name}</span>
-                                            <span className="text-[10px] text-muted-foreground">
+                                            <span className="text-muted-foreground text-[10px]">
                                                 ({(data.file_proposal.size / 1024).toFixed(0)} KB)
                                             </span>
                                         </div>
                                     ) : (
-                                        <p className="mt-1 text-[11px] text-muted-foreground">
+                                        <p className="text-muted-foreground mt-1 text-[11px]">
                                             Pastikan rincian RAB di dalam proposal telah sesuai batas SBM ITK 2026
                                         </p>
                                     )}
                                 </div>
                             </div>
-                            {errors.file_proposal && (
-                                <p className="text-[11px] text-destructive">{errors.file_proposal}</p>
-                            )}
+                            {errors.file_proposal && <p className="text-destructive text-[11px]">{errors.file_proposal}</p>}
                         </div>
 
                         {/* Bottom Actions */}
@@ -299,50 +242,50 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                     {/* Right Info Column (1 col) */}
                     <div className="space-y-4">
                         {/* Status Flow Information Card */}
-                        <div className="rounded-xl border bg-linear-to-t from-primary/5 to-card p-4 shadow-2xs space-y-3">
+                        <div className="from-primary/5 to-card space-y-3 rounded-xl border bg-linear-to-t p-4 shadow-2xs">
                             <div className="flex items-center gap-2">
-                                <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-primary">
+                                <div className="bg-muted text-primary flex size-7 items-center justify-center rounded-lg border">
                                     <Sparkles className="size-3.5" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xs font-semibold text-foreground">Alur 8 Tahapan Dokumen</h3>
-                                    <p className="text-[11px] text-muted-foreground">SOP Verifikasi SAK ITK</p>
+                                    <h3 className="text-foreground text-xs font-semibold">Alur 8 Tahapan Dokumen</h3>
+                                    <p className="text-muted-foreground text-[11px]">SOP Verifikasi SAK ITK</p>
                                 </div>
                             </div>
 
-                            <p className="text-xs text-muted-foreground leading-relaxed">
+                            <p className="text-muted-foreground text-xs leading-relaxed">
                                 Dokumen yang Anda daftarkan otomatis memperoleh Nomor Registrasi dan masuk ke tahap:
                             </p>
 
-                            <div className="rounded-lg border bg-background/80 p-2.5 space-y-2">
+                            <div className="bg-background/80 space-y-2 rounded-lg border p-2.5">
                                 <div className="flex items-center gap-2">
                                     <span className="flex size-5 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
                                         1
                                     </span>
-                                    <span className="text-xs font-semibold text-foreground">Tahap 1: Diajukan</span>
+                                    <span className="text-foreground text-xs font-semibold">Tahap 1: Diajukan</span>
                                 </div>
-                                <p className="text-[11px] text-muted-foreground pl-7 leading-normal">
+                                <p className="text-muted-foreground pl-7 text-[11px] leading-normal">
                                     Diteruskan otomatis ke Subbag Keuangan Fakultas untuk verifikasi kelengkapan berkas & kesesuaian SBM.
                                 </p>
                             </div>
 
-                            <div className="pt-2 text-[11px] text-muted-foreground space-y-1.5">
-                                <p className="font-medium text-foreground">Tahapan Berikutnya:</p>
+                            <div className="text-muted-foreground space-y-1.5 pt-2 text-[11px]">
+                                <p className="text-foreground font-medium">Tahapan Berikutnya:</p>
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-1.5 text-[11px]">
-                                        <div className="size-1.5 rounded-full bg-muted-foreground" />
+                                        <div className="bg-muted-foreground size-1.5 rounded-full" />
                                         <span>2. Verifikasi Fakultas</span>
                                     </div>
                                     <div className="flex items-center gap-1.5 text-[11px]">
-                                        <div className="size-1.5 rounded-full bg-muted-foreground" />
+                                        <div className="bg-muted-foreground size-1.5 rounded-full" />
                                         <span>3. Perlu Revisi (bila ada koreksi)</span>
                                     </div>
                                     <div className="flex items-center gap-1.5 text-[11px]">
-                                        <div className="size-1.5 rounded-full bg-muted-foreground" />
+                                        <div className="bg-muted-foreground size-1.5 rounded-full" />
                                         <span>4. Menunggu SK Penetapan</span>
                                     </div>
                                     <div className="flex items-center gap-1.5 text-[11px]">
-                                        <div className="size-1.5 rounded-full bg-muted-foreground" />
+                                        <div className="bg-muted-foreground size-1.5 rounded-full" />
                                         <span>5-8. Disetujui s/d Dana Cair</span>
                                     </div>
                                 </div>
@@ -350,21 +293,19 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                         </div>
 
                         {/* Checklist Guidelines Card */}
-                        <div className="rounded-xl border bg-card p-4 shadow-2xs space-y-3">
-                            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                                Ketentuan Pengajuan
-                            </h3>
-                            <div className="space-y-2.5 text-xs text-muted-foreground">
+                        <div className="bg-card space-y-3 rounded-xl border p-4 shadow-2xs">
+                            <h3 className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">Ketentuan Pengajuan</h3>
+                            <div className="text-muted-foreground space-y-2.5 text-xs">
                                 <div className="flex items-start gap-2">
-                                    <CheckCircle2 className="size-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                                    <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-emerald-600" />
                                     <span>RAB wajib mengacu tarif Standar Biaya Masukan (SBM) ITK 2026.</span>
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <CheckCircle2 className="size-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                                    <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-emerald-600" />
                                     <span>Usulan diajukan selambat-lambatnya 14 hari sebelum tanggal kegiatan.</span>
                                 </div>
                                 <div className="flex items-start gap-2">
-                                    <CheckCircle2 className="size-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                                    <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-emerald-600" />
                                     <span>Lampirkan susunan kepanitiaan dan rundown jadwal yang jelas.</span>
                                 </div>
                             </div>

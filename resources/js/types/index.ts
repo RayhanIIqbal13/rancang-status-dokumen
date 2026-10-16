@@ -166,4 +166,3 @@ export interface PaginatedData<T> {
     to: number | null;
     total: number;
 }
-

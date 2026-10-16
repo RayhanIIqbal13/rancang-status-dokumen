@@ -1,21 +1,9 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, BuktiPengeluaran, PaginatedData } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import {
-    AlertCircle,
-    ArrowUpRight,
-    CheckCircle2,
-    FileCheck,
-    FileText,
-    Receipt,
-    Scale,
-    Search,
-    ShieldCheck,
-    X,
-} from 'lucide-react';
+import { AlertCircle, ArrowUpRight, FileText, Receipt, Scale, Search, ShieldCheck, X } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface BuktiIndexProps {
@@ -42,19 +30,11 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get(
-            route('bukti-pengeluaran.index'),
-            { search: searchTerm, status_validasi: filters.status_validasi },
-            { preserveState: true }
-        );
+        router.get(route('bukti-pengeluaran.index'), { search: searchTerm, status_validasi: filters.status_validasi }, { preserveState: true });
     };
 
     const handleStatusFilter = (val: string) => {
-        router.get(
-            route('bukti-pengeluaran.index'),
-            { search: filters.search, status_validasi: val },
-            { preserveState: true }
-        );
+        router.get(route('bukti-pengeluaran.index'), { search: filters.search, status_validasi: val }, { preserveState: true });
     };
 
     const formatCurrency = (val: number | string) => {
@@ -74,14 +54,12 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <div className="flex items-center gap-2">
-                            <h1 className="text-xl font-semibold tracking-tight text-foreground">
-                                Bukti Pengeluaran & Validasi SBM
-                            </h1>
-                            <span className="rounded-4xl border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                            <h1 className="text-foreground text-xl font-semibold tracking-tight">Bukti Pengeluaran & Validasi SBM</h1>
+                            <span className="border-primary/20 bg-primary/10 text-primary rounded-4xl border px-2 py-0.5 text-[11px] font-medium">
                                 SPJ Keuangan
                             </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-muted-foreground mt-0.5 text-xs">
                             Arsip kuitansi, faktur belanja, dan rekonsiliasi kesesuaian pagu terhadap Standar Biaya Masukan (SBM) ITK
                         </p>
                     </div>
@@ -99,85 +77,73 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
                 {/* Studio Admin KPI Stat Tiles */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {/* Total Bukti */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-muted-foreground">Total Bukti SPJ</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <span className="text-muted-foreground text-xs font-medium">Total Bukti SPJ</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <Receipt className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium tabular-nums text-foreground">
-                                {stats.total_bukti}
-                            </span>
-                            <span className="text-[11px] text-muted-foreground">kuitansi</span>
+                            <span className="text-foreground text-2xl font-medium tabular-nums">{stats.total_bukti}</span>
+                            <span className="text-muted-foreground text-[11px]">kuitansi</span>
                         </div>
                     </div>
 
                     {/* Total Nominal */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-muted-foreground">Total Nominal Bukti</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <span className="text-muted-foreground text-xs font-medium">Total Nominal Bukti</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <Scale className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-xl font-medium tabular-nums text-foreground">
-                                {formatCurrency(stats.total_nominal)}
-                            </span>
-                            <p className="text-[11px] text-muted-foreground mt-0.5">Seluruh kuitansi SPJ</p>
+                            <span className="text-foreground text-xl font-medium tabular-nums">{formatCurrency(stats.total_nominal)}</span>
+                            <p className="text-muted-foreground mt-0.5 text-[11px]">Seluruh kuitansi SPJ</p>
                         </div>
                     </div>
 
                     {/* Sesuai Standar SBM */}
-                    <div className="rounded-xl bg-linear-to-t from-emerald-500/10 to-card p-4 ring-1 ring-emerald-500/30 shadow-xs">
+                    <div className="to-card rounded-xl bg-linear-to-t from-emerald-500/10 p-4 shadow-xs ring-1 ring-emerald-500/30">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
-                                Sesuai Standar SBM
-                            </span>
+                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Sesuai Standar SBM</span>
                             <div className="flex size-7 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                                 <ShieldCheck className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium tabular-nums text-emerald-700 dark:text-emerald-400">
-                                {stats.sesuai_sbm}
-                            </span>
+                            <span className="text-2xl font-medium text-emerald-700 tabular-nums dark:text-emerald-400">{stats.sesuai_sbm}</span>
                             <span className="text-[11px] text-emerald-600/80">valid 100%</span>
                         </div>
                     </div>
 
                     {/* Perlu Verifikasi */}
-                    <div className="rounded-xl bg-linear-to-t from-amber-500/10 to-card p-4 ring-1 ring-amber-500/30 shadow-xs">
+                    <div className="to-card rounded-xl bg-linear-to-t from-amber-500/10 p-4 shadow-xs ring-1 ring-amber-500/30">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-amber-700 dark:text-amber-400">
-                                Perlu Verifikasi
-                            </span>
+                            <span className="text-xs font-medium text-amber-700 dark:text-amber-400">Perlu Verifikasi</span>
                             <div className="flex size-7 items-center justify-center rounded-lg border bg-amber-500/10 text-amber-600 dark:text-amber-400">
                                 <AlertCircle className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium tabular-nums text-amber-700 dark:text-amber-400">
-                                {stats.perlu_verifikasi}
-                            </span>
+                            <span className="text-2xl font-medium text-amber-700 tabular-nums dark:text-amber-400">{stats.perlu_verifikasi}</span>
                             <span className="text-[11px] text-amber-600/80">dalam review</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Main Card with Toolbar & Table */}
-                <div className="rounded-xl border bg-card shadow-2xs overflow-hidden">
+                <div className="bg-card overflow-hidden rounded-xl border shadow-2xs">
                     {/* Studio Admin Toolbar */}
-                    <div className="flex flex-col gap-3 p-4 border-b sm:flex-row sm:items-center sm:justify-between">
-                        <form onSubmit={handleSearch} className="relative flex-1 max-w-sm">
-                            <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                    <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
+                        <form onSubmit={handleSearch} className="relative max-w-sm flex-1">
+                            <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
                             <Input
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder="Cari jenis bukti, nomor dokumen, uraian..."
-                                className="h-8 pl-8 pr-8 text-xs"
+                                className="h-8 pr-8 pl-8 text-xs"
                             />
                             {searchTerm && (
                                 <button
@@ -187,10 +153,10 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
                                         router.get(
                                             route('bukti-pengeluaran.index'),
                                             { search: '', status_validasi: filters.status_validasi },
-                                            { preserveState: true }
+                                            { preserveState: true },
                                         );
                                     }}
-                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2"
                                 >
                                     <X className="size-3.5" />
                                 </button>
@@ -237,7 +203,7 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
                     {/* Table */}
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs">
-                            <thead className="border-b bg-muted/50 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                            <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
                                 <tr>
                                     <th className="px-4 py-3">Uraian Bukti SPJ</th>
                                     <th className="px-4 py-3">Terkait Dokumen Pengajuan</th>
@@ -250,24 +216,24 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
                             <tbody className="divide-y">
                                 {buktiList.data.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                                        <td colSpan={6} className="text-muted-foreground p-8 text-center">
                                             Tidak ada bukti pengeluaran yang sesuai filter.
                                         </td>
                                     </tr>
                                 ) : (
                                     buktiList.data.map((b) => (
                                         <tr key={b.id} className="hover:bg-muted/30 transition-colors">
-                                            <td className="px-4 py-3.5 font-medium text-foreground max-w-xs">
+                                            <td className="text-foreground max-w-xs px-4 py-3.5 font-medium">
                                                 <div className="line-clamp-2">{b.jenis_bukti}</div>
                                             </td>
 
                                             <td className="px-4 py-3.5">
                                                 {b.dokumen_pengajuan ? (
                                                     <div className="space-y-0.5">
-                                                        <span className="font-mono text-xs font-semibold text-primary">
+                                                        <span className="text-primary font-mono text-xs font-semibold">
                                                             {b.dokumen_pengajuan.nomor_pengajuan}
                                                         </span>
-                                                        <p className="text-[11px] text-muted-foreground truncate max-w-xs">
+                                                        <p className="text-muted-foreground max-w-xs truncate text-[11px]">
                                                             {b.dokumen_pengajuan.nama_kegiatan}
                                                         </p>
                                                     </div>
@@ -276,19 +242,15 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
                                                 )}
                                             </td>
 
-                                            <td className="px-4 py-3.5 text-right font-medium tabular-nums text-foreground">
+                                            <td className="text-foreground px-4 py-3.5 text-right font-medium tabular-nums">
                                                 {formatCurrency(b.nominal)}
                                             </td>
 
                                             <td className="px-4 py-3.5">
                                                 {b.standar_biaya ? (
-                                                    <div className="text-[11px] space-y-0.5">
-                                                        <p className="font-medium text-foreground">
-                                                            {b.standar_biaya.uraian_belanja}
-                                                        </p>
-                                                        <p className="text-muted-foreground">
-                                                            Maks: {formatCurrency(b.standar_biaya.batas_tarif)}
-                                                        </p>
+                                                    <div className="space-y-0.5 text-[11px]">
+                                                        <p className="text-foreground font-medium">{b.standar_biaya.uraian_belanja}</p>
+                                                        <p className="text-muted-foreground">Maks: {formatCurrency(b.standar_biaya.batas_tarif)}</p>
                                                     </div>
                                                 ) : (
                                                     <span className="text-muted-foreground italic">-</span>
@@ -297,14 +259,14 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
 
                                             <td className="px-4 py-3.5">
                                                 <div className="flex flex-wrap items-center gap-1.5">
-                                                    <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                                    <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-medium">
                                                         {b.status_fisik}
                                                     </span>
                                                     <span
                                                         className={`rounded-4xl px-2 py-0.5 text-[10px] font-medium ${
                                                             b.status_validasi_sbm === 'Sesuai SBM'
-                                                                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-300'
-                                                                : 'bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300'
+                                                                ? 'border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
+                                                                : 'border border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
                                                         }`}
                                                     >
                                                         {b.status_validasi_sbm}
@@ -330,7 +292,7 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
 
                     {/* Pagination */}
                     {buktiList.links && buktiList.links.length > 3 && (
-                        <div className="flex items-center justify-between p-3 border-t bg-muted/20 text-xs">
+                        <div className="bg-muted/20 flex items-center justify-between border-t p-3 text-xs">
                             <span className="text-muted-foreground">
                                 Halaman {buktiList.current_page} dari {buktiList.last_page}
                             </span>
@@ -345,10 +307,7 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
                                         className="h-7 min-w-7 px-2 text-xs"
                                     >
                                         {link.url ? (
-                                            <Link
-                                                href={link.url}
-                                                dangerouslySetInnerHTML={{ __html: link.label }}
-                                            />
+                                            <Link href={link.url} dangerouslySetInnerHTML={{ __html: link.label }} />
                                         ) : (
                                             <span dangerouslySetInnerHTML={{ __html: link.label }} />
                                         )}

@@ -1,22 +1,9 @@
 import { StatusBadge } from '@/components/dokumen/status-badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem, DokumenPengajuan, DocumentStatusType } from '@/types';
+import { BreadcrumbItem, DocumentStatusType, DokumenPengajuan } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import {
-    Activity,
-    ArrowUpRight,
-    BarChart3,
-    CheckCircle2,
-    DollarSign,
-    Layers,
-    Percent,
-    PieChart,
-    Printer,
-    Wallet,
-} from 'lucide-react';
-import React from 'react';
+import { Activity, ArrowUpRight, CheckCircle2, DollarSign, Layers, Percent, PieChart, Printer, Wallet } from 'lucide-react';
 
 interface AnggaranByType {
     jenis_anggaran: string;
@@ -49,12 +36,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Laporan Keuangan', href: '/laporan' },
 ];
 
-export default function LaporanIndex({
-    summary,
-    anggaranByType,
-    statusDistribution,
-    recentDisbursed,
-}: LaporanIndexProps) {
+export default function LaporanIndex({ summary, anggaranByType, statusDistribution, recentDisbursed }: LaporanIndexProps) {
     const formatCurrency = (val: string | number) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -76,25 +58,18 @@ export default function LaporanIndex({
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between print:hidden">
                     <div>
                         <div className="flex items-center gap-2">
-                            <h1 className="text-xl font-semibold tracking-tight text-foreground">
-                                Laporan Realisasi & Pelacakan Dokumen
-                            </h1>
-                            <span className="rounded-4xl border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                            <h1 className="text-foreground text-xl font-semibold tracking-tight">Laporan Realisasi & Pelacakan Dokumen</h1>
+                            <span className="border-primary/20 bg-primary/10 text-primary rounded-4xl border px-2 py-0.5 text-[11px] font-medium">
                                 TA 2026
                             </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-muted-foreground mt-0.5 text-xs">
                             Ringkasan eksekutif alokasi pagu usulan, serapan SP2D, dan sebaran 8 tahapan alur berkas
                         </p>
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handlePrint}
-                            className="h-8 gap-1.5 text-xs shadow-xs"
-                        >
+                        <Button variant="outline" size="sm" onClick={handlePrint} className="h-8 gap-1.5 text-xs shadow-xs">
                             <Printer className="size-3.5" />
                             <span>Cetak Laporan</span>
                         </Button>
@@ -102,76 +77,62 @@ export default function LaporanIndex({
                 </div>
 
                 {/* Print Title Header (Visible only when printing) */}
-                <div className="hidden print:block border-b pb-4 mb-4">
+                <div className="mb-4 hidden border-b pb-4 print:block">
                     <h2 className="text-lg font-bold">INSTITUT TEKNOLOGI KALIMANTAN</h2>
-                    <h3 className="text-sm font-semibold text-muted-foreground">
+                    <h3 className="text-muted-foreground text-sm font-semibold">
                         Sistem Informasi Layanan Keuangan (SAK ITK) — Laporan Realisasi & Status Dokumen
                     </h3>
-                    <p className="text-[10px] text-muted-foreground mt-1">
-                        Dicetak pada: {new Date().toLocaleString('id-ID')}
-                    </p>
+                    <p className="text-muted-foreground mt-1 text-[10px]">Dicetak pada: {new Date().toLocaleString('id-ID')}</p>
                 </div>
 
                 {/* Studio Admin KPI Stat Tiles */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {/* Total Usulan */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-muted-foreground">Total Pagu Usulan</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <span className="text-muted-foreground text-xs font-medium">Total Pagu Usulan</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <Wallet className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-xl font-medium tabular-nums text-foreground">
-                                {formatCurrency(summary.total_usulan)}
-                            </span>
-                            <p className="text-[11px] text-muted-foreground mt-0.5">
-                                Dari {summary.total_dokumen} berkas kegiatan
-                            </p>
+                            <span className="text-foreground text-xl font-medium tabular-nums">{formatCurrency(summary.total_usulan)}</span>
+                            <p className="text-muted-foreground mt-0.5 text-[11px]">Dari {summary.total_dokumen} berkas kegiatan</p>
                         </div>
                     </div>
 
                     {/* Total Realisasi Cair */}
-                    <div className="rounded-xl bg-linear-to-t from-emerald-500/10 to-card p-4 ring-1 ring-emerald-500/30 shadow-xs">
+                    <div className="to-card rounded-xl bg-linear-to-t from-emerald-500/10 p-4 shadow-xs ring-1 ring-emerald-500/30">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
-                                Total Realisasi Cair
-                            </span>
+                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Total Realisasi Cair</span>
                             <div className="flex size-7 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                                 <DollarSign className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-xl font-medium tabular-nums text-emerald-700 dark:text-emerald-400">
+                            <span className="text-xl font-medium text-emerald-700 tabular-nums dark:text-emerald-400">
                                 {formatCurrency(summary.total_realisasi)}
                             </span>
-                            <p className="text-[11px] text-emerald-600/80 mt-0.5">
-                                Status Dana Cair (SP2D Selesai)
-                            </p>
+                            <p className="mt-0.5 text-[11px] text-emerald-600/80">Status Dana Cair (SP2D Selesai)</p>
                         </div>
                     </div>
 
                     {/* Daya Serap */}
-                    <div className="rounded-xl bg-linear-to-t from-blue-500/10 to-card p-4 ring-1 ring-blue-500/30 shadow-xs">
+                    <div className="to-card rounded-xl bg-linear-to-t from-blue-500/10 p-4 shadow-xs ring-1 ring-blue-500/30">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
-                                Daya Serap Pagu
-                            </span>
+                            <span className="text-xs font-medium text-blue-700 dark:text-blue-400">Daya Serap Pagu</span>
                             <div className="flex size-7 items-center justify-center rounded-lg border bg-blue-500/10 text-blue-600 dark:text-blue-400">
                                 <Percent className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
                             <div className="flex items-baseline gap-1.5">
-                                <span className="text-2xl font-medium tabular-nums text-blue-700 dark:text-blue-400">
-                                    {summary.serapan_persen}%
-                                </span>
-                                <span className="text-[11px] text-muted-foreground">terserap</span>
+                                <span className="text-2xl font-medium text-blue-700 tabular-nums dark:text-blue-400">{summary.serapan_persen}%</span>
+                                <span className="text-muted-foreground text-[11px]">terserap</span>
                             </div>
-                            <div className="w-full bg-muted/60 rounded-full h-1 mt-2 overflow-hidden">
+                            <div className="bg-muted/60 mt-2 h-1 w-full overflow-hidden rounded-full">
                                 <div
-                                    className="bg-blue-600 dark:bg-blue-400 h-1 rounded-full transition-all duration-500"
+                                    className="h-1 rounded-full bg-blue-600 transition-all duration-500 dark:bg-blue-400"
                                     style={{ width: `${Math.min(summary.serapan_persen, 100)}%` }}
                                 />
                             </div>
@@ -179,36 +140,30 @@ export default function LaporanIndex({
                     </div>
 
                     {/* Total Dokumen */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-muted-foreground">Total Dokumen</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <span className="text-muted-foreground text-xs font-medium">Total Dokumen</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <Layers className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium tabular-nums text-foreground">
-                                {summary.total_dokumen}
-                            </span>
-                            <span className="text-[11px] text-muted-foreground">berkas aktif</span>
+                            <span className="text-foreground text-2xl font-medium tabular-nums">{summary.total_dokumen}</span>
+                            <span className="text-muted-foreground text-[11px]">berkas aktif</span>
                         </div>
                     </div>
                 </div>
 
                 {/* 2-Column Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
                     {/* Status Distribution (7 cols) */}
-                    <div className="lg:col-span-7 rounded-xl border bg-card p-5 shadow-2xs space-y-4">
+                    <div className="bg-card space-y-4 rounded-xl border p-5 shadow-2xs lg:col-span-7">
                         <div className="flex items-center justify-between border-b pb-3">
                             <div>
-                                <h2 className="text-sm font-semibold tracking-tight text-foreground">
-                                    Distribusi Berkas 8 Tahapan Alur
-                                </h2>
-                                <p className="text-xs text-muted-foreground mt-0.5">
-                                    Sebaran dokumen pada alur verifikasi & pelacakan resmi
-                                </p>
+                                <h2 className="text-foreground text-sm font-semibold tracking-tight">Distribusi Berkas 8 Tahapan Alur</h2>
+                                <p className="text-muted-foreground mt-0.5 text-xs">Sebaran dokumen pada alur verifikasi & pelacakan resmi</p>
                             </div>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <Activity className="size-3.5" />
                             </div>
                         </div>
@@ -218,23 +173,15 @@ export default function LaporanIndex({
                                 <div key={item.status} className="space-y-1.5">
                                     <div className="flex items-center justify-between text-xs">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-mono text-[10px] text-muted-foreground w-4">
-                                                {idx + 1}.
-                                            </span>
-                                            <span className="font-medium text-foreground">
-                                                {item.label}
-                                            </span>
+                                            <span className="text-muted-foreground w-4 font-mono text-[10px]">{idx + 1}.</span>
+                                            <span className="text-foreground font-medium">{item.label}</span>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <span className="font-medium text-foreground tabular-nums">
-                                                {item.count} berkas
-                                            </span>
-                                            <span className="text-muted-foreground w-10 text-right tabular-nums">
-                                                {item.percentage}%
-                                            </span>
+                                            <span className="text-foreground font-medium tabular-nums">{item.count} berkas</span>
+                                            <span className="text-muted-foreground w-10 text-right tabular-nums">{item.percentage}%</span>
                                         </div>
                                     </div>
-                                    <div className="w-full bg-muted/60 rounded-full h-1.5 overflow-hidden">
+                                    <div className="bg-muted/60 h-1.5 w-full overflow-hidden rounded-full">
                                         <div
                                             className={`h-1.5 rounded-full transition-all duration-300 ${
                                                 item.status === 'Dana Cair'
@@ -256,59 +203,43 @@ export default function LaporanIndex({
                     </div>
 
                     {/* Breakdown by Budget Type (5 cols) */}
-                    <div className="lg:col-span-5 rounded-xl border bg-card p-5 shadow-2xs space-y-4">
+                    <div className="bg-card space-y-4 rounded-xl border p-5 shadow-2xs lg:col-span-5">
                         <div className="flex items-center justify-between border-b pb-3">
                             <div>
-                                <h2 className="text-sm font-semibold tracking-tight text-foreground">
-                                    Usulan Menurut Sumber Anggaran
-                                </h2>
-                                <p className="text-xs text-muted-foreground mt-0.5">
-                                    Proporsi alokasi pagu menurut klaster belanja
-                                </p>
+                                <h2 className="text-foreground text-sm font-semibold tracking-tight">Usulan Menurut Sumber Anggaran</h2>
+                                <p className="text-muted-foreground mt-0.5 text-xs">Proporsi alokasi pagu menurut klaster belanja</p>
                             </div>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <PieChart className="size-3.5" />
                             </div>
                         </div>
 
                         <div className="space-y-3 pt-1">
                             {anggaranByType.length === 0 ? (
-                                <p className="text-xs text-muted-foreground text-center py-8">
-                                    Belum ada data anggaran tercatat.
-                                </p>
+                                <p className="text-muted-foreground py-8 text-center text-xs">Belum ada data anggaran tercatat.</p>
                             ) : (
                                 anggaranByType.map((item) => {
                                     const percentOfTotal =
-                                        summary.total_usulan > 0
-                                            ? Math.round((Number(item.total_usulan) / summary.total_usulan) * 100)
-                                            : 0;
+                                        summary.total_usulan > 0 ? Math.round((Number(item.total_usulan) / summary.total_usulan) * 100) : 0;
 
                                     return (
-                                        <div
-                                            key={item.jenis_anggaran}
-                                            className="rounded-lg border bg-muted/20 p-3 space-y-1.5"
-                                        >
+                                        <div key={item.jenis_anggaran} className="bg-muted/20 space-y-1.5 rounded-lg border p-3">
                                             <div className="flex items-center justify-between">
-                                                <span className="font-medium text-xs text-foreground">
-                                                    {item.jenis_anggaran}
-                                                </span>
-                                                <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                                <span className="text-foreground text-xs font-medium">{item.jenis_anggaran}</span>
+                                                <span className="bg-muted text-muted-foreground rounded-md px-1.5 py-0.5 text-[10px] font-medium">
                                                     {item.count} usulan
                                                 </span>
                                             </div>
                                             <div className="flex items-baseline justify-between text-xs">
-                                                <span className="text-sm font-semibold tabular-nums text-foreground">
+                                                <span className="text-foreground text-sm font-semibold tabular-nums">
                                                     {formatCurrency(item.total_usulan)}
                                                 </span>
-                                                <span className="text-[11px] text-muted-foreground font-medium tabular-nums">
+                                                <span className="text-muted-foreground text-[11px] font-medium tabular-nums">
                                                     {percentOfTotal}% dari total
                                                 </span>
                                             </div>
-                                            <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
-                                                <div
-                                                    className="bg-primary h-1 rounded-full"
-                                                    style={{ width: `${percentOfTotal}%` }}
-                                                />
+                                            <div className="bg-muted h-1 w-full overflow-hidden rounded-full">
+                                                <div className="bg-primary h-1 rounded-full" style={{ width: `${percentOfTotal}%` }} />
                                             </div>
                                         </div>
                                     );
@@ -319,13 +250,11 @@ export default function LaporanIndex({
                 </div>
 
                 {/* Recent Completed Disbursements Table Card */}
-                <div className="rounded-xl border bg-card shadow-2xs overflow-hidden">
-                    <div className="flex items-center justify-between p-4 border-b">
+                <div className="bg-card overflow-hidden rounded-xl border shadow-2xs">
+                    <div className="flex items-center justify-between border-b p-4">
                         <div>
-                            <h2 className="text-sm font-semibold tracking-tight text-foreground">
-                                Realisasi Pencairan Terakhir (Siklus Selesai)
-                            </h2>
-                            <p className="text-xs text-muted-foreground mt-0.5">
+                            <h2 className="text-foreground text-sm font-semibold tracking-tight">Realisasi Pencairan Terakhir (Siklus Selesai)</h2>
+                            <p className="text-muted-foreground mt-0.5 text-xs">
                                 Dokumen yang telah menyelesaikan verifikasi SPJ dan pencairan dana di aplikasi SAKTI
                             </p>
                         </div>
@@ -336,7 +265,7 @@ export default function LaporanIndex({
 
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs">
-                            <thead className="border-b bg-muted/50 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                            <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
                                 <tr>
                                     <th className="px-4 py-3">Nama Usulan Kegiatan</th>
                                     <th className="px-4 py-3">Pengusul / Unit</th>
@@ -350,36 +279,32 @@ export default function LaporanIndex({
                             <tbody className="divide-y">
                                 {recentDisbursed.length === 0 ? (
                                     <tr>
-                                        <td colSpan={7} className="px-4 py-8 text-center text-xs text-muted-foreground">
+                                        <td colSpan={7} className="text-muted-foreground px-4 py-8 text-center text-xs">
                                             Belum ada dokumen yang mencapai status pencairan dana.
                                         </td>
                                     </tr>
                                 ) : (
                                     recentDisbursed.map((doc) => (
                                         <tr key={doc.id} className="hover:bg-muted/30 transition-colors">
-                                            <td className="px-4 py-3.5 font-medium text-foreground max-w-xs">
+                                            <td className="text-foreground max-w-xs px-4 py-3.5 font-medium">
                                                 <p className="truncate">{doc.nama_kegiatan}</p>
-                                                <span className="font-mono text-[11px] text-primary">
-                                                    {doc.nomor_pengajuan}
-                                                </span>
+                                                <span className="text-primary font-mono text-[11px]">{doc.nomor_pengajuan}</span>
                                             </td>
 
-                                            <td className="px-4 py-3.5 text-xs text-muted-foreground">
-                                                <p className="font-medium text-foreground">{doc.user?.name}</p>
+                                            <td className="text-muted-foreground px-4 py-3.5 text-xs">
+                                                <p className="text-foreground font-medium">{doc.user?.name}</p>
                                                 <p className="text-[11px]">{doc.user?.unit || '-'}</p>
                                             </td>
 
-                                            <td className="px-4 py-3.5 text-xs text-muted-foreground">
-                                                <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">
-                                                    {doc.jenis_anggaran}
-                                                </span>
+                                            <td className="text-muted-foreground px-4 py-3.5 text-xs">
+                                                <span className="bg-muted rounded px-1.5 py-0.5 text-[10px] font-medium">{doc.jenis_anggaran}</span>
                                             </td>
 
-                                            <td className="px-4 py-3.5 text-right font-medium tabular-nums text-foreground">
+                                            <td className="text-foreground px-4 py-3.5 text-right font-medium tabular-nums">
                                                 {formatCurrency(doc.total_usulan)}
                                             </td>
 
-                                            <td className="px-4 py-3.5 text-right font-semibold tabular-nums text-emerald-700 dark:text-emerald-400">
+                                            <td className="px-4 py-3.5 text-right font-semibold text-emerald-700 tabular-nums dark:text-emerald-400">
                                                 {doc.realisasi_anggaran?.total_realisasi
                                                     ? formatCurrency(doc.realisasi_anggaran.total_realisasi)
                                                     : formatCurrency(doc.total_usulan)}

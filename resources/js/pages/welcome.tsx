@@ -1,26 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import {
-    Activity,
-    ArrowRight,
-    Building2,
-    CheckCircle2,
-    ChevronRight,
-    Coins,
-    FileCheck,
-    FileSpreadsheet,
-    FileText,
-    Landmark,
-    Layers,
-    Lock,
-    Receipt,
-    Shield,
-    Sparkles,
-    UserCheck,
-    Users,
-} from 'lucide-react';
-import React from 'react';
+import { Activity, ArrowRight, Building2, ChevronRight, FileCheck, Landmark, Shield, Sparkles, UserCheck } from 'lucide-react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -37,20 +18,18 @@ export default function Welcome() {
     ];
 
     return (
-        <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
+        <div className="bg-background text-foreground selection:bg-primary selection:text-primary-foreground min-h-screen antialiased">
             <Head title="SAK ITK — Sistem Layanan Keuangan & Pelacakan Dokumen" />
 
             {/* Studio Admin Header Navigation */}
-            <header className="sticky top-0 z-50 flex h-12 w-full items-center justify-between border-b bg-background/80 px-4 md:px-8 backdrop-blur-md">
+            <header className="bg-background/80 sticky top-0 z-50 flex h-12 w-full items-center justify-between border-b px-4 backdrop-blur-md md:px-8">
                 <div className="flex items-center gap-3">
-                    <div className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
+                    <div className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-lg shadow-xs">
                         <Building2 className="size-4" />
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="font-semibold text-xs tracking-tight text-foreground">SAK ITK</span>
-                        <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-                            Studio Admin
-                        </span>
+                        <span className="text-foreground text-xs font-semibold tracking-tight">SAK ITK</span>
+                        <span className="bg-muted text-muted-foreground rounded-md px-1.5 py-0.5 text-[10px] font-medium">Studio Admin</span>
                     </div>
                 </div>
 
@@ -80,18 +59,19 @@ export default function Welcome() {
 
             {/* Hero Section */}
             <main className="mx-auto flex max-w-6xl flex-col gap-10 p-6 md:p-12">
-                <div className="flex flex-col items-center text-center space-y-4 pt-4 md:pt-8">
-                    <div className="inline-flex items-center gap-2 rounded-4xl border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary shadow-xs">
+                <div className="flex flex-col items-center space-y-4 pt-4 text-center md:pt-8">
+                    <div className="border-primary/20 bg-primary/5 text-primary inline-flex items-center gap-2 rounded-4xl border px-3 py-1 text-xs font-medium shadow-xs">
                         <Sparkles className="size-3.5" />
                         <span>Sistem Informasi Layanan Keuangan ITK • TA 2026</span>
                     </div>
 
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl max-w-3xl leading-tight">
+                    <h1 className="text-foreground max-w-3xl text-3xl leading-tight font-bold tracking-tight sm:text-5xl">
                         Pelacakan Status Dokumen & Realisasi Anggaran SBM
                     </h1>
 
-                    <p className="max-w-2xl text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                        Platform tata kelola dokumen usulan anggaran, verifikasi kepatuhan Standar Biaya Masukan (SBM), rekonsiliasi SPJ, dan pencatatan pencairan modul SAKTI secara transparan dan akuntabel.
+                    <p className="text-muted-foreground max-w-2xl text-xs leading-relaxed sm:text-sm">
+                        Platform tata kelola dokumen usulan anggaran, verifikasi kepatuhan Standar Biaya Masukan (SBM), rekonsiliasi SPJ, dan
+                        pencatatan pencairan modul SAKTI secara transparan dan akuntabel.
                     </p>
 
                     <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -121,41 +101,33 @@ export default function Welcome() {
                 </div>
 
                 {/* 8-Stage Interactive Visual Flow */}
-                <div className="rounded-xl border bg-card p-6 shadow-2xs space-y-4">
-                    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
+                <div className="bg-card space-y-4 rounded-xl border p-6 shadow-2xs">
+                    <div className="flex flex-col gap-1 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h2 className="text-sm font-semibold tracking-tight text-foreground">
-                                Alur 8 Tahapan Siklus Dokumen Pengajuan
-                            </h2>
-                            <p className="text-xs text-muted-foreground mt-0.5">
+                            <h2 className="text-foreground text-sm font-semibold tracking-tight">Alur 8 Tahapan Siklus Dokumen Pengajuan</h2>
+                            <p className="text-muted-foreground mt-0.5 text-xs">
                                 Standar Operasional Prosedur (SOP) alur pengusulan kegiatan hingga pencairan dana
                             </p>
                         </div>
-                        <span className="rounded-4xl border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary self-start sm:self-auto">
+                        <span className="border-primary/20 bg-primary/10 text-primary self-start rounded-4xl border px-2 py-0.5 text-[10px] font-medium sm:self-auto">
                             8 Tahap Terintegrasi
                         </span>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8 pt-2">
+                    <div className="grid grid-cols-2 gap-2 pt-2 sm:grid-cols-4 lg:grid-cols-8">
                         {stages.map((st) => (
                             <div
                                 key={st.num}
-                                className="group relative rounded-xl border bg-linear-to-t from-primary/5 to-card p-3 shadow-2xs transition-all hover:border-primary/50 hover:shadow-xs"
+                                className="group from-primary/5 to-card hover:border-primary/50 relative rounded-xl border bg-linear-to-t p-3 shadow-2xs transition-all hover:shadow-xs"
                             >
                                 <div className="flex items-center justify-between">
-                                    <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
+                                    <span className="bg-primary/10 text-primary flex size-5 items-center justify-center rounded-full text-[10px] font-bold">
                                         {st.num}
                                     </span>
-                                    <span className="text-[9px] font-medium text-muted-foreground">
-                                        {st.role}
-                                    </span>
+                                    <span className="text-muted-foreground text-[9px] font-medium">{st.role}</span>
                                 </div>
-                                <h3 className="mt-2 text-xs font-semibold text-foreground leading-tight line-clamp-1">
-                                    {st.title}
-                                </h3>
-                                <p className="mt-1 text-[10px] text-muted-foreground leading-normal line-clamp-2">
-                                    {st.desc}
-                                </p>
+                                <h3 className="text-foreground mt-2 line-clamp-1 text-xs leading-tight font-semibold">{st.title}</h3>
+                                <p className="text-muted-foreground mt-1 line-clamp-2 text-[10px] leading-normal">{st.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -164,57 +136,58 @@ export default function Welcome() {
                 {/* Core Feature Matrix (Studio Admin Style) */}
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {/* Card 1 */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-5 ring-1 ring-foreground/10 shadow-xs space-y-2">
-                        <div className="flex size-8 items-center justify-center rounded-lg border bg-muted text-primary">
+                    <div className="from-primary/5 to-card ring-foreground/10 space-y-2 rounded-xl bg-linear-to-t p-5 shadow-xs ring-1">
+                        <div className="bg-muted text-primary flex size-8 items-center justify-center rounded-lg border">
                             <Activity className="size-4" />
                         </div>
-                        <h3 className="text-sm font-semibold text-foreground">Pelacakan Status Real-Time</h3>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
+                        <h3 className="text-foreground text-sm font-semibold">Pelacakan Status Real-Time</h3>
+                        <p className="text-muted-foreground text-xs leading-relaxed">
                             Pantau riwayat mutasi berkas dan disposisi posisi fisik dokumen pada setiap tahapan alur secara transparan.
                         </p>
                     </div>
 
                     {/* Card 2 */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-5 ring-1 ring-foreground/10 shadow-xs space-y-2">
-                        <div className="flex size-8 items-center justify-center rounded-lg border bg-muted text-primary">
+                    <div className="from-primary/5 to-card ring-foreground/10 space-y-2 rounded-xl bg-linear-to-t p-5 shadow-xs ring-1">
+                        <div className="bg-muted text-primary flex size-8 items-center justify-center rounded-lg border">
                             <FileCheck className="size-4" />
                         </div>
-                        <h3 className="text-sm font-semibold text-foreground">Validasi Kepatuhan SBM</h3>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
+                        <h3 className="text-foreground text-sm font-semibold">Validasi Kepatuhan SBM</h3>
+                        <p className="text-muted-foreground text-xs leading-relaxed">
                             Pemeriksaan otomatis batas plafon belanja dan honorarium mengacu Standar Biaya Masukan ITK Tahun 2026.
                         </p>
                     </div>
 
                     {/* Card 3 */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-5 ring-1 ring-foreground/10 shadow-xs space-y-2">
-                        <div className="flex size-8 items-center justify-center rounded-lg border bg-muted text-primary">
+                    <div className="from-primary/5 to-card ring-foreground/10 space-y-2 rounded-xl bg-linear-to-t p-5 shadow-xs ring-1">
+                        <div className="bg-muted text-primary flex size-8 items-center justify-center rounded-lg border">
                             <Landmark className="size-4" />
                         </div>
-                        <h3 className="text-sm font-semibold text-foreground">Sinkronisasi SP2D SAKTI</h3>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
+                        <h3 className="text-foreground text-sm font-semibold">Sinkronisasi SP2D SAKTI</h3>
+                        <p className="text-muted-foreground text-xs leading-relaxed">
                             Pencatatan realisasi dana cair dan pelaporan pertanggungjawaban SPJ yang terintegrasi dengan modul keuangan.
                         </p>
                     </div>
 
                     {/* Card 4 */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-5 ring-1 ring-foreground/10 shadow-xs space-y-2">
-                        <div className="flex size-8 items-center justify-center rounded-lg border bg-muted text-primary">
+                    <div className="from-primary/5 to-card ring-foreground/10 space-y-2 rounded-xl bg-linear-to-t p-5 shadow-xs ring-1">
+                        <div className="bg-muted text-primary flex size-8 items-center justify-center rounded-lg border">
                             <Shield className="size-4" />
                         </div>
-                        <h3 className="text-sm font-semibold text-foreground">Akses Multi-Role Terkendali</h3>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
+                        <h3 className="text-foreground text-sm font-semibold">Akses Multi-Role Terkendali</h3>
+                        <p className="text-muted-foreground text-xs leading-relaxed">
                             Pembagian wewenang yang aman untuk Dosen/Pengusul, Tim Verifikator Keuangan, Pimpinan, dan Administrator.
                         </p>
                     </div>
                 </div>
 
                 {/* Quick Demo Accounts Banner */}
-                <div className="rounded-xl border bg-muted/30 p-5 shadow-2xs">
+                <div className="bg-muted/30 rounded-xl border p-5 shadow-2xs">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h3 className="text-sm font-semibold text-foreground">Siap Mencoba Sistem?</h3>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                                Gunakan salah satu akun demo yang telah disediakan (kata sandi: <code className="font-mono text-primary font-bold">password</code>)
+                            <h3 className="text-foreground text-sm font-semibold">Siap Mencoba Sistem?</h3>
+                            <p className="text-muted-foreground mt-0.5 text-xs">
+                                Gunakan salah satu akun demo yang telah disediakan (kata sandi:{' '}
+                                <code className="text-primary font-mono font-bold">password</code>)
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -230,7 +203,7 @@ export default function Welcome() {
             </main>
 
             {/* Footer */}
-            <footer className="mt-12 border-t py-6 text-center text-xs text-muted-foreground">
+            <footer className="text-muted-foreground mt-12 border-t py-6 text-center text-xs">
                 <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
                     <p>© 2026 Institut Teknologi Kalimantan • Sistem Informasi Layanan Keuangan (SAK ITK)</p>
                     <p className="text-[11px]">Studio Admin Design System</p>

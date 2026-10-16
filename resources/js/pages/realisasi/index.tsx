@@ -1,45 +1,13 @@
 import { StatusBadge } from '@/components/dokumen/status-badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DokumenPengajuan, PaginatedData, User } from '@/types';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import {
-    ArrowUpRight,
-    Building2,
-    Calendar,
-    CheckCircle2,
-    DollarSign,
-    Edit3,
-    FileSpreadsheet,
-    FileText,
-    Landmark,
-    Percent,
-    PieChart,
-    Plus,
-    Receipt,
-    Search,
-    TrendingUp,
-    Wallet,
-    X,
-} from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, DollarSign, Edit3, FileSpreadsheet, Landmark, Search, TrendingUp, Wallet, X } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface RealisasiIndexProps {
@@ -60,10 +28,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function RealisasiIndex({ documents, filters, stats }: RealisasiIndexProps) {
     const { auth } = usePage<{ auth: { user: User } }>().props;
-    const isStaffOrLeader =
-        auth.user.role === 'staf_keuangan' ||
-        auth.user.role === 'admin' ||
-        auth.user.role === 'pimpinan';
+    const isStaffOrLeader = auth.user.role === 'staf_keuangan' || auth.user.role === 'admin' || auth.user.role === 'pimpinan';
     const [searchTerm, setSearchTerm] = useState(filters.search || '');
     const [selectedDoc, setSelectedDoc] = useState<DokumenPengajuan | null>(null);
 
@@ -126,14 +91,12 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <div className="flex items-center gap-2">
-                            <h1 className="text-xl font-semibold tracking-tight text-foreground">
-                                Realisasi Anggaran & Modul SAKTI
-                            </h1>
-                            <span className="rounded-4xl border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                            <h1 className="text-foreground text-xl font-semibold tracking-tight">Realisasi Anggaran & Modul SAKTI</h1>
+                            <span className="border-primary/20 bg-primary/10 text-primary rounded-4xl border px-2 py-0.5 text-[11px] font-medium">
                                 SP2D & Realisasi
                             </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-muted-foreground mt-0.5 text-xs">
                             Pencatatan realisasi dana SP2D Kemenkeu, pemantauan sisa pagu, dan status kelengkapan SPJ
                         </p>
                     </div>
@@ -151,85 +114,75 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                 {/* Studio Admin KPI Stat Tiles */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {/* Total Usulan */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-muted-foreground">Total Pagu Usulan</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <span className="text-muted-foreground text-xs font-medium">Total Pagu Usulan</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <Wallet className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-xl font-medium tabular-nums text-foreground">
-                                {formatCurrency(stats.total_usulan)}
-                            </span>
-                            <p className="text-[11px] text-muted-foreground mt-0.5">Total komitmen usulan</p>
+                            <span className="text-foreground text-xl font-medium tabular-nums">{formatCurrency(stats.total_usulan)}</span>
+                            <p className="text-muted-foreground mt-0.5 text-[11px]">Total komitmen usulan</p>
                         </div>
                     </div>
 
                     {/* Total Realisasi Cair */}
-                    <div className="rounded-xl bg-linear-to-t from-teal-500/10 to-card p-4 ring-1 ring-teal-500/30 shadow-xs">
+                    <div className="to-card rounded-xl bg-linear-to-t from-teal-500/10 p-4 shadow-xs ring-1 ring-teal-500/30">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-teal-700 dark:text-teal-400">
-                                Total Realisasi Cair
-                            </span>
+                            <span className="text-xs font-medium text-teal-700 dark:text-teal-400">Total Realisasi Cair</span>
                             <div className="flex size-7 items-center justify-center rounded-lg border bg-teal-500/10 text-teal-600 dark:text-teal-400">
                                 <DollarSign className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-xl font-medium tabular-nums text-teal-700 dark:text-teal-400">
+                            <span className="text-xl font-medium text-teal-700 tabular-nums dark:text-teal-400">
                                 {formatCurrency(stats.total_realisasi)}
                             </span>
-                            <p className="text-[11px] text-teal-600/80 mt-0.5">SP2D telah diterbitkan</p>
+                            <p className="mt-0.5 text-[11px] text-teal-600/80">SP2D telah diterbitkan</p>
                         </div>
                     </div>
 
                     {/* Sisa Alokasi */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-muted-foreground">Sisa Alokasi Pagu</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <span className="text-muted-foreground text-xs font-medium">Sisa Alokasi Pagu</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <Landmark className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-xl font-medium tabular-nums text-foreground">
-                                {formatCurrency(stats.sisa_anggaran)}
-                            </span>
-                            <p className="text-[11px] text-muted-foreground mt-0.5">Belum dicairkan</p>
+                            <span className="text-foreground text-xl font-medium tabular-nums">{formatCurrency(stats.sisa_anggaran)}</span>
+                            <p className="text-muted-foreground mt-0.5 text-[11px]">Belum dicairkan</p>
                         </div>
                     </div>
 
                     {/* Persentase Serapan */}
-                    <div className="rounded-xl bg-linear-to-t from-blue-500/10 to-card p-4 ring-1 ring-blue-500/30 shadow-xs">
+                    <div className="to-card rounded-xl bg-linear-to-t from-blue-500/10 p-4 shadow-xs ring-1 ring-blue-500/30">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
-                                Persentase Serapan
-                            </span>
+                            <span className="text-xs font-medium text-blue-700 dark:text-blue-400">Persentase Serapan</span>
                             <div className="flex size-7 items-center justify-center rounded-lg border bg-blue-500/10 text-blue-600 dark:text-blue-400">
                                 <TrendingUp className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline gap-1.5">
-                            <span className="text-2xl font-medium tabular-nums text-blue-700 dark:text-blue-400">
-                                {stats.serapan_persen}%
-                            </span>
-                            <span className="text-[11px] text-muted-foreground">daya serap</span>
+                            <span className="text-2xl font-medium text-blue-700 tabular-nums dark:text-blue-400">{stats.serapan_persen}%</span>
+                            <span className="text-muted-foreground text-[11px]">daya serap</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Main Card with Toolbar & Table */}
-                <div className="rounded-xl border bg-card shadow-2xs overflow-hidden">
+                <div className="bg-card overflow-hidden rounded-xl border shadow-2xs">
                     {/* Studio Admin Toolbar */}
-                    <div className="flex flex-col gap-3 p-4 border-b sm:flex-row sm:items-center sm:justify-between">
-                        <form onSubmit={handleSearch} className="relative flex-1 max-w-sm">
-                            <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                    <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
+                        <form onSubmit={handleSearch} className="relative max-w-sm flex-1">
+                            <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
                             <Input
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder="Cari nomor pengajuan atau nama usulan..."
-                                className="h-8 pl-8 pr-8 text-xs"
+                                className="h-8 pr-8 pl-8 text-xs"
                             />
                             {searchTerm && (
                                 <button
@@ -238,14 +191,14 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                                         setSearchTerm('');
                                         router.get(route('realisasi-anggaran.index'), { search: '' });
                                     }}
-                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2"
                                 >
                                     <X className="size-3.5" />
                                 </button>
                             )}
                         </form>
 
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-muted-foreground text-xs">
                             Total <strong className="text-foreground">{documents.total}</strong> dokumen anggaran
                         </div>
                     </div>
@@ -253,7 +206,7 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                     {/* Table */}
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs">
-                            <thead className="border-b bg-muted/50 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                            <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
                                 <tr>
                                     <th className="px-4 py-3">Nomor & Usulan</th>
                                     <th className="px-4 py-3">Pengusul & Unit</th>
@@ -266,7 +219,7 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                             <tbody className="divide-y">
                                 {documents.data.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                                        <td colSpan={6} className="text-muted-foreground p-8 text-center">
                                             Tidak ada data realisasi anggaran yang sesuai pencarian.
                                         </td>
                                     </tr>
@@ -275,50 +228,44 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                                         const realisasi = doc.realisasi_anggaran;
                                         return (
                                             <tr key={doc.id} className="hover:bg-muted/30 transition-colors">
-                                                <td className="px-4 py-3.5 space-y-1 max-w-xs">
+                                                <td className="max-w-xs space-y-1 px-4 py-3.5">
                                                     <div className="flex items-center gap-1.5">
-                                                        <span className="font-mono text-xs font-semibold text-primary">
-                                                            {doc.nomor_pengajuan}
-                                                        </span>
-                                                        <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                                                        <span className="text-primary font-mono text-xs font-semibold">{doc.nomor_pengajuan}</span>
+                                                        <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-[10px]">
                                                             {doc.jenis_anggaran}
                                                         </span>
                                                     </div>
-                                                    <p className="font-medium text-foreground truncate">
-                                                        {doc.nama_kegiatan}
-                                                    </p>
+                                                    <p className="text-foreground truncate font-medium">{doc.nama_kegiatan}</p>
                                                     <StatusBadge status={doc.status_terkini} size="sm" />
                                                 </td>
 
-                                                <td className="px-4 py-3.5 text-muted-foreground">
-                                                    <p className="font-medium text-foreground">{doc.user?.name}</p>
+                                                <td className="text-muted-foreground px-4 py-3.5">
+                                                    <p className="text-foreground font-medium">{doc.user?.name}</p>
                                                     <p className="text-[11px]">{doc.user?.unit || '-'}</p>
                                                 </td>
 
-                                                <td className="px-4 py-3.5 text-right font-medium tabular-nums text-foreground">
+                                                <td className="text-foreground px-4 py-3.5 text-right font-medium tabular-nums">
                                                     {formatCurrency(doc.total_usulan)}
                                                 </td>
 
-                                                <td className="px-4 py-3.5 text-right font-semibold tabular-nums text-teal-700 dark:text-teal-400">
+                                                <td className="px-4 py-3.5 text-right font-semibold text-teal-700 tabular-nums dark:text-teal-400">
                                                     {realisasi ? formatCurrency(realisasi.total_realisasi) : '-'}
                                                 </td>
 
                                                 <td className="px-4 py-3.5">
                                                     {realisasi ? (
                                                         <div className="space-y-0.5">
-                                                            <span className="inline-flex rounded-4xl bg-teal-50 border border-teal-200 px-2 py-0.5 text-[10px] font-medium text-teal-800 dark:bg-teal-950/40 dark:border-teal-800 dark:text-teal-300">
+                                                            <span className="inline-flex rounded-4xl border border-teal-200 bg-teal-50 px-2 py-0.5 text-[10px] font-medium text-teal-800 dark:border-teal-800 dark:bg-teal-950/40 dark:text-teal-300">
                                                                 {realisasi.status_pencairan}
                                                             </span>
                                                             {realisasi.tgl_pencairan && (
-                                                                <p className="text-[10px] text-muted-foreground">
+                                                                <p className="text-muted-foreground text-[10px]">
                                                                     Tgl Cair: {formatDate(realisasi.tgl_pencairan)}
                                                                 </p>
                                                             )}
                                                         </div>
                                                     ) : (
-                                                        <span className="text-muted-foreground text-xs italic">
-                                                            Menunggu SAKTI
-                                                        </span>
+                                                        <span className="text-muted-foreground text-xs italic">Menunggu SAKTI</span>
                                                     )}
                                                 </td>
 
@@ -352,7 +299,7 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
 
                     {/* Pagination */}
                     {documents.links && documents.links.length > 3 && (
-                        <div className="flex items-center justify-between p-3 border-t bg-muted/20 text-xs">
+                        <div className="bg-muted/20 flex items-center justify-between border-t p-3 text-xs">
                             <span className="text-muted-foreground">
                                 Halaman {documents.current_page} dari {documents.last_page}
                             </span>
@@ -367,10 +314,7 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                                         className="h-7 min-w-7 px-2 text-xs"
                                     >
                                         {link.url ? (
-                                            <Link
-                                                href={link.url}
-                                                dangerouslySetInnerHTML={{ __html: link.label }}
-                                            />
+                                            <Link href={link.url} dangerouslySetInnerHTML={{ __html: link.label }} />
                                         ) : (
                                             <span dangerouslySetInnerHTML={{ __html: link.label }} />
                                         )}
@@ -385,12 +329,9 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                 <Dialog open={Boolean(selectedDoc)} onOpenChange={(open) => !open && setSelectedDoc(null)}>
                     <DialogContent className="max-w-md rounded-xl">
                         <DialogHeader className="border-b pb-3">
-                            <DialogTitle className="text-base font-semibold tracking-tight">
-                                Input Realisasi Anggaran SAKTI
-                            </DialogTitle>
-                            <DialogDescription className="text-xs text-muted-foreground">
-                                Dokumen: <strong className="text-foreground">{selectedDoc?.nomor_pengajuan}</strong> —{' '}
-                                {selectedDoc?.nama_kegiatan}
+                            <DialogTitle className="text-base font-semibold tracking-tight">Input Realisasi Anggaran SAKTI</DialogTitle>
+                            <DialogDescription className="text-muted-foreground text-xs">
+                                Dokumen: <strong className="text-foreground">{selectedDoc?.nomor_pengajuan}</strong> — {selectedDoc?.nama_kegiatan}
                             </DialogDescription>
                         </DialogHeader>
 
@@ -409,7 +350,7 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                                     className="h-8 text-xs"
                                     required
                                 />
-                                <p className="text-[11px] text-muted-foreground">
+                                <p className="text-muted-foreground text-[11px]">
                                     Usulan semula: {selectedDoc ? formatCurrency(selectedDoc.total_usulan) : '-'}
                                 </p>
                             </div>
@@ -432,11 +373,8 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                                 <Label htmlFor="status_pencairan" className="text-xs font-medium">
                                     Status SAKTI / SP2D <span className="text-destructive">*</span>
                                 </Label>
-                                <Select
-                                    value={form.data.status_pencairan}
-                                    onValueChange={(val) => form.setData('status_pencairan', val)}
-                                >
-                                    <SelectTrigger id="status_pencairan" className="h-8 text-xs w-full">
+                                <Select value={form.data.status_pencairan} onValueChange={(val) => form.setData('status_pencairan', val)}>
+                                    <SelectTrigger id="status_pencairan" className="h-8 w-full text-xs">
                                         <SelectValue placeholder="Pilih status pencairan" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -463,29 +401,18 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                                 <textarea
                                     id="draf_rekap_spj"
                                     rows={3}
-                                    className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-xs shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                    className="border-input placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded-md border bg-transparent px-3 py-2 text-xs shadow-xs focus-visible:ring-1 focus-visible:outline-none"
                                     placeholder="Nomor SP2D, rekening tujuan transfer, atau catatan rekonsiliasi kas..."
                                     value={form.data.draf_rekap_spj}
                                     onChange={(e) => form.setData('draf_rekap_spj', e.target.value)}
                                 />
                             </div>
 
-                            <DialogFooter className="border-t pt-3 gap-2">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-8 text-xs"
-                                    onClick={() => setSelectedDoc(null)}
-                                >
+                            <DialogFooter className="gap-2 border-t pt-3">
+                                <Button type="button" variant="outline" size="sm" className="h-8 text-xs" onClick={() => setSelectedDoc(null)}>
                                     Batal
                                 </Button>
-                                <Button
-                                    type="submit"
-                                    size="sm"
-                                    disabled={form.processing}
-                                    className="h-8 gap-1.5 text-xs shadow-xs"
-                                >
+                                <Button type="submit" size="sm" disabled={form.processing} className="h-8 gap-1.5 text-xs shadow-xs">
                                     <CheckCircle2 className="size-3.5" />
                                     <span>{form.processing ? 'Menyimpan...' : 'Simpan Realisasi'}</span>
                                 </Button>

@@ -10,7 +10,6 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
 interface RegisterForm {
-    [key: string]: any;
     name: string;
     email: string;
     password: string;

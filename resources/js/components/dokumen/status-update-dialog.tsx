@@ -1,23 +1,9 @@
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { DokumenPengajuan, DocumentStatusType, StatusStageInfo, User } from '@/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DocumentStatusType, DokumenPengajuan, StatusStageInfo, User } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { AlertCircle, ArrowRight, RefreshCw, Send } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -98,10 +84,7 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
         }
 
         if (currentUser.role === 'pimpinan') {
-            return [
-                'Disetujui, Kegiatan Berjalan',
-                'Menunggu SK / Penetapan Universitas',
-            ].includes(stage.value);
+            return ['Disetujui, Kegiatan Berjalan', 'Menunggu SK / Penetapan Universitas'].includes(stage.value);
         }
 
         if (currentUser.role === 'pengusul' && isRevision) {
@@ -127,7 +110,7 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
         if (!open) {
             clearErrors();
         }
-    }, [open]);
+    }, [open, clearErrors]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -155,9 +138,8 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
                     <DialogTitle className="text-base font-semibold tracking-tight">
                         {isApplicant && isRevision ? 'Kirimkan Revisi Dokumen' : 'Perbarui Status Dokumen'}
                     </DialogTitle>
-                    <DialogDescription className="text-xs text-muted-foreground">
-                        Dokumen: <strong className="text-foreground">{document.nomor_pengajuan}</strong> —{' '}
-                        {document.nama_kegiatan}
+                    <DialogDescription className="text-muted-foreground text-xs">
+                        Dokumen: <strong className="text-foreground">{document.nomor_pengajuan}</strong> — {document.nama_kegiatan}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -167,11 +149,8 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
                         <Label htmlFor="tahap" className="text-xs font-medium">
                             Tahap / Status Alur <span className="text-destructive">*</span>
                         </Label>
-                        <Select
-                            value={data.tahap}
-                            onValueChange={(val: DocumentStatusType) => handleStageChange(val)}
-                        >
-                            <SelectTrigger id="tahap" className="h-8 text-xs w-full">
+                        <Select value={data.tahap} onValueChange={(val: DocumentStatusType) => handleStageChange(val)}>
+                            <SelectTrigger id="tahap" className="h-8 w-full text-xs">
                                 <SelectValue placeholder="Pilih status alur" />
                             </SelectTrigger>
                             <SelectContent>
@@ -179,20 +158,14 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
                                     <SelectItem key={stage.value} value={stage.value} className="text-xs">
                                         <div className="flex items-center gap-2">
                                             <span className="font-medium">{stage.label}</span>
-                                            <span className="text-[10px] text-muted-foreground">
-                                                (Oleh: {stage.updated_by})
-                                            </span>
+                                            <span className="text-muted-foreground text-[10px]">(Oleh: {stage.updated_by})</span>
                                         </div>
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
-                        {errors.tahap && (
-                            <p className="text-[11px] text-destructive">{errors.tahap}</p>
-                        )}
-                        <p className="text-[11px] text-muted-foreground">
-                            {stages.find((s) => s.value === data.tahap)?.description}
-                        </p>
+                        {errors.tahap && <p className="text-destructive text-[11px]">{errors.tahap}</p>}
+                        <p className="text-muted-foreground text-[11px]">{stages.find((s) => s.value === data.tahap)?.description}</p>
                     </div>
 
                     {/* Document Position */}
@@ -207,12 +180,8 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
                             placeholder="Contoh: Subbag Keuangan Fakultas, Biro Perencanaan, PPK..."
                             className="h-8 text-xs"
                         />
-                        {errors.posisi_berkas && (
-                            <p className="text-[11px] text-destructive">{errors.posisi_berkas}</p>
-                        )}
-                        <p className="text-[11px] text-muted-foreground">
-                            Lokasi fisik atau unit kerja penanggung jawab berkas saat ini.
-                        </p>
+                        {errors.posisi_berkas && <p className="text-destructive text-[11px]">{errors.posisi_berkas}</p>}
+                        <p className="text-muted-foreground text-[11px]">Lokasi fisik atau unit kerja penanggung jawab berkas saat ini.</p>
                     </div>
 
                     {/* Notes / Revision Remarks */}
@@ -220,7 +189,7 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
                         <div className="flex items-center justify-between">
                             <Label htmlFor="catatan" className="text-xs font-medium">
                                 {data.tahap === 'Perlu Revisi' ? (
-                                    <span className="flex items-center gap-1 text-destructive font-semibold">
+                                    <span className="text-destructive flex items-center gap-1 font-semibold">
                                         <AlertCircle className="size-3.5" />
                                         Catatan Revisi Dokumen *
                                     </span>
@@ -228,17 +197,13 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
                                     'Catatan / Keterangan Verifikasi'
                                 )}
                             </Label>
-                            {data.tahap === 'Perlu Revisi' && (
-                                <span className="text-[10px] font-medium text-destructive">Wajib diisi</span>
-                            )}
+                            {data.tahap === 'Perlu Revisi' && <span className="text-destructive text-[10px] font-medium">Wajib diisi</span>}
                         </div>
                         <textarea
                             id="catatan"
                             rows={3}
-                            className={`w-full rounded-md border bg-transparent px-3 py-2 text-xs shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 ${
-                                errors.catatan
-                                    ? 'border-destructive focus-visible:ring-destructive'
-                                    : 'border-input focus-visible:ring-ring'
+                            className={`placeholder:text-muted-foreground w-full rounded-md border bg-transparent px-3 py-2 text-xs shadow-xs transition-colors focus-visible:ring-1 focus-visible:outline-none ${
+                                errors.catatan ? 'border-destructive focus-visible:ring-destructive' : 'border-input focus-visible:ring-ring'
                             }`}
                             placeholder={
                                 data.tahap === 'Perlu Revisi'
@@ -250,12 +215,10 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
                             value={data.catatan}
                             onChange={(e) => setData('catatan', e.target.value)}
                         />
-                        {errors.catatan && (
-                            <p className="text-[11px] text-destructive">{errors.catatan}</p>
-                        )}
+                        {errors.catatan && <p className="text-destructive text-[11px]">{errors.catatan}</p>}
                     </div>
 
-                    <DialogFooter className="border-t pt-3 gap-2">
+                    <DialogFooter className="gap-2 border-t pt-3">
                         <Button
                             type="button"
                             variant="outline"

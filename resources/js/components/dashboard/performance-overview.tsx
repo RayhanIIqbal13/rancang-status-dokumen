@@ -1,29 +1,13 @@
-import * as React from 'react';
-import { addHours, endOfToday, format, parseISO, subHours } from 'date-fns';
-import { Area, CartesianGrid, ComposedChart, Line, XAxis } from 'recharts';
 import { Link } from '@inertiajs/react';
-import { Search } from 'lucide-react';
+import { addHours, endOfToday, format, parseISO, subHours } from 'date-fns';
+import * as React from 'react';
+import { Area, CartesianGrid, ComposedChart, XAxis } from 'recharts';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-    type ChartConfig,
-    ChartContainer,
-    ChartLegend,
-    ChartLegendContent,
-    ChartTooltip,
-    ChartTooltipContent,
-} from '@/components/ui/chart';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+import { type ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip } from '@/components/ui/chart';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // 180 continuous real-data points replicating next-shadcn-admin-dashboard
 const chartValues = [
@@ -264,7 +248,7 @@ export function PerformanceOverview({ initialData }: { initialData?: Performance
             <CardHeader>
                 <CardTitle className="leading-none">Performance Overview</CardTitle>
                 <CardDescription>
-                    <span className="@[540px]/card:block hidden">
+                    <span className="hidden @[540px]/card:block">
                         Monitoring pergerakan berkas serapan belanja dan penyelesaian pencarian sakti TA 2026
                     </span>
                     <span className="@[540px]/card:hidden">Realisasi pencarian sakti TA 2026</span>
@@ -285,7 +269,7 @@ export function PerformanceOverview({ initialData }: { initialData?: Performance
                         </SelectContent>
                     </Select>
 
-                    <Badge variant="outline" className="h-8 gap-1.5 px-3 font-medium text-xs bg-muted/40 border-border/60">
+                    <Badge variant="outline" className="bg-muted/40 border-border/60 h-8 gap-1.5 px-3 text-xs font-medium">
                         <span className="size-2 rounded-full bg-[var(--chart-3)]" />
                         pencarian sakti
                     </Badge>
@@ -297,27 +281,27 @@ export function PerformanceOverview({ initialData }: { initialData?: Performance
             </CardHeader>
 
             <CardContent className="space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/40 p-2.5 border border-border/50 text-xs">
-                    <div className="flex items-center gap-2 flex-wrap">
+                <div className="bg-muted/40 border-border/50 flex flex-wrap items-center justify-between gap-2 rounded-lg border p-2.5 text-xs">
+                    <div className="flex flex-wrap items-center gap-2">
                         <span className="size-2 rounded-full bg-[var(--chart-3)]" />
-                        <span className="font-semibold text-foreground">
+                        <span className="text-foreground font-semibold">
                             pencarian sakti (Periode {period === 'month' ? '1 Bulan' : period === 'week' ? '7 Hari' : '3 Bulan'})
                         </span>
-                        <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
                             5 Berkas Selesai
                         </span>
                     </div>
 
                     {latestDisbursedPoint && (
-                        <div className="flex items-center gap-1.5 text-muted-foreground flex-wrap">
+                        <div className="text-muted-foreground flex flex-wrap items-center gap-1.5">
                             <span>Kegiatan Terakhir Selesai:</span>
                             <span
-                                className="font-medium text-foreground max-w-[260px] lg:max-w-md truncate"
+                                className="text-foreground max-w-[260px] truncate font-medium lg:max-w-md"
                                 title={latestDisbursedPoint.disbursedActivity ?? latestDisbursedPoint.activityName}
                             >
                                 {latestDisbursedPoint.disbursedActivity ?? latestDisbursedPoint.activityName}
                             </span>
-                            <span className="font-mono font-semibold text-emerald-600 dark:text-emerald-400 ml-1">
+                            <span className="ml-1 font-mono font-semibold text-emerald-600 dark:text-emerald-400">
                                 {latestDisbursedPoint.formattedDisbursedAmount ?? latestDisbursedPoint.formattedAmount}
                             </span>
                         </div>
@@ -355,34 +339,28 @@ export function PerformanceOverview({ initialData }: { initialData?: Performance
                                     return null;
                                 }
                                 const point = payload[0]?.payload as PerformanceChartPoint;
-                                const dateFormatted = point?.date
-                                    ? format(parseISO(point.date), 'd MMMM yyyy')
-                                    : '';
+                                const dateFormatted = point?.date ? format(parseISO(point.date), 'd MMMM yyyy') : '';
                                 const actName = point?.disbursedActivity ?? point?.activityName;
                                 const actAmount = point?.formattedDisbursedAmount ?? point?.formattedAmount;
 
                                 return (
-                                    <div className="grid min-w-64 max-w-xs items-start gap-2 rounded-xl border border-border/80 bg-background/95 backdrop-blur-md p-3 text-xs shadow-xl ring-1 ring-black/5 dark:ring-white/10">
-                                        <div className="flex items-center justify-between border-b border-border/60 pb-1.5 font-medium">
+                                    <div className="border-border/80 bg-background/95 grid max-w-xs min-w-64 items-start gap-2 rounded-xl border p-3 text-xs shadow-xl ring-1 ring-black/5 backdrop-blur-md dark:ring-white/10">
+                                        <div className="border-border/60 flex items-center justify-between border-b pb-1.5 font-medium">
                                             <span className="text-foreground font-semibold">{dateFormatted}</span>
-                                            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                                            <span className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-[10px] font-semibold">
                                                 pencarian sakti
                                             </span>
                                         </div>
 
                                         {actName && (
-                                            <div className="space-y-1 rounded-lg bg-muted/40 p-2 border border-border/40">
-                                                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                            <div className="bg-muted/40 border-border/40 space-y-1 rounded-lg border p-2">
+                                                <div className="text-muted-foreground text-[10px] font-semibold tracking-wider uppercase">
                                                     Dokumen Cair Terkait
                                                 </div>
-                                                <div className="font-medium text-foreground line-clamp-2 text-xs leading-snug">
-                                                    {actName}
-                                                </div>
+                                                <div className="text-foreground line-clamp-2 text-xs leading-snug font-medium">{actName}</div>
                                                 {actAmount && (
                                                     <div className="flex items-center justify-between pt-1">
-                                                        <span className="text-[10px] text-muted-foreground">
-                                                            Nominal:
-                                                        </span>
+                                                        <span className="text-muted-foreground text-[10px]">Nominal:</span>
                                                         <span className="font-mono font-semibold text-emerald-600 dark:text-emerald-400">
                                                             {actAmount}
                                                         </span>
@@ -397,9 +375,7 @@ export function PerformanceOverview({ initialData }: { initialData?: Performance
                                                     <div className="size-2 rounded-[2px] bg-[var(--chart-3)]" />
                                                     <span className="text-muted-foreground">pencarian sakti</span>
                                                 </div>
-                                                <span className="font-mono font-semibold text-foreground">
-                                                    {point?.pencairanSakti} berkas
-                                                </span>
+                                                <span className="text-foreground font-mono font-semibold">{point?.pencairanSakti} berkas</span>
                                             </div>
                                         </div>
                                     </div>

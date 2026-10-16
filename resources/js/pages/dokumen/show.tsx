@@ -4,47 +4,15 @@ import { StatusTimeline } from '@/components/dokumen/status-timeline';
 import { StatusUpdateDialog } from '@/components/dokumen/status-update-dialog';
 import { WorkflowStepper } from '@/components/dokumen/workflow-stepper';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem, BuktiPengeluaran, DokumenPengajuan, StandarBiaya, StatusStageInfo, User } from '@/types';
+import { BreadcrumbItem, DokumenPengajuan, StandarBiaya, StatusStageInfo, User } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import {
-    AlertCircle,
-    ArrowLeft,
-    ArrowUpRight,
-    Building2,
-    Calendar,
-    CheckCircle2,
-    Clock,
-    DollarSign,
-    Download,
-    FileCheck,
-    FileText,
-    Landmark,
-    MapPin,
-    Plus,
-    Receipt,
-    Trash2,
-    User as UserIcon,
-} from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Building2, Clock, Download, Landmark, MapPin, Plus, Receipt, Trash2, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 
 interface ShowProps {
@@ -54,14 +22,9 @@ interface ShowProps {
     canUpdateStatus: boolean;
 }
 
-export default function DokumenShow({
-    document,
-    stages,
-    standarBiayaList,
-    canUpdateStatus,
-}: ShowProps) {
+export default function DokumenShow({ document, stages, standarBiayaList, canUpdateStatus }: ShowProps) {
     const { auth } = usePage<{ auth: { user: User } }>().props;
-    const currentUser = auth.user;
+    const _currentUser = auth.user;
     const [activeTab, setActiveTab] = useState<'timeline' | 'spj' | 'realisasi'>('timeline');
 
     // SPJ Receipt form
@@ -127,7 +90,7 @@ export default function DokumenShow({
     };
 
     const latestTracking = document.latest_status_tracking;
-    const isCompleted = document.status_terkini === 'Dana Cair';
+    const _isCompleted = document.status_terkini === 'Dana Cair';
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -144,25 +107,17 @@ export default function DokumenShow({
                         </Button>
                         <div>
                             <div className="flex flex-wrap items-center gap-2">
-                                <span className="font-mono text-sm font-bold text-primary">
-                                    {document.nomor_pengajuan}
-                                </span>
+                                <span className="text-primary font-mono text-sm font-bold">{document.nomor_pengajuan}</span>
                                 <span className="text-muted-foreground">•</span>
-                                <span className="text-xs text-muted-foreground">
-                                    Diajukan: {formatDate(document.created_at)}
-                                </span>
+                                <span className="text-muted-foreground text-xs">Diajukan: {formatDate(document.created_at)}</span>
                             </div>
-                            <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                                {document.nama_kegiatan}
-                            </h1>
+                            <h1 className="text-foreground text-xl font-bold tracking-tight sm:text-2xl">{document.nama_kegiatan}</h1>
                         </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
                         <StatusBadge status={document.status_terkini} size="lg" />
-                        {canUpdateStatus && (
-                            <StatusUpdateDialog document={document} stages={stages} />
-                        )}
+                        {canUpdateStatus && <StatusUpdateDialog document={document} stages={stages} />}
                     </div>
                 </div>
 
@@ -181,31 +136,27 @@ export default function DokumenShow({
                             <CardContent className="p-5">
                                 <div className="grid gap-4 sm:grid-cols-3">
                                     <div>
-                                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                                            Status Terkini
-                                        </span>
-                                        <div className="mt-1.5 flex items-center gap-1.5 font-bold text-foreground">
+                                        <span className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">Status Terkini</span>
+                                        <div className="text-foreground mt-1.5 flex items-center gap-1.5 font-bold">
                                             <StatusBadge status={document.status_terkini} size="sm" />
                                         </div>
                                     </div>
                                     <div>
-                                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                        <span className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
                                             Posisi Berkas Fisik / Unit
                                         </span>
-                                        <p className="mt-1.5 flex items-center gap-1.5 text-sm font-bold text-foreground">
-                                            <MapPin className="size-4 text-primary shrink-0" />
-                                            <span>
-                                                {latestTracking?.posisi_berkas || 'Subbag Keuangan Fakultas'}
-                                            </span>
+                                        <p className="text-foreground mt-1.5 flex items-center gap-1.5 text-sm font-bold">
+                                            <MapPin className="text-primary size-4 shrink-0" />
+                                            <span>{latestTracking?.posisi_berkas || 'Subbag Keuangan Fakultas'}</span>
                                         </p>
                                     </div>
                                     <div>
-                                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                        <span className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
                                             Pembaruan Terakhir
                                         </span>
-                                        <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+                                        <p className="text-muted-foreground mt-1.5 flex items-center gap-1.5 text-xs">
                                             <Clock className="size-3.5" />
-                                            <span className="font-medium text-foreground">
+                                            <span className="text-foreground font-medium">
                                                 {latestTracking
                                                     ? new Intl.DateTimeFormat('id-ID', {
                                                           dateStyle: 'medium',
@@ -220,14 +171,14 @@ export default function DokumenShow({
                         </Card>
 
                         {/* Interactive Tabs Header */}
-                        <div className="flex border-b border-border">
+                        <div className="border-border flex border-b">
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('timeline')}
                                 className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
                                     activeTab === 'timeline'
                                         ? 'border-primary text-primary'
-                                        : 'border-transparent text-muted-foreground hover:text-foreground'
+                                        : 'text-muted-foreground hover:text-foreground border-transparent'
                                 }`}
                             >
                                 <Clock className="size-4" />
@@ -239,7 +190,7 @@ export default function DokumenShow({
                                 className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
                                     activeTab === 'spj'
                                         ? 'border-primary text-primary'
-                                        : 'border-transparent text-muted-foreground hover:text-foreground'
+                                        : 'text-muted-foreground hover:text-foreground border-transparent'
                                 }`}
                             >
                                 <Receipt className="size-4" />
@@ -251,7 +202,7 @@ export default function DokumenShow({
                                 className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
                                     activeTab === 'realisasi'
                                         ? 'border-primary text-primary'
-                                        : 'border-transparent text-muted-foreground hover:text-foreground'
+                                        : 'text-muted-foreground hover:text-foreground border-transparent'
                                 }`}
                             >
                                 <Landmark className="size-4" />
@@ -261,13 +212,11 @@ export default function DokumenShow({
 
                         {/* Tab Content 1: Status Tracking Timeline */}
                         {activeTab === 'timeline' && (
-                            <div className="rounded-xl border border-border/80 bg-card p-5 shadow-xs">
-                                <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-border/60 pb-3">
+                            <div className="border-border/80 bg-card rounded-xl border p-5 shadow-xs">
+                                <div className="border-border/60 mb-4 flex flex-col gap-3 border-b pb-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div>
-                                        <h3 className="text-base font-bold text-foreground">
-                                            Log Riwayat Status & Catatan
-                                        </h3>
-                                        <p className="text-xs text-muted-foreground mt-0.5">
+                                        <h3 className="text-foreground text-base font-bold">Log Riwayat Status & Catatan</h3>
+                                        <p className="text-muted-foreground mt-0.5 text-xs">
                                             Rekam jejak setiap perpindahan status, petugas pemeriksa, posisi dokumen, dan catatan revisi
                                         </p>
                                     </div>
@@ -284,13 +233,11 @@ export default function DokumenShow({
 
                         {/* Tab Content 2: Bukti SPJ & Validasi SBM */}
                         {activeTab === 'spj' && (
-                            <div className="space-y-4 rounded-xl border bg-card p-5 shadow-xs dark:border-neutral-800">
+                            <div className="bg-card space-y-4 rounded-xl border p-5 shadow-xs dark:border-neutral-800">
                                 <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
                                     <div>
-                                        <h3 className="text-base font-bold text-foreground">
-                                            Bukti Pengeluaran & Validasi SBM
-                                        </h3>
-                                        <p className="text-xs text-muted-foreground">
+                                        <h3 className="text-foreground text-base font-bold">Bukti Pengeluaran & Validasi SBM</h3>
+                                        <p className="text-muted-foreground text-xs">
                                             Daftar bukti kuitansi dan kesesuaian terhadap batas tarif Standar Biaya Masukan
                                         </p>
                                     </div>
@@ -374,11 +321,7 @@ export default function DokumenShow({
                                                 </div>
 
                                                 <DialogFooter>
-                                                    <Button
-                                                        type="button"
-                                                        variant="outline"
-                                                        onClick={() => setOpenSpjDialog(false)}
-                                                    >
+                                                    <Button type="button" variant="outline" onClick={() => setOpenSpjDialog(false)}>
                                                         Batal
                                                     </Button>
                                                     <Button type="submit" disabled={spjForm.processing}>
@@ -391,7 +334,7 @@ export default function DokumenShow({
                                 </div>
 
                                 {!document.bukti_pengeluarans || document.bukti_pengeluarans.length === 0 ? (
-                                    <div className="rounded-lg border border-dashed p-8 text-center text-muted-foreground">
+                                    <div className="text-muted-foreground rounded-lg border border-dashed p-8 text-center">
                                         <Receipt className="mx-auto size-8 opacity-40" />
                                         <p className="mt-2 text-sm">Belum ada bukti pengeluaran SPJ yang tercatat.</p>
                                     </div>
@@ -400,19 +343,18 @@ export default function DokumenShow({
                                         {document.bukti_pengeluarans.map((bukti) => (
                                             <div
                                                 key={bukti.id}
-                                                className="flex flex-col gap-2 p-3 sm:flex-row sm:items-center sm:justify-between text-xs"
+                                                className="flex flex-col gap-2 p-3 text-xs sm:flex-row sm:items-center sm:justify-between"
                                             >
                                                 <div>
-                                                    <p className="font-semibold text-foreground text-sm">
-                                                        {bukti.jenis_bukti}
-                                                    </p>
+                                                    <p className="text-foreground text-sm font-semibold">{bukti.jenis_bukti}</p>
                                                     {bukti.standar_biaya && (
                                                         <p className="text-muted-foreground mt-0.5">
-                                                            Acuan SBM: {bukti.standar_biaya.uraian_belanja} (Maks: {formatCurrency(bukti.standar_biaya.batas_tarif)})
+                                                            Acuan SBM: {bukti.standar_biaya.uraian_belanja} (Maks:{' '}
+                                                            {formatCurrency(bukti.standar_biaya.batas_tarif)})
                                                         </p>
                                                     )}
-                                                    <div className="flex items-center gap-2 mt-1">
-                                                        <span className="rounded bg-muted px-1.5 py-0.5 font-medium">
+                                                    <div className="mt-1 flex items-center gap-2">
+                                                        <span className="bg-muted rounded px-1.5 py-0.5 font-medium">
                                                             Fisik: {bukti.status_fisik}
                                                         </span>
                                                         <span
@@ -427,21 +369,16 @@ export default function DokumenShow({
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-3">
-                                                    <span className="text-sm font-extrabold text-foreground">
-                                                        {formatCurrency(bukti.nominal)}
-                                                    </span>
+                                                    <span className="text-foreground text-sm font-extrabold">{formatCurrency(bukti.nominal)}</span>
                                                     {canUpdateStatus && (
                                                         <Button
                                                             size="icon"
                                                             variant="ghost"
-                                                            className="size-7 text-destructive hover:bg-destructive/10"
+                                                            className="text-destructive hover:bg-destructive/10 size-7"
                                                             onClick={() => {
                                                                 if (confirm('Hapus bukti pengeluaran ini?')) {
                                                                     spjForm.delete(
-                                                                        route('dokumen-pengajuan.bukti-pengeluaran.destroy', [
-                                                                            document.id,
-                                                                            bukti.id,
-                                                                        ])
+                                                                        route('dokumen-pengajuan.bukti-pengeluaran.destroy', [document.id, bukti.id]),
                                                                     );
                                                                 }
                                                             }}
@@ -459,22 +396,18 @@ export default function DokumenShow({
 
                         {/* Tab Content 3: Realisasi & SAKTI */}
                         {activeTab === 'realisasi' && (
-                            <div className="space-y-4 rounded-xl border bg-card p-5 shadow-xs dark:border-neutral-800">
+                            <div className="bg-card space-y-4 rounded-xl border p-5 shadow-xs dark:border-neutral-800">
                                 <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
                                     <div>
-                                        <h3 className="text-base font-bold text-foreground">
-                                            Realisasi Anggaran & Integrasi SAKTI
-                                        </h3>
-                                        <p className="text-xs text-muted-foreground">
+                                        <h3 className="text-foreground text-base font-bold">Realisasi Anggaran & Integrasi SAKTI</h3>
+                                        <p className="text-muted-foreground text-xs">
                                             Pencatatan realisasi pencairan dana, status SP2D, dan verifikasi akhir
                                         </p>
                                     </div>
                                     {canUpdateStatus && (
                                         <Dialog open={openRealisasiDialog} onOpenChange={setOpenRealisasiDialog}>
                                             <DialogTrigger asChild>
-                                                <Button size="sm">
-                                                    {document.realisasi_anggaran ? 'Ubah Realisasi' : 'Catat Realisasi'}
-                                                </Button>
+                                                <Button size="sm">{document.realisasi_anggaran ? 'Ubah Realisasi' : 'Catat Realisasi'}</Button>
                                             </DialogTrigger>
                                             <DialogContent>
                                                 <DialogHeader>
@@ -490,9 +423,7 @@ export default function DokumenShow({
                                                             id="total_realisasi"
                                                             type="number"
                                                             value={realisasiForm.data.total_realisasi}
-                                                            onChange={(e) =>
-                                                                realisasiForm.setData('total_realisasi', e.target.value)
-                                                            }
+                                                            onChange={(e) => realisasiForm.setData('total_realisasi', e.target.value)}
                                                             required
                                                         />
                                                     </div>
@@ -502,9 +433,7 @@ export default function DokumenShow({
                                                             id="tgl_pencairan"
                                                             type="date"
                                                             value={realisasiForm.data.tgl_pencairan}
-                                                            onChange={(e) =>
-                                                                realisasiForm.setData('tgl_pencairan', e.target.value)
-                                                            }
+                                                            onChange={(e) => realisasiForm.setData('tgl_pencairan', e.target.value)}
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
@@ -512,9 +441,7 @@ export default function DokumenShow({
                                                         <Input
                                                             id="status_pencairan"
                                                             value={realisasiForm.data.status_pencairan}
-                                                            onChange={(e) =>
-                                                                realisasiForm.setData('status_pencairan', e.target.value)
-                                                            }
+                                                            onChange={(e) => realisasiForm.setData('status_pencairan', e.target.value)}
                                                             required
                                                         />
                                                     </div>
@@ -525,17 +452,11 @@ export default function DokumenShow({
                                                             rows={3}
                                                             className="w-full rounded-md border p-2 text-sm"
                                                             value={realisasiForm.data.draf_rekap_spj}
-                                                            onChange={(e) =>
-                                                                realisasiForm.setData('draf_rekap_spj', e.target.value)
-                                                            }
+                                                            onChange={(e) => realisasiForm.setData('draf_rekap_spj', e.target.value)}
                                                         />
                                                     </div>
                                                     <DialogFooter>
-                                                        <Button
-                                                            type="button"
-                                                            variant="outline"
-                                                            onClick={() => setOpenRealisasiDialog(false)}
-                                                        >
+                                                        <Button type="button" variant="outline" onClick={() => setOpenRealisasiDialog(false)}>
                                                             Batal
                                                         </Button>
                                                         <Button type="submit" disabled={realisasiForm.processing}>
@@ -550,32 +471,32 @@ export default function DokumenShow({
 
                                 {document.realisasi_anggaran ? (
                                     <div className="grid gap-4 sm:grid-cols-2">
-                                        <div className="rounded-lg border p-4 bg-muted/20">
-                                            <span className="text-xs text-muted-foreground">Total Realisasi Pencairan</span>
-                                            <p className="mt-1 text-2xl font-bold text-foreground">
+                                        <div className="bg-muted/20 rounded-lg border p-4">
+                                            <span className="text-muted-foreground text-xs">Total Realisasi Pencairan</span>
+                                            <p className="text-foreground mt-1 text-2xl font-bold">
                                                 {formatCurrency(document.realisasi_anggaran.total_realisasi)}
                                             </p>
                                         </div>
-                                        <div className="rounded-lg border p-4 bg-muted/20">
-                                            <span className="text-xs text-muted-foreground">Status Pencairan SAKTI</span>
+                                        <div className="bg-muted/20 rounded-lg border p-4">
+                                            <span className="text-muted-foreground text-xs">Status Pencairan SAKTI</span>
                                             <p className="mt-1 text-base font-bold text-teal-700 dark:text-teal-400">
                                                 {document.realisasi_anggaran.status_pencairan}
                                             </p>
                                             {document.realisasi_anggaran.tgl_pencairan && (
-                                                <p className="text-xs text-muted-foreground mt-1">
+                                                <p className="text-muted-foreground mt-1 text-xs">
                                                     Tanggal: {formatDate(document.realisasi_anggaran.tgl_pencairan)}
                                                 </p>
                                             )}
                                         </div>
                                         {document.realisasi_anggaran.draf_rekap_spj && (
-                                            <div className="sm:col-span-2 rounded-lg border p-4 text-xs bg-muted/40">
-                                                <p className="font-semibold mb-1">Catatan Rekap SPJ & SAKTI:</p>
+                                            <div className="bg-muted/40 rounded-lg border p-4 text-xs sm:col-span-2">
+                                                <p className="mb-1 font-semibold">Catatan Rekap SPJ & SAKTI:</p>
                                                 <p>{document.realisasi_anggaran.draf_rekap_spj}</p>
                                             </div>
                                         )}
                                     </div>
                                 ) : (
-                                    <div className="rounded-lg border border-dashed p-8 text-center text-muted-foreground">
+                                    <div className="text-muted-foreground rounded-lg border border-dashed p-8 text-center">
                                         <Landmark className="mx-auto size-8 opacity-40" />
                                         <p className="mt-2 text-sm">
                                             Realisasi anggaran akan dicatat oleh Staf Keuangan pada Tahap 7 & 8 (SAKTI & Dana Cair).
@@ -591,36 +512,30 @@ export default function DokumenShow({
                         {/* Financial Information Card */}
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+                                <CardTitle className="text-muted-foreground text-sm font-bold tracking-wider uppercase">
                                     Rincian Usulan Anggaran
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4 text-xs">
                                 <div>
                                     <span className="text-muted-foreground">Total Usulan Dana:</span>
-                                    <p className="text-2xl font-extrabold text-foreground mt-0.5">
-                                        {formatCurrency(document.total_usulan)}
-                                    </p>
+                                    <p className="text-foreground mt-0.5 text-2xl font-extrabold">{formatCurrency(document.total_usulan)}</p>
                                 </div>
 
-                                <div className="border-t pt-3 space-y-2">
+                                <div className="space-y-2 border-t pt-3">
                                     <div className="flex justify-between">
                                         <span className="text-muted-foreground">Jenis Anggaran:</span>
-                                        <span className="font-semibold text-foreground text-right">
-                                            {document.jenis_anggaran}
-                                        </span>
+                                        <span className="text-foreground text-right font-semibold">{document.jenis_anggaran}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-muted-foreground">Tanggal Pelaksanaan:</span>
-                                        <span className="font-semibold text-foreground text-right">
-                                            {formatDate(document.tgl_pelaksanaan)}
-                                        </span>
+                                        <span className="text-foreground text-right font-semibold">{formatDate(document.tgl_pelaksanaan)}</span>
                                     </div>
                                 </div>
 
                                 <div className="border-t pt-3">
                                     <span className="text-muted-foreground">Uraian Kegiatan:</span>
-                                    <p className="mt-1 leading-relaxed text-foreground whitespace-pre-line bg-muted/30 p-2.5 rounded-md border">
+                                    <p className="text-foreground bg-muted/30 mt-1 rounded-md border p-2.5 leading-relaxed whitespace-pre-line">
                                         {document.uraian}
                                     </p>
                                 </div>
@@ -628,11 +543,7 @@ export default function DokumenShow({
                                 {document.file_proposal && (
                                     <div className="border-t pt-3">
                                         <Button asChild variant="outline" size="sm" className="w-full gap-2">
-                                            <a
-                                                href={`/storage/${document.file_proposal}`}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                            >
+                                            <a href={`/storage/${document.file_proposal}`} target="_blank" rel="noreferrer">
                                                 <Download className="size-3.5" />
                                                 <span>Unduh Berkas Proposal</span>
                                             </a>
@@ -645,26 +556,20 @@ export default function DokumenShow({
                         {/* Applicant User Card */}
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                                    Data Pengusul
-                                </CardTitle>
+                                <CardTitle className="text-muted-foreground text-sm font-bold tracking-wider uppercase">Data Pengusul</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3 text-xs">
                                 <div className="flex items-center gap-3">
-                                    <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm">
+                                    <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full text-sm font-bold">
                                         {document.user?.name?.charAt(0) ?? 'U'}
                                     </div>
                                     <div>
-                                        <p className="font-bold text-sm text-foreground">
-                                            {document.user?.name}
-                                        </p>
-                                        <p className="text-muted-foreground">
-                                            NIP/NIM: {document.user?.nip_nim ?? '-'}
-                                        </p>
+                                        <p className="text-foreground text-sm font-bold">{document.user?.name}</p>
+                                        <p className="text-muted-foreground">NIP/NIM: {document.user?.nip_nim ?? '-'}</p>
                                     </div>
                                 </div>
 
-                                <div className="border-t pt-3 space-y-2 text-muted-foreground">
+                                <div className="text-muted-foreground space-y-2 border-t pt-3">
                                     <div className="flex items-center gap-2">
                                         <Building2 className="size-3.5 shrink-0" />
                                         <span>{document.user?.unit ?? 'Unit Kerja / Fakultas'}</span>

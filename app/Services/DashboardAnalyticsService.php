@@ -13,8 +13,7 @@ class DashboardAnalyticsService
     /**
      * Generate daily performance overview chart data for the given user.
      *
-     * @param User $user
-     * @param int $days Number of days to include in the time series (default 90 days = 3 months)
+     * @param  int  $days  Number of days to include in the time series (default 90 days = 3 months)
      * @return array<int, array{
      *     date: string,
      *     usulanMasuk: int,
@@ -116,10 +115,10 @@ class DashboardAnalyticsService
                 'pencairanSakti' => $runningPencairan,
                 'activityName' => $activityName,
                 'amount' => $amount,
-                'formattedAmount' => 'Rp ' . number_format($amount, 0, ',', '.'),
+                'formattedAmount' => 'Rp '.number_format($amount, 0, ',', '.'),
                 'disbursedActivity' => $disbursedActivity,
                 'disbursedAmount' => $disbursedAmount,
-                'formattedDisbursedAmount' => 'Rp ' . number_format($disbursedAmount, 0, ',', '.'),
+                'formattedDisbursedAmount' => 'Rp '.number_format($disbursedAmount, 0, ',', '.'),
                 'dailySubmissions' => $daySubmissions,
                 'dailyVerifications' => $dayVerifications,
                 'dailyPencairans' => $dayPencairans,

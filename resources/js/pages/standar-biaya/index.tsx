@@ -1,31 +1,11 @@
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, PaginatedData, SharedData, StandarBiaya } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import {
-    BookOpen,
-    Filter,
-    Info,
-    Layers,
-    Plus,
-    Search,
-    ShieldCheck,
-    Tag,
-    X,
-} from 'lucide-react';
+import { BookOpen, Layers, Plus, Search, ShieldCheck, X } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface StandarBiayaIndexProps {
@@ -47,12 +27,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Standar Biaya (SBM)', href: '/standar-biaya' },
 ];
 
-export default function StandarBiayaIndex({
-    items,
-    categories,
-    filters,
-    stats,
-}: StandarBiayaIndexProps) {
+export default function StandarBiayaIndex({ items, categories, filters, stats }: StandarBiayaIndexProps) {
     const { auth } = usePage<SharedData>().props;
     const isStaffOrAdmin = auth.user.role === 'staf_keuangan' || auth.user.role === 'admin';
 
@@ -69,19 +44,11 @@ export default function StandarBiayaIndex({
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get(
-            route('standar-biaya.index'),
-            { search: searchTerm, kategori: filters.kategori },
-            { preserveState: true }
-        );
+        router.get(route('standar-biaya.index'), { search: searchTerm, kategori: filters.kategori }, { preserveState: true });
     };
 
     const handleCategoryFilter = (category: string) => {
-        router.get(
-            route('standar-biaya.index'),
-            { search: searchTerm, kategori: category },
-            { preserveState: true }
-        );
+        router.get(route('standar-biaya.index'), { search: searchTerm, kategori: category }, { preserveState: true });
     };
 
     const handleResetFilters = () => {
@@ -116,14 +83,12 @@ export default function StandarBiayaIndex({
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <div className="flex items-center gap-2">
-                            <h1 className="text-xl font-semibold tracking-tight text-foreground">
-                                Standar Biaya Masukan (SBM)
-                            </h1>
-                            <span className="rounded-4xl border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                            <h1 className="text-foreground text-xl font-semibold tracking-tight">Standar Biaya Masukan (SBM)</h1>
+                            <span className="border-primary/20 bg-primary/10 text-primary rounded-4xl border px-2 py-0.5 text-[11px] font-medium">
                                 TA {stats.tahun_aktif}
                             </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-muted-foreground mt-0.5 text-xs">
                             Katalog acuan batas tarif belanja operasional, honorarium, dan perjalanan dinas Institut Teknologi Kalimantan
                         </p>
                     </div>
@@ -139,10 +104,8 @@ export default function StandarBiayaIndex({
                             <DialogContent className="max-w-md rounded-xl">
                                 <form onSubmit={handleSubmitAdd}>
                                     <DialogHeader className="border-b pb-3">
-                                        <DialogTitle className="text-base font-semibold tracking-tight">
-                                            Tambah Standar Biaya Baru
-                                        </DialogTitle>
-                                        <DialogDescription className="text-xs text-muted-foreground">
+                                        <DialogTitle className="text-base font-semibold tracking-tight">Tambah Standar Biaya Baru</DialogTitle>
+                                        <DialogDescription className="text-muted-foreground text-xs">
                                             Tambahkan plafon tarif belanja baru untuk validasi proposal dan pertanggungjawaban SPJ.
                                         </DialogDescription>
                                     </DialogHeader>
@@ -160,9 +123,7 @@ export default function StandarBiayaIndex({
                                                 className="h-8 text-xs"
                                                 required
                                             />
-                                            {errors.kategori && (
-                                                <p className="text-[11px] text-destructive">{errors.kategori}</p>
-                                            )}
+                                            {errors.kategori && <p className="text-destructive text-[11px]">{errors.kategori}</p>}
                                         </div>
 
                                         <div className="space-y-1.5">
@@ -177,9 +138,7 @@ export default function StandarBiayaIndex({
                                                 className="h-8 text-xs"
                                                 required
                                             />
-                                            {errors.uraian_belanja && (
-                                                <p className="text-[11px] text-destructive">{errors.uraian_belanja}</p>
-                                            )}
+                                            {errors.uraian_belanja && <p className="text-destructive text-[11px]">{errors.uraian_belanja}</p>}
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-3">
@@ -195,9 +154,7 @@ export default function StandarBiayaIndex({
                                                     className="h-8 text-xs"
                                                     required
                                                 />
-                                                {errors.satuan && (
-                                                    <p className="text-[11px] text-destructive">{errors.satuan}</p>
-                                                )}
+                                                {errors.satuan && <p className="text-destructive text-[11px]">{errors.satuan}</p>}
                                             </div>
 
                                             <div className="space-y-1.5">
@@ -212,9 +169,7 @@ export default function StandarBiayaIndex({
                                                     className="h-8 text-xs"
                                                     required
                                                 />
-                                                {errors.tahun && (
-                                                    <p className="text-[11px] text-destructive">{errors.tahun}</p>
-                                                )}
+                                                {errors.tahun && <p className="text-destructive text-[11px]">{errors.tahun}</p>}
                                             </div>
                                         </div>
 
@@ -231,20 +186,12 @@ export default function StandarBiayaIndex({
                                                 className="h-8 text-xs"
                                                 required
                                             />
-                                            {errors.batas_tarif && (
-                                                <p className="text-[11px] text-destructive">{errors.batas_tarif}</p>
-                                            )}
+                                            {errors.batas_tarif && <p className="text-destructive text-[11px]">{errors.batas_tarif}</p>}
                                         </div>
                                     </div>
 
-                                    <DialogFooter className="border-t pt-3 gap-2">
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="sm"
-                                            className="h-8 text-xs"
-                                            onClick={() => setIsAddOpen(false)}
-                                        >
+                                    <DialogFooter className="gap-2 border-t pt-3">
+                                        <Button type="button" variant="outline" size="sm" className="h-8 text-xs" onClick={() => setIsAddOpen(false)}>
                                             Batal
                                         </Button>
                                         <Button type="submit" disabled={processing} size="sm" className="h-8 gap-1 text-xs shadow-xs">
@@ -258,85 +205,75 @@ export default function StandarBiayaIndex({
                 </div>
 
                 {/* Studio Admin KPI Stat Tiles */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                     {/* Total Acuan */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-muted-foreground">Total Acuan SBM</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <span className="text-muted-foreground text-xs font-medium">Total Acuan SBM</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <BookOpen className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium tabular-nums text-foreground">
-                                {stats.total_items} Item
-                            </span>
-                            <span className="text-[11px] text-muted-foreground">Plafon biaya resmi</span>
+                            <span className="text-foreground text-2xl font-medium tabular-nums">{stats.total_items} Item</span>
+                            <span className="text-muted-foreground text-[11px]">Plafon biaya resmi</span>
                         </div>
                     </div>
 
                     {/* Kategori Belanja */}
-                    <div className="rounded-xl bg-linear-to-t from-primary/5 to-card p-4 ring-1 ring-foreground/10 shadow-xs">
+                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-muted-foreground">Klaster Kategori</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                            <span className="text-muted-foreground text-xs font-medium">Klaster Kategori</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                 <Layers className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium tabular-nums text-foreground">
-                                {stats.total_kategori} Klaster
-                            </span>
-                            <span className="text-[11px] text-muted-foreground">Kelompok pos belanja</span>
+                            <span className="text-foreground text-2xl font-medium tabular-nums">{stats.total_kategori} Klaster</span>
+                            <span className="text-muted-foreground text-[11px]">Kelompok pos belanja</span>
                         </div>
                     </div>
 
                     {/* Validasi Otomatis */}
-                    <div className="rounded-xl bg-linear-to-t from-emerald-500/10 to-card p-4 ring-1 ring-emerald-500/30 shadow-xs">
+                    <div className="to-card rounded-xl bg-linear-to-t from-emerald-500/10 p-4 shadow-xs ring-1 ring-emerald-500/30">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
-                                Validasi Otomatis
-                            </span>
+                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Validasi Otomatis</span>
                             <div className="flex size-7 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                                 <ShieldCheck className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-base font-semibold text-foreground">
-                                Terhubung ke SPJ & Proposal
-                            </span>
-                            <p className="text-[11px] text-muted-foreground mt-0.5">
-                                Belanja di atas plafon otomatis terdeteksi
-                            </p>
+                            <span className="text-foreground text-base font-semibold">Terhubung ke SPJ & Proposal</span>
+                            <p className="text-muted-foreground mt-0.5 text-[11px]">Belanja di atas plafon otomatis terdeteksi</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Main Card with Toolbar & Table */}
-                <div className="rounded-xl border bg-card shadow-2xs overflow-hidden">
+                <div className="bg-card overflow-hidden rounded-xl border shadow-2xs">
                     {/* Studio Admin Toolbar */}
-                    <div className="flex flex-col gap-3 p-4 border-b">
+                    <div className="flex flex-col gap-3 border-b p-4">
                         <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-                            <form onSubmit={handleSearch} className="relative flex-1 max-w-sm">
-                                <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                            <form onSubmit={handleSearch} className="relative max-w-sm flex-1">
+                                <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
                                 <Input
                                     placeholder="Cari uraian belanja atau standar tarif..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="h-8 pl-8 pr-8 text-xs"
+                                    className="h-8 pr-8 pl-8 text-xs"
                                 />
                                 {searchTerm && (
                                     <button
                                         type="button"
                                         onClick={handleResetFilters}
-                                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2"
                                     >
                                         <X className="size-3.5" />
                                     </button>
                                 )}
                             </form>
 
-                            <div className="text-xs text-muted-foreground">
+                            <div className="text-muted-foreground text-xs">
                                 Menampilkan <strong className="text-foreground">{items.data.length}</strong> dari{' '}
                                 <strong className="text-foreground">{stats.total_items}</strong> acuan tarif
                             </div>
@@ -375,9 +312,9 @@ export default function StandarBiayaIndex({
                     {/* Table */}
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs">
-                            <thead className="border-b bg-muted/50 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                            <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
                                 <tr>
-                                    <th className="px-4 py-3 w-12 text-center">#</th>
+                                    <th className="w-12 px-4 py-3 text-center">#</th>
                                     <th className="px-4 py-3">Kategori</th>
                                     <th className="px-4 py-3">Uraian Belanja</th>
                                     <th className="px-4 py-3 text-center">Satuan</th>
@@ -388,35 +325,31 @@ export default function StandarBiayaIndex({
                             <tbody className="divide-y">
                                 {items.data.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                                        <td colSpan={6} className="text-muted-foreground p-8 text-center">
                                             Tidak ada data Standar Biaya Masukan yang sesuai kriteria pencarian.
                                         </td>
                                     </tr>
                                 ) : (
                                     items.data.map((item, index) => (
                                         <tr key={item.id} className="hover:bg-muted/30 transition-colors">
-                                            <td className="px-4 py-3 text-center font-mono text-[11px] text-muted-foreground">
+                                            <td className="text-muted-foreground px-4 py-3 text-center font-mono text-[11px]">
                                                 {(items.current_page - 1) * items.per_page + index + 1}
                                             </td>
                                             <td className="px-4 py-3">
-                                                <span className="rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                                                <span className="bg-muted text-muted-foreground rounded-md px-2 py-0.5 text-[11px] font-medium">
                                                     {item.kategori}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 font-medium text-foreground">
-                                                {item.uraian_belanja}
-                                            </td>
+                                            <td className="text-foreground px-4 py-3 font-medium">{item.uraian_belanja}</td>
                                             <td className="px-4 py-3 text-center">
-                                                <span className="rounded bg-muted/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                                                <span className="bg-muted/60 text-muted-foreground rounded px-1.5 py-0.5 text-[10px]">
                                                     {item.satuan}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-right font-semibold tabular-nums text-foreground">
+                                            <td className="text-foreground px-4 py-3 text-right font-semibold tabular-nums">
                                                 {formatCurrency(item.batas_tarif)}
                                             </td>
-                                            <td className="px-4 py-3 text-center font-mono text-[11px] text-muted-foreground">
-                                                {item.tahun}
-                                            </td>
+                                            <td className="text-muted-foreground px-4 py-3 text-center font-mono text-[11px]">{item.tahun}</td>
                                         </tr>
                                     ))
                                 )}
@@ -426,7 +359,7 @@ export default function StandarBiayaIndex({
 
                     {/* Pagination */}
                     {items.links && items.links.length > 3 && (
-                        <div className="flex items-center justify-between p-3 border-t bg-muted/20 text-xs">
+                        <div className="bg-muted/20 flex items-center justify-between border-t p-3 text-xs">
                             <span className="text-muted-foreground">
                                 Halaman {items.current_page} dari {items.last_page}
                             </span>

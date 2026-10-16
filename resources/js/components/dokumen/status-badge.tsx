@@ -1,15 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { DocumentStatusType } from '@/types';
-import {
-    AlertTriangle,
-    CheckCircle2,
-    Clock,
-    FileCheck,
-    FileSearch,
-    Landmark,
-    Send,
-    Sparkles,
-} from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Clock, FileCheck, FileSearch, Landmark, Send, Sparkles } from 'lucide-react';
 
 interface StatusBadgeProps {
     status: DocumentStatusType | string;

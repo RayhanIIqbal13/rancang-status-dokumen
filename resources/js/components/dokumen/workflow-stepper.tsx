@@ -1,22 +1,7 @@
 import { Badge } from '@/components/ui/badge';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DocumentStatusType, StatusStageInfo } from '@/types';
-import {
-    AlertTriangle,
-    Check,
-    CheckCircle2,
-    Clock,
-    FileCheck,
-    FileSearch,
-    Landmark,
-    Send,
-    Sparkles,
-} from 'lucide-react';
+import { AlertTriangle, Check, CheckCircle2, Clock, FileCheck, FileSearch, Landmark, Send, Sparkles } from 'lucide-react';
 
 interface WorkflowStepperProps {
     currentStatus: DocumentStatusType;
@@ -41,7 +26,7 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
     const currentIdx = allStages.indexOf(currentStatus);
 
     const stageIcons: Record<string, typeof Send> = {
-        'Diajukan': Send,
+        Diajukan: Send,
         'Verifikasi Fakultas': FileSearch,
         'Perlu Revisi': AlertTriangle,
         'Menunggu SK / Penetapan Universitas': Clock,
@@ -96,16 +81,12 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
 
     return (
         <TooltipProvider delayDuration={250}>
-            <div className={`rounded-xl border border-border/80 bg-card p-4 sm:p-5 shadow-xs transition-all ${className}`}>
+            <div className={`border-border/80 bg-card rounded-xl border p-4 shadow-xs transition-all sm:p-5 ${className}`}>
                 {/* Header section with calm, slow-animated status indicator */}
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-3.5">
+                <div className="border-border/60 mb-5 flex flex-wrap items-center justify-between gap-3 border-b pb-3.5">
                     <div>
-                        <h3 className="text-sm font-bold text-foreground tracking-tight">
-                            Alur Status Dokumen Keuangan SAK ITK
-                        </h3>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                            Siklus 8 tahap proses pengelolaan dokumen dan pencairan dana
-                        </p>
+                        <h3 className="text-foreground text-sm font-bold tracking-tight">Alur Status Dokumen Keuangan SAK ITK</h3>
+                        <p className="text-muted-foreground mt-0.5 text-xs">Siklus 8 tahap proses pengelolaan dokumen dan pencairan dana</p>
                     </div>
 
                     {/* Animated current status pill with calm, slow pulse matching StatusTimeline */}
@@ -113,7 +94,7 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                         {isRevision ? (
                             <Badge
                                 variant="destructive"
-                                className="bg-rose-600 text-white text-xs font-semibold gap-1.5 shadow-xs animate-slow-pulse"
+                                className="animate-slow-pulse gap-1.5 bg-rose-600 text-xs font-semibold text-white shadow-xs"
                             >
                                 <AlertTriangle className="size-3.5" />
                                 <span>Status Saat Ini: Perlu Revisi Dokumen</span>
@@ -121,7 +102,7 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                         ) : currentStatus === 'Dana Cair' ? (
                             <Badge
                                 variant="outline"
-                                className="border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 text-xs font-semibold gap-1.5"
+                                className="gap-1.5 border-emerald-300 bg-emerald-50 text-xs font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
                             >
                                 <CheckCircle2 className="size-3.5" />
                                 <span>Semua Tahap Selesai (Dana Cair)</span>
@@ -129,7 +110,7 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                         ) : (
                             <Badge
                                 variant="outline"
-                                className="border-primary/30 bg-primary/10 text-primary text-xs font-semibold gap-1.5 animate-slow-pulse"
+                                className="border-primary/30 bg-primary/10 text-primary animate-slow-pulse gap-1.5 text-xs font-semibold"
                             >
                                 <Clock className="size-3.5" />
                                 <span>
@@ -141,30 +122,18 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                 </div>
 
                 {/* Stepper Horizontal Trail with Increased Width & Calming Smooth Animations */}
-                <div className="relative overflow-x-auto pb-4 pt-2 scrollbar-thin">
-                    <ol className="flex items-start justify-between min-w-[1040px] w-full relative px-2">
+                <div className="scrollbar-thin relative overflow-x-auto pt-2 pb-4">
+                    <ol className="relative flex w-full min-w-[1040px] items-start justify-between px-2">
                         {allStages.map((stepName, index) => {
                             const stageInfo = stages.find((s) => s.value === stepName);
                             const isCurrent = currentStatus === stepName;
-                            const isPast =
-                                currentStatus === 'Dana Cair'
-                                    ? true
-                                    : isRevision
-                                      ? index < 2
-                                      : currentIdx > index;
+                            const isPast = currentStatus === 'Dana Cair' ? true : isRevision ? index < 2 : currentIdx > index;
 
                             const StepIcon = stageIcons[stepName] || Send;
 
                             // Horizontal connector progress logic
-                            const isLinePassed =
-                                currentStatus === 'Dana Cair'
-                                    ? true
-                                    : isRevision
-                                      ? index < 1
-                                      : currentIdx > index;
-                            const isLineConnectingToCurrent =
-                                !isLinePassed &&
-                                (currentIdx === index + 1 || (isRevision && index === 1));
+                            const isLinePassed = currentStatus === 'Dana Cair' ? true : isRevision ? index < 1 : currentIdx > index;
+                            const isLineConnectingToCurrent = !isLinePassed && (currentIdx === index + 1 || (isRevision && index === 1));
 
                             // Node styling matching StatusTimeline with slow, elegant pulse
                             let circleStyle = 'bg-muted/40 text-muted-foreground border-border/80';
@@ -192,25 +161,19 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                             }
 
                             return (
-                                <li
-                                    key={stepName}
-                                    className="group relative flex-1 flex flex-col items-center text-center px-1 min-w-[125px]"
-                                >
+                                <li key={stepName} className="group relative flex min-w-[125px] flex-1 flex-col items-center px-1 text-center">
                                     {/* Horizontal Connector Line between this step and the next */}
                                     {index < allStages.length - 1 && (
-                                        <div
-                                            className="absolute top-5 left-1/2 w-full -translate-y-1/2 z-0 pointer-events-none"
-                                            aria-hidden="true"
-                                        >
-                                            <div className="h-1 w-full bg-border/70 dark:bg-muted/60 relative overflow-hidden">
+                                        <div className="pointer-events-none absolute top-5 left-1/2 z-0 w-full -translate-y-1/2" aria-hidden="true">
+                                            <div className="bg-border/70 dark:bg-muted/60 relative h-1 w-full overflow-hidden">
                                                 <div
                                                     className={`h-full transition-all duration-700 ease-in-out ${
                                                         isLinePassed
-                                                            ? 'bg-emerald-500 w-full'
+                                                            ? 'w-full bg-emerald-500'
                                                             : isLineConnectingToCurrent
                                                               ? isRevision
-                                                                  ? 'bg-gradient-to-r from-emerald-500 to-rose-500 w-full animate-slow-flow'
-                                                                  : 'bg-gradient-to-r from-emerald-500 via-primary/80 to-primary w-full animate-slow-flow'
+                                                                  ? 'animate-slow-flow w-full bg-gradient-to-r from-emerald-500 to-rose-500'
+                                                                  : 'via-primary/80 to-primary animate-slow-flow w-full bg-gradient-to-r from-emerald-500'
                                                               : 'w-0'
                                                     }`}
                                                 />
@@ -225,10 +188,10 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                                                 {/* Gentle, calm breathing glow for active stage (3.5s smooth cycle) */}
                                                 {isCurrent && (
                                                     <span
-                                                        className={`absolute -inset-1.5 rounded-full animate-slow-glow pointer-events-none ${
+                                                        className={`animate-slow-glow pointer-events-none absolute -inset-1.5 rounded-full ${
                                                             isRevision
                                                                 ? 'bg-rose-500/25 ring-2 ring-rose-400/30'
-                                                                : 'bg-primary/20 ring-2 ring-primary/25'
+                                                                : 'bg-primary/20 ring-primary/25 ring-2'
                                                         }`}
                                                     />
                                                 )}
@@ -246,39 +209,44 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                                                 </div>
                                             </div>
                                         </TooltipTrigger>
-                                        <TooltipContent side="top" sideOffset={8} className="max-w-xs text-xs p-3 space-y-1.5 shadow-lg">
-                                            <div className="flex items-center justify-between gap-2 border-b border-border/50 pb-1 font-semibold">
-                                                <span>Tahap {index + 1}: {stepName}</span>
-                                                <span className="text-[10px] text-muted-foreground">
+                                        <TooltipContent side="top" sideOffset={8} className="max-w-xs space-y-1.5 p-3 text-xs shadow-lg">
+                                            <div className="border-border/50 flex items-center justify-between gap-2 border-b pb-1 font-semibold">
+                                                <span>
+                                                    Tahap {index + 1}: {stepName}
+                                                </span>
+                                                <span className="text-muted-foreground text-[10px]">
                                                     {isPast ? 'Selesai' : isCurrent ? 'Sedang Berjalan' : 'Menunggu'}
                                                 </span>
                                             </div>
                                             <p className="text-muted-foreground text-[11px] leading-relaxed">
                                                 {stageInfo?.description || 'Proses tahapan pengelolaan dokumen dan pencairan dana.'}
                                             </p>
-                                            <div className="flex items-center justify-between pt-1 text-[10px] text-muted-foreground">
-                                                <span>Petugas: <strong className="text-foreground">{stageInfo?.updated_by ?? 'Staf Keuangan'}</strong></span>
-                                                <span>Posisi: <strong className="text-foreground">{stageInfo?.default_posisi ?? 'Subbag Keuangan'}</strong></span>
+                                            <div className="text-muted-foreground flex items-center justify-between pt-1 text-[10px]">
+                                                <span>
+                                                    Petugas: <strong className="text-foreground">{stageInfo?.updated_by ?? 'Staf Keuangan'}</strong>
+                                                </span>
+                                                <span>
+                                                    Posisi:{' '}
+                                                    <strong className="text-foreground">{stageInfo?.default_posisi ?? 'Subbag Keuangan'}</strong>
+                                                </span>
                                             </div>
                                         </TooltipContent>
                                     </Tooltip>
 
                                     {/* Label & Details: Never cut off, ample spacing and aligned baseline */}
-                                    <div className="mt-2.5 flex flex-col items-center w-full">
-                                        <span className="font-mono text-[10px] text-muted-foreground block">
-                                            Tahap {index + 1}
-                                        </span>
+                                    <div className="mt-2.5 flex w-full flex-col items-center">
+                                        <span className="text-muted-foreground block font-mono text-[10px]">Tahap {index + 1}</span>
 
                                         {/* Step Title: Explicit 2-line formatting prevents clipping and overlapping */}
-                                        <div className="min-h-[42px] flex flex-col items-center justify-center mt-1 w-full px-0.5">
+                                        <div className="mt-1 flex min-h-[42px] w-full flex-col items-center justify-center px-0.5">
                                             <p
-                                                className={`text-[11px] sm:text-xs font-semibold leading-snug text-center transition-colors ${
+                                                className={`text-center text-[11px] leading-snug font-semibold transition-colors sm:text-xs ${
                                                     isCurrent
                                                         ? isRevision
-                                                            ? 'text-rose-600 dark:text-rose-400 font-bold'
+                                                            ? 'font-bold text-rose-600 dark:text-rose-400'
                                                             : 'text-primary font-bold'
                                                         : isPast
-                                                          ? 'text-foreground font-semibold group-hover:text-primary'
+                                                          ? 'text-foreground group-hover:text-primary font-semibold'
                                                           : 'text-muted-foreground/75 group-hover:text-foreground'
                                                 }`}
                                             >
@@ -287,7 +255,7 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                                         </div>
 
                                         {/* Responsible Officer */}
-                                        <p className="mt-1 text-[10px] text-muted-foreground text-center leading-normal">
+                                        <p className="text-muted-foreground mt-1 text-center text-[10px] leading-normal">
                                             {stageInfo?.updated_by ?? 'Staf Keuangan'}
                                         </p>
                                     </div>

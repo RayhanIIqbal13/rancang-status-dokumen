@@ -598,7 +598,7 @@ class DokumenTrackingSeeder extends Seeder
                         'total_realisasi' => $total,
                         'tgl_pencairan' => now()->subDays(rand(1, 10))->format('Y-m-d'),
                         'status_pencairan' => 'Dana Cair (SP2D Selesai)',
-                        'draf_rekap_spj' => 'SPJ lengkap 100% senilai Rp ' . number_format($total, 0, ',', '.') . ' telah diverifikasi.',
+                        'draf_rekap_spj' => 'SPJ lengkap 100% senilai Rp '.number_format($total, 0, ',', '.').' telah diverifikasi.',
                     ]
                 );
             }

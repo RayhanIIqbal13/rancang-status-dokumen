@@ -1,52 +1,16 @@
-import React, { useState } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
-import {
-    Activity,
-    ArrowUpRight,
-    ChevronDown,
-    DollarSign,
-    Download,
-    FileCheck,
-    FileText,
-    Filter,
-    GitCommitHorizontal,
-    Search,
-    TrendingDown,
-    TrendingUp,
-    UserPlus,
-    Users,
-    Waves,
-} from 'lucide-react';
-import { StatusBadge } from '@/components/dokumen/status-badge';
 import { PerformanceOverview, type PerformanceChartPoint } from '@/components/dashboard/performance-overview';
+import { StatusBadge } from '@/components/dokumen/status-badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardAction,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DokumenPengajuan, User } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { ArrowUpRight, DollarSign, Download, Search, TrendingDown, TrendingUp, UserPlus, Users, Waves } from 'lucide-react';
+import { useState } from 'react';
 
 interface DashboardProps {
     recentDocuments: DokumenPengajuan[];
@@ -79,16 +43,16 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Dashboard({
     recentDocuments = [],
-    actionRequired = [],
-    recentDisbursements = [],
+    actionRequired: _actionRequired = [],
+    recentDisbursements: _recentDisbursements = [],
     latestDisbursement = null,
     stats,
     performanceChartData = [],
 }: DashboardProps) {
     const { auth } = usePage<{ auth: { user: User } }>().props;
-    const user = auth.user;
+    const _user = auth.user;
     const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('all');
+    const [statusFilter, _setStatusFilter] = useState('all');
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
     const formatCurrency = (amount: number | string) => {
@@ -115,16 +79,12 @@ export default function Dashboard({
             doc.nomor_pengajuan?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             doc.user?.name?.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const matchesStatus =
-            statusFilter === 'all' || doc.status_terkini === statusFilter;
+        const matchesStatus = statusFilter === 'all' || doc.status_terkini === statusFilter;
 
         return matchesSearch && matchesStatus;
     });
 
-    const totalNominal = stats.total_nominal ?? recentDocuments.reduce(
-        (acc, curr) => acc + (Number(curr.total_usulan) || 0),
-        0
-    );
+    const totalNominal = stats.total_nominal ?? recentDocuments.reduce((acc, curr) => acc + (Number(curr.total_usulan) || 0), 0);
 
     const toggleSelectAll = (checked: boolean) => {
         if (checked) {
@@ -135,23 +95,21 @@ export default function Dashboard({
     };
 
     const toggleSelectRow = (id: number) => {
-        setSelectedRows((prev) =>
-            prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id]
-        );
+        setSelectedRows((prev) => (prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id]));
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Default Dashboard — Studio Admin" />
 
-            <div className="@container/main flex flex-col gap-4 md:gap-6 p-4 md:p-6 w-full">
+            <div className="@container/main flex w-full flex-col gap-4 p-4 md:gap-6 md:p-6">
                 {/* 1. MetricCards - Exact match with next-shadcn-admin-dashboard */}
-                <div className="grid grid-cols-1 gap-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs xl:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+                <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs xl:grid-cols-4">
                     {/* Card 1: Total Revenue / Pagu Usulan */}
                     <Card>
                         <CardHeader>
                             <CardTitle>
-                                <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                                <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                     <DollarSign className="size-4" />
                                 </div>
                             </CardTitle>
@@ -159,7 +117,7 @@ export default function Dashboard({
                         </CardHeader>
                         <CardContent className="flex flex-col gap-1">
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="font-medium text-3xl tabular-nums leading-none tracking-tight">
+                                <div className="text-3xl leading-none font-medium tracking-tight tabular-nums">
                                     {totalNominal > 0 ? formatCurrency(totalNominal) : 'Rp 1.968.500.000'}
                                 </div>
                                 <Badge>
@@ -175,7 +133,7 @@ export default function Dashboard({
                     <Card>
                         <CardHeader>
                             <CardTitle>
-                                <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                                <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                     <UserPlus className="size-4" />
                                 </div>
                             </CardTitle>
@@ -183,17 +141,13 @@ export default function Dashboard({
                         </CardHeader>
                         <CardContent className="flex flex-col gap-1">
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="font-medium text-3xl tabular-nums leading-none tracking-tight">
-                                    {stats.total_pengajuan}
-                                </div>
+                                <div className="text-3xl leading-none font-medium tracking-tight tabular-nums">{stats.total_pengajuan}</div>
                                 <Badge variant="destructive">
                                     <TrendingDown className="size-3" />
                                     -20%
                                 </Badge>
                             </div>
-                            <p className="text-muted-foreground text-sm">
-                                {stats.perlu_revisi} berkas perlu revisi pengusul
-                            </p>
+                            <p className="text-muted-foreground text-sm">{stats.perlu_revisi} berkas perlu revisi pengusul</p>
                         </CardContent>
                     </Card>
 
@@ -201,7 +155,7 @@ export default function Dashboard({
                     <Card>
                         <CardHeader>
                             <CardTitle>
-                                <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                                <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                     <Users className="size-4" />
                                 </div>
                             </CardTitle>
@@ -209,9 +163,7 @@ export default function Dashboard({
                         </CardHeader>
                         <CardContent className="flex flex-col gap-1">
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="font-medium text-3xl tabular-nums leading-none tracking-tight">
-                                    {stats.menunggu_verifikasi}
-                                </div>
+                                <div className="text-3xl leading-none font-medium tracking-tight tabular-nums">{stats.menunggu_verifikasi}</div>
                                 <Badge>
                                     <TrendingUp className="size-3" />
                                     +12.5%
@@ -225,7 +177,7 @@ export default function Dashboard({
                     <Card>
                         <CardHeader>
                             <CardTitle>
-                                <div className="flex size-7 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+                                <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
                                     <Waves className="size-4" />
                                 </div>
                             </CardTitle>
@@ -233,20 +185,25 @@ export default function Dashboard({
                         </CardHeader>
                         <CardContent className="flex flex-col gap-1.5">
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="font-semibold text-2xl tabular-nums leading-none tracking-tight text-foreground">
+                                <div className="text-foreground text-2xl leading-none font-semibold tracking-tight tabular-nums">
                                     {latestDisbursement
                                         ? formatCurrency(latestDisbursement.total_usulan)
                                         : stats.total_cair_nominal && stats.total_cair_nominal > 0
                                           ? formatCurrency(stats.total_cair_nominal)
                                           : 'Rp 28.500.000'}
                                 </div>
-                                <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 font-medium">
-                                    <TrendingUp className="size-3 mr-1" />
+                                <Badge className="border-emerald-500/20 bg-emerald-500/10 font-medium text-emerald-700 dark:text-emerald-400">
+                                    <TrendingUp className="mr-1 size-3" />
                                     {stats.dana_cair} Berkas Cair
                                 </Badge>
                             </div>
-                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
-                                <span className="font-medium text-foreground line-clamp-1 truncate" title={latestDisbursement?.nama_kegiatan ?? 'Penyusunan Rencana Strategis (Renstra) Penelitian Fakultas 2026-2030'}>
+                            <div className="text-muted-foreground mt-0.5 flex items-center gap-1.5 text-xs">
+                                <span
+                                    className="text-foreground line-clamp-1 truncate font-medium"
+                                    title={
+                                        latestDisbursement?.nama_kegiatan ?? 'Penyusunan Rencana Strategis (Renstra) Penelitian Fakultas 2026-2030'
+                                    }
+                                >
                                     {latestDisbursement?.nama_kegiatan ?? 'Penyusunan Rencana Strategis (Renstra) Penelitian Fakultas 2026-2030'}
                                 </span>
                             </div>
@@ -260,22 +217,20 @@ export default function Dashboard({
                 {/* 3. SubscriberOverview / Recent Documents Table Card */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="leading-none">
-                            {recentDocuments.length} Dokumen Pengajuan Terkini
-                        </CardTitle>
+                        <CardTitle className="leading-none">{recentDocuments.length} Dokumen Pengajuan Terkini</CardTitle>
                         <CardDescription>
                             Daftar berkas usulan kegiatan, status tahapan verifikasi, unit kerja pengusul, dan pagu anggaran.
                         </CardDescription>
                         <CardAction>
                             <div className="flex items-center gap-2">
                                 <div className="relative">
-                                    <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                                    <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
                                     <Input
                                         type="text"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         placeholder="Cari kegiatan..."
-                                        className="h-8 w-44 lg:w-56 pl-8 text-xs"
+                                        className="h-8 w-44 pl-8 text-xs lg:w-56"
                                     />
                                 </div>
 
@@ -290,16 +245,13 @@ export default function Dashboard({
                     </CardHeader>
 
                     <CardContent className="pt-0">
-                        <div className="rounded-lg border border-border/70 overflow-hidden">
+                        <div className="border-border/70 overflow-hidden rounded-lg border">
                             <Table>
                                 <TableHeader>
                                     <TableRow className="bg-muted/30">
                                         <TableHead className="w-10">
                                             <Checkbox
-                                                checked={
-                                                    selectedRows.length === filteredDocuments.length &&
-                                                    filteredDocuments.length > 0
-                                                }
+                                                checked={selectedRows.length === filteredDocuments.length && filteredDocuments.length > 0}
                                                 onCheckedChange={toggleSelectAll}
                                             />
                                         </TableHead>
@@ -308,13 +260,13 @@ export default function Dashboard({
                                         <TableHead>Pengusul & Unit</TableHead>
                                         <TableHead className="text-right">Pagu Usulan</TableHead>
                                         <TableHead>Tanggal Pelaksanaan</TableHead>
-                                        <TableHead className="text-right w-12">Aksi</TableHead>
+                                        <TableHead className="w-12 text-right">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {filteredDocuments.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={7} className="h-28 text-center text-xs text-muted-foreground">
+                                            <TableCell colSpan={7} className="text-muted-foreground h-28 text-center text-xs">
                                                 Tidak ada dokumen pengajuan yang cocok dengan pencarian.
                                             </TableCell>
                                         </TableRow>
@@ -323,7 +275,7 @@ export default function Dashboard({
                                             <TableRow
                                                 key={doc.id}
                                                 data-state={selectedRows.includes(doc.id) ? 'selected' : undefined}
-                                                className="transition-colors hover:bg-muted/40"
+                                                className="hover:bg-muted/40 transition-colors"
                                             >
                                                 <TableCell>
                                                     <Checkbox
@@ -334,11 +286,11 @@ export default function Dashboard({
                                                 <TableCell className="max-w-xs">
                                                     <Link
                                                         href={`/dokumen-pengajuan/${doc.id}`}
-                                                        className="font-medium text-foreground hover:underline line-clamp-1 text-xs"
+                                                        className="text-foreground line-clamp-1 text-xs font-medium hover:underline"
                                                     >
                                                         {doc.nama_kegiatan}
                                                     </Link>
-                                                    <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-muted-foreground font-mono">
+                                                    <div className="text-muted-foreground mt-0.5 flex items-center gap-1.5 font-mono text-[10px]">
                                                         <span>{doc.nomor_pengajuan}</span>
                                                         <span>•</span>
                                                         <span>{doc.jenis_anggaran}</span>
@@ -348,19 +300,13 @@ export default function Dashboard({
                                                     <StatusBadge status={doc.status_terkini} size="sm" />
                                                 </TableCell>
                                                 <TableCell className="text-xs">
-                                                    <span className="font-medium text-foreground block">
-                                                        {doc.user?.name}
-                                                    </span>
-                                                    <span className="text-[10px] text-muted-foreground block">
-                                                        {doc.user?.unit || '-'}
-                                                    </span>
+                                                    <span className="text-foreground block font-medium">{doc.user?.name}</span>
+                                                    <span className="text-muted-foreground block text-[10px]">{doc.user?.unit || '-'}</span>
                                                 </TableCell>
-                                                <TableCell className="text-right font-medium tabular-nums text-foreground text-xs">
+                                                <TableCell className="text-foreground text-right text-xs font-medium tabular-nums">
                                                     {formatCurrency(doc.total_usulan)}
                                                 </TableCell>
-                                                <TableCell className="text-xs text-muted-foreground">
-                                                    {formatDate(doc.tgl_pelaksanaan)}
-                                                </TableCell>
+                                                <TableCell className="text-muted-foreground text-xs">{formatDate(doc.tgl_pelaksanaan)}</TableCell>
                                                 <TableCell className="text-right">
                                                     <Button asChild size="icon" variant="ghost" className="size-7">
                                                         <Link href={`/dokumen-pengajuan/${doc.id}`}>

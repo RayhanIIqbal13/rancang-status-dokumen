@@ -152,13 +152,16 @@
 
     body {
         @apply bg-background text-foreground antialiased;
-        font-feature-settings: 'rlig' 1, 'calt' 1;
+        font-feature-settings:
+            'rlig' 1,
+            'calt' 1;
     }
 }
 
 /* Custom slow & gentle animations for status flow & timelines */
 @keyframes slow-pulse {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
         transform: scale(1);
     }
@@ -169,7 +172,8 @@
 }
 
 @keyframes slow-glow {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 0.25;
         transform: scale(1);
     }
@@ -203,4 +207,3 @@
     background-size: 200% 200%;
     animation: slow-flow 4s ease-in-out infinite;
 }
-

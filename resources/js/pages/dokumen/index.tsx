@@ -1,53 +1,13 @@
-import React, { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
-import {
-    AlertTriangle,
-    ArrowUpRight,
-    Building2,
-    Calendar,
-    CheckCircle2,
-    Clock,
-    Download,
-    FileCheck,
-    FilePlus,
-    FileText,
-    Filter,
-    GitCommitHorizontal,
-    Layers,
-    MapPin,
-    PlusCircle,
-    Search,
-    User as UserIcon,
-    Wallet,
-    X,
-} from 'lucide-react';
 import { StatusBadge } from '@/components/dokumen/status-badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardAction,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import {
-    BreadcrumbItem,
-    DokumenPengajuan,
-    DocumentStatusType,
-    PaginatedData,
-    StatusStageInfo,
-} from '@/types';
+import { BreadcrumbItem, DokumenPengajuan, PaginatedData, StatusStageInfo } from '@/types';
+import { Head, Link, router } from '@inertiajs/react';
+import { AlertTriangle, CheckCircle2, Clock, FileText, Filter, Layers, MapPin, PlusCircle, Search, Wallet, X } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface IndexProps {
     documents: PaginatedData<DokumenPengajuan>;
@@ -73,24 +33,16 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Pengajuan Dokumen', href: '/dokumen-pengajuan' },
 ];
 
-export default function DokumenIndex({ documents, filters, stats, stages }: IndexProps) {
+export default function DokumenIndex({ documents, filters, stats, stages: _stages }: IndexProps) {
     const [searchTerm, setSearchTerm] = useState(filters.search || '');
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get(
-            route('dokumen-pengajuan.index'),
-            { search: searchTerm, status: filters.status },
-            { preserveState: true }
-        );
+        router.get(route('dokumen-pengajuan.index'), { search: searchTerm, status: filters.status }, { preserveState: true });
     };
 
     const handleFilterStatus = (status: string) => {
-        router.get(
-            route('dokumen-pengajuan.index'),
-            { search: searchTerm, status },
-            { preserveState: true }
-        );
+        router.get(route('dokumen-pengajuan.index'), { search: searchTerm, status }, { preserveState: true });
     };
 
     const handleReset = () => {
@@ -119,25 +71,23 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Pengajuan Dokumen Keuangan — SAK ITK" />
 
-            <div className="@container/main flex flex-col gap-4 md:gap-6 p-4 md:p-6 max-w-screen-2xl mx-auto w-full">
+            <div className="@container/main mx-auto flex w-full max-w-screen-2xl flex-col gap-4 p-4 md:gap-6 md:p-6">
                 {/* Header */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <div className="flex items-center gap-2">
-                            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground font-heading">
-                                Pengajuan Dokumen Keuangan
-                            </h1>
+                            <h1 className="text-foreground font-heading text-xl font-bold tracking-tight md:text-2xl">Pengajuan Dokumen Keuangan</h1>
                             <Badge variant="outline" className="border-border bg-muted/40 text-xs font-medium">
                                 Total: {stats.total}
                             </Badge>
                         </div>
-                        <p className="text-xs md:text-sm text-muted-foreground mt-0.5">
+                        <p className="text-muted-foreground mt-0.5 text-xs md:text-sm">
                             Daftar proposal usulan anggaran, kelengkapan berkas fisik, dan disposisi verifikasi fakultas
                         </p>
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Button asChild size="sm" className="h-8 text-xs gap-1.5 rounded-lg shadow-xs">
+                        <Button asChild size="sm" className="h-8 gap-1.5 rounded-lg text-xs shadow-xs">
                             <Link href="/dokumen-pengajuan/create">
                                 <PlusCircle className="size-3.5" />
                                 <span>Buat Pengajuan Baru</span>
@@ -147,57 +97,53 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
                 </div>
 
                 {/* KPI Stat Tiles */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                    <Card className="rounded-xl border border-border/80 p-3 shadow-xs">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+                    <Card className="border-border/80 rounded-xl border p-3 shadow-xs">
                         <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-medium text-muted-foreground">Semua Dokumen</span>
-                            <FileText className="size-3.5 text-muted-foreground" />
+                            <span className="text-muted-foreground text-[11px] font-medium">Semua Dokumen</span>
+                            <FileText className="text-muted-foreground size-3.5" />
                         </div>
-                        <div className="text-xl font-bold text-foreground mt-1 tabular-nums">{stats.total}</div>
+                        <div className="text-foreground mt-1 text-xl font-bold tabular-nums">{stats.total}</div>
                     </Card>
 
-                    <Card className="rounded-xl border border-border/80 p-3 shadow-xs">
+                    <Card className="border-border/80 rounded-xl border p-3 shadow-xs">
                         <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-medium text-muted-foreground">Diajukan</span>
+                            <span className="text-muted-foreground text-[11px] font-medium">Diajukan</span>
                             <Clock className="size-3.5 text-blue-600" />
                         </div>
-                        <div className="text-xl font-bold text-foreground mt-1 tabular-nums">{stats.diajukan}</div>
+                        <div className="text-foreground mt-1 text-xl font-bold tabular-nums">{stats.diajukan}</div>
                     </Card>
 
-                    <Card className="rounded-xl border border-border/80 p-3 shadow-xs">
+                    <Card className="border-border/80 rounded-xl border p-3 shadow-xs">
                         <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-medium text-muted-foreground">Verifikasi SBM</span>
+                            <span className="text-muted-foreground text-[11px] font-medium">Verifikasi SBM</span>
                             <Layers className="size-3.5 text-amber-600" />
                         </div>
-                        <div className="text-xl font-bold text-foreground mt-1 tabular-nums">{stats.verifikasi}</div>
+                        <div className="text-foreground mt-1 text-xl font-bold tabular-nums">{stats.verifikasi}</div>
                     </Card>
 
-                    <Card className="rounded-xl border border-border/80 p-3 shadow-xs">
+                    <Card className="border-border/80 rounded-xl border p-3 shadow-xs">
                         <div className="flex items-center justify-between">
                             <span className="text-[11px] font-medium text-rose-600">Perlu Revisi</span>
                             <AlertTriangle className="size-3.5 text-rose-600" />
                         </div>
-                        <div className="text-xl font-bold text-rose-600 dark:text-rose-400 mt-1 tabular-nums">
-                            {stats.perlu_revisi}
-                        </div>
+                        <div className="mt-1 text-xl font-bold text-rose-600 tabular-nums dark:text-rose-400">{stats.perlu_revisi}</div>
                     </Card>
 
-                    <Card className="rounded-xl border border-border/80 p-3 shadow-xs">
+                    <Card className="border-border/80 rounded-xl border p-3 shadow-xs">
                         <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-medium text-muted-foreground">Disetujui</span>
+                            <span className="text-muted-foreground text-[11px] font-medium">Disetujui</span>
                             <CheckCircle2 className="size-3.5 text-teal-600" />
                         </div>
-                        <div className="text-xl font-bold text-foreground mt-1 tabular-nums">{stats.disetujui}</div>
+                        <div className="text-foreground mt-1 text-xl font-bold tabular-nums">{stats.disetujui}</div>
                     </Card>
 
-                    <Card className="rounded-xl border border-border/80 p-3 shadow-xs">
+                    <Card className="border-border/80 rounded-xl border p-3 shadow-xs">
                         <div className="flex items-center justify-between">
                             <span className="text-[11px] font-medium text-emerald-600">Dana Cair</span>
                             <Wallet className="size-3.5 text-emerald-600" />
                         </div>
-                        <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1 tabular-nums">
-                            {stats.dana_cair}
-                        </div>
+                        <div className="mt-1 text-xl font-bold text-emerald-600 tabular-nums dark:text-emerald-400">{stats.dana_cair}</div>
                     </Card>
                 </div>
 
@@ -205,25 +151,20 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
                 <Card>
                     <CardHeader>
                         <CardTitle className="leading-none">Berkas Pengajuan Dokumen</CardTitle>
-                        <CardDescription>
-                            Kelola usulan, cek posisi berkas fisik, dan pantau status realisasi anggaran SBM
-                        </CardDescription>
+                        <CardDescription>Kelola usulan, cek posisi berkas fisik, dan pantau status realisasi anggaran SBM</CardDescription>
                         <CardAction>
-                            <form
-                                onSubmit={handleSearch}
-                                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
-                            >
+                            <form onSubmit={handleSearch} className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
                                 <div className="relative">
-                                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+                                    <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
                                     <input
                                         type="text"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         placeholder="Cari kegiatan atau pengusul..."
-                                        className="h-8 w-44 lg:w-56 pl-8 pr-2.5 text-xs rounded-lg border border-border/80 bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                                        className="border-border/80 bg-background text-foreground placeholder:text-muted-foreground focus:ring-ring h-8 w-44 rounded-lg border pr-2.5 pl-8 text-xs focus:ring-1 focus:outline-none lg:w-56"
                                     />
                                 </div>
-                                <Button type="submit" variant="secondary" size="sm" className="h-8 text-xs gap-1">
+                                <Button type="submit" variant="secondary" size="sm" className="h-8 gap-1 text-xs">
                                     <Filter className="size-3" />
                                     Cari
                                 </Button>
@@ -233,7 +174,7 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
                                         variant="ghost"
                                         size="sm"
                                         onClick={handleReset}
-                                        className="h-8 text-xs text-muted-foreground hover:text-foreground gap-1"
+                                        className="text-muted-foreground hover:text-foreground h-8 gap-1 text-xs"
                                     >
                                         <X className="size-3" />
                                         Reset
@@ -244,7 +185,7 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
                     </CardHeader>
 
                     {/* Filter Pills */}
-                    <div className="px-4 pb-3 border-b border-border/60">
+                    <div className="border-border/60 border-b px-4 pb-3">
                         <div className="flex flex-wrap items-center gap-1.5 text-xs">
                             <span className="text-muted-foreground mr-1 text-[11px]">Filter Status:</span>
                             {[
@@ -260,7 +201,7 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
                                     key={tab.id}
                                     type="button"
                                     onClick={() => handleFilterStatus(tab.id)}
-                                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors ${
+                                    className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
                                         filters.status === tab.id
                                             ? 'bg-primary text-primary-foreground shadow-xs'
                                             : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -273,7 +214,7 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
                     </div>
 
                     <CardContent className="pt-0">
-                        <div className="rounded-lg border border-border/70 overflow-hidden">
+                        <div className="border-border/70 overflow-hidden rounded-lg border">
                             <Table>
                                 <TableHeader>
                                     <TableRow className="bg-muted/30">
@@ -283,13 +224,13 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
                                         <TableHead className="text-right">Total Usulan</TableHead>
                                         <TableHead className="text-center">Status Terkini</TableHead>
                                         <TableHead>Posisi Berkas</TableHead>
-                                        <TableHead className="text-right w-24">Aksi</TableHead>
+                                        <TableHead className="w-24 text-right">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {documents.data.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={7} className="h-28 text-center text-xs text-muted-foreground">
+                                            <TableCell colSpan={7} className="text-muted-foreground h-28 text-center text-xs">
                                                 Tidak ada dokumen pengajuan ditemukan.
                                             </TableCell>
                                         </TableRow>
@@ -297,53 +238,47 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
                                         documents.data.map((doc) => (
                                             <TableRow key={doc.id} className="hover:bg-muted/40 transition-colors">
                                                 <TableCell className="max-w-xs">
-                                                    <div className="font-mono text-xs font-bold text-primary">
-                                                        {doc.nomor_pengajuan}
-                                                    </div>
+                                                    <div className="text-primary font-mono text-xs font-bold">{doc.nomor_pengajuan}</div>
                                                     <Link
                                                         href={route('dokumen-pengajuan.show', doc.id)}
-                                                        className="font-medium text-foreground text-xs hover:text-primary transition-colors line-clamp-1 block mt-0.5"
+                                                        className="text-foreground hover:text-primary mt-0.5 line-clamp-1 block text-xs font-medium transition-colors"
                                                     >
                                                         {doc.nama_kegiatan}
                                                     </Link>
-                                                    <span className="text-[10px] text-muted-foreground font-mono">
+                                                    <span className="text-muted-foreground font-mono text-[10px]">
                                                         Diajukan: {formatDate(doc.created_at)}
                                                     </span>
                                                 </TableCell>
                                                 <TableCell className="text-xs">
-                                                    <div className="font-medium text-foreground">{doc.user?.name || '-'}</div>
+                                                    <div className="text-foreground font-medium">{doc.user?.name || '-'}</div>
                                                     <div className="text-muted-foreground text-[10px]">{doc.user?.unit || '-'}</div>
                                                 </TableCell>
                                                 <TableCell className="text-xs">
-                                                    <span className="inline-block px-2 py-0.5 rounded bg-muted text-[11px] font-medium text-muted-foreground">
+                                                    <span className="bg-muted text-muted-foreground inline-block rounded px-2 py-0.5 text-[11px] font-medium">
                                                         {doc.jenis_anggaran}
                                                     </span>
                                                 </TableCell>
-                                                <TableCell className="text-right text-xs font-bold tabular-nums text-foreground">
+                                                <TableCell className="text-foreground text-right text-xs font-bold tabular-nums">
                                                     {formatCurrency(doc.total_usulan)}
                                                 </TableCell>
                                                 <TableCell className="text-center">
                                                     <StatusBadge status={doc.status_terkini} size="sm" />
                                                 </TableCell>
                                                 <TableCell className="text-xs">
-                                                    <div className="flex items-center gap-1 font-medium text-foreground">
-                                                        <MapPin className="size-3 text-primary shrink-0" />
-                                                        <span className="truncate max-w-[140px]">
+                                                    <div className="text-foreground flex items-center gap-1 font-medium">
+                                                        <MapPin className="text-primary size-3 shrink-0" />
+                                                        <span className="max-w-[140px] truncate">
                                                             {doc.latest_status_tracking?.posisi_berkas || 'Subbag Keuangan Fakultas'}
                                                         </span>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex items-center justify-end gap-1.5">
-                                                        <Button asChild variant="outline" size="sm" className="h-7 text-xs px-2.5 rounded-lg">
-                                                            <Link href={route('status-tracking.show', doc.id)}>
-                                                                Lacak
-                                                            </Link>
+                                                        <Button asChild variant="outline" size="sm" className="h-7 rounded-lg px-2.5 text-xs">
+                                                            <Link href={route('status-tracking.show', doc.id)}>Lacak</Link>
                                                         </Button>
-                                                        <Button asChild size="sm" className="h-7 text-xs px-2.5 rounded-lg">
-                                                            <Link href={route('dokumen-pengajuan.show', doc.id)}>
-                                                                Detail
-                                                            </Link>
+                                                        <Button asChild size="sm" className="h-7 rounded-lg px-2.5 text-xs">
+                                                            <Link href={route('dokumen-pengajuan.show', doc.id)}>Detail</Link>
                                                         </Button>
                                                     </div>
                                                 </TableCell>
@@ -357,11 +292,11 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
 
                     {/* Pagination Footer */}
                     {documents.links && documents.links.length > 3 && (
-                        <div className="flex items-center justify-between px-4 py-3 border-t border-border/60 bg-muted/20 text-xs text-muted-foreground">
+                        <div className="border-border/60 bg-muted/20 text-muted-foreground flex items-center justify-between border-t px-4 py-3 text-xs">
                             <div>
-                                Menampilkan <span className="font-medium text-foreground">{documents.from || 0}</span>-
-                                <span className="font-medium text-foreground">{documents.to || 0}</span> dari{' '}
-                                <span className="font-medium text-foreground">{documents.total}</span> data
+                                Menampilkan <span className="text-foreground font-medium">{documents.from || 0}</span>-
+                                <span className="text-foreground font-medium">{documents.to || 0}</span> dari{' '}
+                                <span className="text-foreground font-medium">{documents.total}</span> data
                             </div>
                             <div className="flex gap-1">
                                 {documents.links.map((link, i) => (
@@ -370,12 +305,12 @@ export default function DokumenIndex({ documents, filters, stats, stages }: Inde
                                         disabled={!link.url}
                                         onClick={() => link.url && router.get(link.url, {}, { preserveState: true })}
                                         dangerouslySetInnerHTML={{ __html: link.label }}
-                                        className={`h-7 min-w-7 px-2 rounded-lg text-xs font-medium transition-colors ${
+                                        className={`h-7 min-w-7 rounded-lg px-2 text-xs font-medium transition-colors ${
                                             link.active
-                                                ? 'bg-primary text-primary-foreground shadow-xs font-bold'
+                                                ? 'bg-primary text-primary-foreground font-bold shadow-xs'
                                                 : link.url
-                                                ? 'hover:bg-muted text-foreground'
-                                                : 'text-muted-foreground/40 cursor-not-allowed'
+                                                  ? 'hover:bg-muted text-foreground'
+                                                  : 'text-muted-foreground/40 cursor-not-allowed'
                                         }`}
                                     />
                                 ))}

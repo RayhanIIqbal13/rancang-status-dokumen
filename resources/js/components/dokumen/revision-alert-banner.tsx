@@ -22,9 +22,7 @@ export function RevisionAlertBanner({ document, stages, className = '' }: Revisi
     const isOwner = document.user_id === currentUser.id;
 
     return (
-        <div
-            className={`rounded-xl border-2 border-rose-400 bg-rose-50/90 p-5 shadow-xs dark:border-rose-800 dark:bg-rose-950/40 ${className}`}
-        >
+        <div className={`rounded-xl border-2 border-rose-400 bg-rose-50/90 p-5 shadow-xs dark:border-rose-800 dark:bg-rose-950/40 ${className}`}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex items-start gap-3.5">
                     <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-rose-600 text-white shadow-xs">
@@ -32,9 +30,7 @@ export function RevisionAlertBanner({ document, stages, className = '' }: Revisi
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
-                            <h4 className="text-base font-bold text-rose-900 dark:text-rose-100">
-                                Dokumen Memerlukan Revisi & Perbaikan
-                            </h4>
+                            <h4 className="text-base font-bold text-rose-900 dark:text-rose-100">Dokumen Memerlukan Revisi & Perbaikan</h4>
                             <span className="rounded-full bg-rose-200/80 px-2 py-0.5 text-[10px] font-bold tracking-wide text-rose-800 uppercase dark:bg-rose-900 dark:text-rose-200">
                                 Tindakan Diperlukan
                             </span>
@@ -45,15 +41,15 @@ export function RevisionAlertBanner({ document, stages, className = '' }: Revisi
 
                         {/* Revision Notes Box */}
                         <div className="mt-3 rounded-lg border border-rose-300 bg-white/80 p-3.5 text-xs leading-relaxed text-rose-950 shadow-2xs dark:border-rose-800 dark:bg-neutral-900/80 dark:text-rose-100">
-                            <p className="font-semibold text-rose-800 dark:text-rose-400 mb-1">
+                            <p className="mb-1 font-semibold text-rose-800 dark:text-rose-400">
                                 Catatan Pemeriksa ({latestTracking?.updater_name ?? 'Staf Keuangan'}):
                             </p>
-                            <p className="whitespace-pre-line font-medium">
+                            <p className="font-medium whitespace-pre-line">
                                 {latestTracking?.catatan ||
                                     'Harap periksa kembali kelengkapan lampiran usulan dan kepatuhan terhadap Standar Biaya Masukan (SBM).'}
                             </p>
                             {latestTracking?.waktu_update && (
-                                <p className="mt-2 flex items-center gap-1 text-[11px] text-muted-foreground">
+                                <p className="text-muted-foreground mt-2 flex items-center gap-1 text-[11px]">
                                     <Clock className="size-3" />
                                     <span>
                                         Dicatat pada:{' '}
@@ -75,7 +71,7 @@ export function RevisionAlertBanner({ document, stages, className = '' }: Revisi
                             document={document}
                             stages={stages}
                             triggerButton={
-                                <Button className="w-full gap-2 bg-rose-600 text-white hover:bg-rose-700 shadow-sm sm:w-auto">
+                                <Button className="w-full gap-2 bg-rose-600 text-white shadow-sm hover:bg-rose-700 sm:w-auto">
                                     <RefreshCw className="size-4" />
                                     <span>Kirimkan Revisi Dokumen</span>
                                 </Button>

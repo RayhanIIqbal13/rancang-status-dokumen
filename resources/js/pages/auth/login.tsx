@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle, Shield, User, Users } from 'lucide-react';
-import React, { FormEventHandler } from 'react';
+import { LoaderCircle } from 'lucide-react';
+import { FormEventHandler } from 'react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -11,7 +11,6 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
 interface LoginForm {
-    [key: string]: any;
     email: string;
     password: string;
     remember: boolean;
@@ -45,10 +44,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     };
 
     return (
-        <AuthLayout
-            title="Masuk ke Akun SAK ITK"
-            description="Masukkan email dan kata sandi untuk mengakses layanan status dokumen"
-        >
+        <AuthLayout title="Masuk ke Akun SAK ITK" description="Masukkan email dan kata sandi untuk mengakses layanan status dokumen">
             <Head title="Masuk - Studio Admin SAK ITK" />
 
             <form className="flex flex-col gap-4" onSubmit={submit}>
@@ -79,7 +75,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         {canResetPassword && (
                             <TextLink
                                 href={route('password.request')}
-                                className="text-[11px] text-muted-foreground hover:text-foreground"
+                                className="text-muted-foreground hover:text-foreground text-[11px]"
                                 tabIndex={5}
                             >
                                 Lupa sandi?
@@ -108,58 +104,51 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         checked={data.remember}
                         onCheckedChange={(checked) => setData('remember', Boolean(checked))}
                     />
-                    <Label htmlFor="remember" className="text-xs text-muted-foreground font-normal cursor-pointer">
+                    <Label htmlFor="remember" className="text-muted-foreground cursor-pointer text-xs font-normal">
                         Ingat saya di perangkat ini
                     </Label>
                 </div>
 
-                <Button
-                    type="submit"
-                    className="mt-2 h-8 w-full gap-2 text-xs shadow-xs"
-                    tabIndex={4}
-                    disabled={processing}
-                >
+                <Button type="submit" className="mt-2 h-8 w-full gap-2 text-xs shadow-xs" tabIndex={4} disabled={processing}>
                     {processing && <LoaderCircle className="size-3.5 animate-spin" />}
                     <span>Masuk ke Sistem</span>
                 </Button>
 
                 {/* Quick Demo Accounts */}
-                <div className="mt-2 border-t pt-3 space-y-2">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground text-center">
-                        Akun Demo Cepat
-                    </p>
+                <div className="mt-2 space-y-2 border-t pt-3">
+                    <p className="text-muted-foreground text-center text-[10px] font-semibold tracking-wider uppercase">Akun Demo Cepat</p>
                     <div className="grid grid-cols-2 gap-1.5">
                         <button
                             type="button"
                             onClick={() => fillDemo('pengusul@univ.ac.id')}
-                            className="rounded-md border bg-muted/40 p-1.5 text-left text-[11px] transition-colors hover:bg-muted hover:border-primary/50"
+                            className="bg-muted/40 hover:bg-muted hover:border-primary/50 rounded-md border p-1.5 text-left text-[11px] transition-colors"
                         >
-                            <span className="font-semibold block text-foreground">Pengusul</span>
-                            <span className="text-[10px] text-muted-foreground">Dr. Ahmad Hidayat</span>
+                            <span className="text-foreground block font-semibold">Pengusul</span>
+                            <span className="text-muted-foreground text-[10px]">Dr. Ahmad Hidayat</span>
                         </button>
                         <button
                             type="button"
                             onClick={() => fillDemo('stafkeuangan@univ.ac.id')}
-                            className="rounded-md border bg-muted/40 p-1.5 text-left text-[11px] transition-colors hover:bg-muted hover:border-primary/50"
+                            className="bg-muted/40 hover:bg-muted hover:border-primary/50 rounded-md border p-1.5 text-left text-[11px] transition-colors"
                         >
-                            <span className="font-semibold block text-foreground">Staf Keuangan</span>
-                            <span className="text-[10px] text-muted-foreground">Siti Rahmawati</span>
+                            <span className="text-foreground block font-semibold">Staf Keuangan</span>
+                            <span className="text-muted-foreground text-[10px]">Siti Rahmawati</span>
                         </button>
                         <button
                             type="button"
                             onClick={() => fillDemo('pimpinan@univ.ac.id')}
-                            className="rounded-md border bg-muted/40 p-1.5 text-left text-[11px] transition-colors hover:bg-muted hover:border-primary/50"
+                            className="bg-muted/40 hover:bg-muted hover:border-primary/50 rounded-md border p-1.5 text-left text-[11px] transition-colors"
                         >
-                            <span className="font-semibold block text-foreground">Pimpinan</span>
-                            <span className="text-[10px] text-muted-foreground">Prof. Bambang</span>
+                            <span className="text-foreground block font-semibold">Pimpinan</span>
+                            <span className="text-muted-foreground text-[10px]">Prof. Bambang</span>
                         </button>
                         <button
                             type="button"
                             onClick={() => fillDemo('admin@univ.ac.id')}
-                            className="rounded-md border bg-muted/40 p-1.5 text-left text-[11px] transition-colors hover:bg-muted hover:border-primary/50"
+                            className="bg-muted/40 hover:bg-muted hover:border-primary/50 rounded-md border p-1.5 text-left text-[11px] transition-colors"
                         >
-                            <span className="font-semibold block text-foreground">Admin Pusat</span>
-                            <span className="text-[10px] text-muted-foreground">Superuser</span>
+                            <span className="text-foreground block font-semibold">Admin Pusat</span>
+                            <span className="text-muted-foreground text-[10px]">Superuser</span>
                         </button>
                     </div>
                 </div>

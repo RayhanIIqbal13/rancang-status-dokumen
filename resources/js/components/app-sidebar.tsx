@@ -1,20 +1,3 @@
-import React from 'react';
-import { Link, usePage } from '@inertiajs/react';
-import {
-    BarChart3,
-    CheckSquare,
-    Command,
-    FileText,
-    GitCommitHorizontal,
-    Landmark,
-    LayoutGrid,
-    Mail,
-    Plus,
-    Receipt,
-    Scale,
-    Shield,
-    Users,
-} from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import { SupportCard } from '@/components/support-card';
 import {
@@ -31,6 +14,21 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import {
+    BarChart3,
+    CheckSquare,
+    Command,
+    FileText,
+    GitCommitHorizontal,
+    Landmark,
+    LayoutGrid,
+    Mail,
+    Plus,
+    Receipt,
+    Scale,
+    Users,
+} from 'lucide-react';
 
 export function AppSidebar() {
     const page = usePage<SharedData>();
@@ -116,22 +114,18 @@ export function AppSidebar() {
     ];
 
     return (
-        <Sidebar collapsible="icon" variant="sidebar" className="border-r border-sidebar-border bg-sidebar">
+        <Sidebar collapsible="icon" variant="sidebar" className="border-sidebar-border bg-sidebar border-r">
             <SidebarHeader className="p-3">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild className="hover:bg-sidebar-accent transition-colors">
                             <Link href="/dashboard">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
+                                <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg shadow-xs">
                                     <Command className="size-4" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold tracking-tight text-foreground">
-                                        SIM-KEUANGAN SBM
-                                    </span>
-                                    <span className="truncate text-xs text-muted-foreground">
-                                        Pelacakan Dokumen & SAKTI
-                                    </span>
+                                    <span className="text-foreground truncate font-semibold tracking-tight">SIM-KEUANGAN SBM</span>
+                                    <span className="text-muted-foreground truncate text-xs">Pelacakan Dokumen & SAKTI</span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>
@@ -142,14 +136,14 @@ export function AppSidebar() {
                 <div className="flex items-center gap-1.5 px-0.5 pt-1 group-data-[collapsible=icon]:hidden">
                     <Link
                         href="/dokumen-pengajuan/create"
-                        className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-medium text-primary-foreground shadow-xs hover:bg-primary/90 transition-colors"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium shadow-xs transition-colors"
                     >
                         <Plus className="size-3.5 shrink-0" />
                         <span className="truncate">Ajukan Dokumen</span>
                     </Link>
                     <Link
                         href="/dokumen-pengajuan"
-                        className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/80 bg-background text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                        className="border-border/80 bg-background text-muted-foreground hover:bg-muted hover:text-foreground flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors"
                         title="Semua Dokumen"
                     >
                         <Mail className="size-3.5" />
@@ -157,14 +151,14 @@ export function AppSidebar() {
                 </div>
             </SidebarHeader>
 
-            <SidebarContent className="px-2 py-1 space-y-1">
+            <SidebarContent className="space-y-1 px-2 py-1">
                 {navGroups.map((group) => {
                     const visibleItems = group.items.filter((item) => item.show !== false);
                     if (visibleItems.length === 0) return null;
 
                     return (
                         <SidebarGroup key={group.label} className="p-0 py-1">
-                            <SidebarGroupLabel className="h-6 px-2 text-[11px] font-normal text-muted-foreground group-data-[collapsible=icon]:hidden">
+                            <SidebarGroupLabel className="text-muted-foreground h-6 px-2 text-[11px] font-normal group-data-[collapsible=icon]:hidden">
                                 {group.label}
                             </SidebarGroupLabel>
                             <SidebarGroupContent>
@@ -177,15 +171,15 @@ export function AppSidebar() {
                                                     asChild
                                                     isActive={item.active}
                                                     tooltip={item.title}
-                                                    className="h-8 text-xs px-2.5 gap-2.5 rounded-lg font-normal text-foreground/80 hover:bg-sidebar-accent hover:text-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-foreground transition-colors"
+                                                    className="text-foreground/80 hover:bg-sidebar-accent hover:text-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-foreground h-8 gap-2.5 rounded-lg px-2.5 text-xs font-normal transition-colors data-[active=true]:font-medium"
                                                 >
                                                     <Link href={item.url}>
-                                                        <IconComponent className="size-4 shrink-0 text-muted-foreground group-data-[active=true]:text-foreground" />
+                                                        <IconComponent className="text-muted-foreground group-data-[active=true]:text-foreground size-4 shrink-0" />
                                                         <span className="truncate">{item.title}</span>
                                                     </Link>
                                                 </SidebarMenuButton>
                                                 {item.badge && (
-                                                    <SidebarMenuBadge className="rounded-full border border-border bg-muted/60 text-[10px] font-medium px-1.5 py-0 text-muted-foreground group-data-[collapsible=icon]:hidden">
+                                                    <SidebarMenuBadge className="border-border bg-muted/60 text-muted-foreground rounded-full border px-1.5 py-0 text-[10px] font-medium group-data-[collapsible=icon]:hidden">
                                                         {item.badge}
                                                     </SidebarMenuBadge>
                                                 )}
@@ -199,7 +193,7 @@ export function AppSidebar() {
                 })}
             </SidebarContent>
 
-            <SidebarFooter className="border-t border-sidebar-border/80 p-2 space-y-2">
+            <SidebarFooter className="border-sidebar-border/80 space-y-2 border-t p-2">
                 <SupportCard />
                 <NavUser />
             </SidebarFooter>
