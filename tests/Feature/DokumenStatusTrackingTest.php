@@ -387,3 +387,63 @@ test('global search api returns matching documents and sbm items for command pal
         ->and($response->json('sbm'))->toHaveCount(1)
         ->and($response->json('sbm.0.uraian_belanja'))->toBe('Honorarium Keynote Speaker Cloud');
 });
+
+test('administrator or staff can register, update, and delete users from directory', function () {
+    // 1. Register new user
+    $response = $this->actingAs($this->financeStaff)
+        ->post(route('pengguna.store'), [
+            'name' => 'Dr. Budi Santoso, M.T.',
+            'email' => 'budi.santoso@itk.ac.id',
+            'nip_nim' => '198801122019031002',
+            'unit' => 'Fakultas Sains dan Teknologi',
+            'role' => 'pengusul',
+            'password' => '',
+        ]);
+
+    $response->assertRedirect(route('pengguna.index'))
+        ->assertSessionHas('success');
+
+    $newUser = User::where('email', 'budi.santoso@itk.ac.id')->first();
+    expect($newUser)->not->toBeNull()
+        ->and($newUser->name)->toBe('Dr. Budi Santoso, M.T.')
+        ->and($newUser->role)->toBe(UserRole::Pengusul);
+
+    // Verify default password was hashed
+    expect(\Illuminate\Support\Facades\Hash::check('password', $newUser->password))->toBeTrue();
+
+    // 2. Update user
+    $updateResponse = $this->actingAs($this->financeStaff)
+        ->put(route('pengguna.update', $newUser), [
+            'name' => 'Prof. Dr. Budi Santoso, M.Eng.',
+            'email' => 'budi.santoso@itk.ac.id',
+            'nip_nim' => '198801122019031002',
+            'unit' => 'Dekanat Sains dan Teknologi',
+            'role' => 'pimpinan',
+            'password' => 'newpassword123',
+        ]);
+
+    $updateResponse->assertRedirect(route('pengguna.index'))
+        ->assertSessionHas('success');
+
+    $newUser->refresh();
+    expect($newUser->name)->toBe('Prof. Dr. Budi Santoso, M.Eng.')
+        ->and($newUser->role)->toBe(UserRole::Pimpinan);
+    expect(\Illuminate\Support\Facades\Hash::check('newpassword123', $newUser->password))->toBeTrue();
+
+    // 3. User cannot delete themselves
+    $selfDeleteResponse = $this->actingAs($this->financeStaff)
+        ->delete(route('pengguna.destroy', $this->financeStaff));
+
+    $selfDeleteResponse->assertRedirect(route('pengguna.index'))
+        ->assertSessionHas('error');
+
+    // 4. Delete user
+    $deleteResponse = $this->actingAs($this->financeStaff)
+        ->delete(route('pengguna.destroy', $newUser));
+
+    $deleteResponse->assertRedirect(route('pengguna.index'))
+        ->assertSessionHas('success');
+
+    expect(User::find($newUser->id))->toBeNull();
+});
+

@@ -125,6 +125,9 @@ Route::middleware(['auth'])->group(function () {
 
     // 8. Users / Pengguna
     Route::get('pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
+    Route::post('pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
+    Route::put('pengguna/{user}', [PenggunaController::class, 'update'])->name('pengguna.update');
+    Route::delete('pengguna/{user}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
 
     // 9. Reports / Laporan
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
