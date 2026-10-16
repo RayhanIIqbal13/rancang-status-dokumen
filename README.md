@@ -3,7 +3,7 @@
 # 🏛️ SAK ITK — Financial Document Status Tracking System
 ### *Sistem Informasi Pelacakan & Transparansi Status Dokumen Pengajuan Anggaran SAK ITK*
 
-[![CI Tests](https://img.shields.io/badge/CI%20Tests-Pest%20PHP%20PASS-emerald?style=for-the-badge&logo=pest)](https://github.com/RayhanIIqbal13/rancang-status-dokumen/actions)
+[![CI Tests](https://img.shields.io/badge/CI%20Tests-40%20Pest%20PHP%20PASS-emerald?style=for-the-badge&logo=pest)](https://github.com/RayhanIIqbal13/rancang-status-dokumen/actions)
 [![Code Quality](https://img.shields.io/badge/Code%20Style-Pint%20%26%20ESLint-blue?style=for-the-badge&logo=eslint)](https://github.com/RayhanIIqbal13/rancang-status-dokumen/actions)
 [![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
 [![React](https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
@@ -16,7 +16,7 @@
 
 **SAK ITK Document Status Tracking System** adalah platform web modern untuk manajemen, pelacakan real-time, dan audit transparan alur dokumen pengajuan anggaran kegiatan di lingkungan kampus **Institut Teknologi Kalimantan (ITK)**. 
 
-Dirancang untuk mengeliminasi ketidakpastian *"black box"* administrasi manual dengan menghadirkan **Siklus Transparansi 8 Tahap**, validasi kepatuhan **Standar Biaya Masukan (SBM) Kemenkeu**, rekonsiliasi SPJ, serta integrasi alur pencairan dana aplikasi **SAKTI**.
+Dirancang untuk mengeliminasi ketidakpastian *"black box"* administrasi manual dengan menghadirkan **Siklus Transparansi 8 Tahap**, validasi kepatuhan **Standar Biaya Masukan (SBM) Kemenkeu**, manajemen direktori pengguna terpusat, rekonsiliasi SPJ, serta integrasi alur pencairan dana aplikasi **SAKTI**.
 
 [Fitur Utama](#-fitur-utama) • [Siklus 8 Tahap](#-siklus-alur-8-tahap-dokumen) • [Arsitektur](#-arsitektur--teknologi) • [Akun Demo](#-akun-demo-untuk-pengujian) • [Instalasi](#-panduan-instalasi--menjalankan-aplikasi) • [Pengujian](#-otomatisasi-pengujian--kualitas-kode)
 
@@ -32,6 +32,7 @@ Dirancang untuk mengeliminasi ketidakpastian *"black box"* administrasi manual d
 | **Revisi Berulang Tanpa Catatan Jelas:** Catatan koreksi lisan/kertas sering hilang dan membingungkan. | **Revision Loop & Historical Notes:** Notifikasi revisi otomatis dengan daftar poin perbaikan terpusat dari verifikator. |
 | **Pelanggaran Batas Pagu & Tarif SBM:** Pengusulan honor/akomodasi kerap melebihi standar pemerintah. | **Validasi SBM Kemenkeu Otomatis:** Sistem mengecek kesesuaian plafon honor narasumber, konsumsi, dan transport secara sistemik. |
 | **Keterlambatan SPJ & Pencairan SAKTI:** Rekapitulasi bukti kuitansi terpisah dari sistem pencairan dana. | **Siklus SPJ Terpadu hingga Dana Cair:** Modul unggah bukti digital, approval pimpinan, integrasi status SAKTI, dan pencairan SP2D. |
+| **Registrasi Akun Manual & Kaku:** Penambahan pengguna harus lewat database langsung. | **Direktori Pengguna Mandiri:** Registrasi pengguna baru dengan pemetaan peran, toggle show/hide password, dan konfirmasi kata sandi aman. |
 
 ---
 
@@ -82,10 +83,18 @@ flowchart TD
 - 📐 **Standar Biaya Masukan (SBM) Compliance Engine:** Katalog acuan biaya standar pemerintah (Honor narasumber, paket meeting, konsumsi, akomodasi, transportasi) beserta validasi kepatuhan transaksi.
 - 🔁 **Workflow Interaktif & Modal Update Status:** Dialog modal bagi staf keuangan dan pimpinan untuk mengubah status, memilih posisi berkas berikutnya, dan memasukkan catatan disposisi.
 - 🧾 **Manajemen Bukti Pengeluaran & Realisasi Anggaran:** Pencatatan kuitansi/faktur, kelengkapan fisik, persentase serapan anggaran, dan tanggal pencairan SP2D.
+- 👥 **Direktori & Manajemen Pengguna (User Management):**
+  - **Pendaftaran Akun Baru:** Modal pendaftaran dengan form nama, email universitas, NIP/NIDN/NIM, unit kerja, serta penetapan hak akses peran (*Pengusul, Staf Keuangan, Pimpinan, Administrator*).
+  - **Verifikasi Sandi Ganda:** Kolom *Kata Sandi* & *Konfirmasi Kata Sandi* dilengkapi indikator kecocokan real-time.
+  - **Toggle Mata (Show/Hide Password):** Kemudahan melihat/menyembunyikan kata sandi dengan ikon interaktif.
+  - **Default Password Helper:** Pendaftaran cepat dengan kata sandi bawaan `password` yang dapat diganti sewaktu-waktu.
+  - **Edit & Hapus Pengguna:** Perbaruan data akun serta perlindungan protektif agar pengguna tidak dapat menghapus akunnya sendiri.
+- 🔍 **Command Palette & Global Search (`Ctrl + K` / `Cmd + K`):** Pencarian instan dokumen pengajuan, pagu anggaran, nomor proposal, dan katalog SBM langsung dari keyboard.
+- 🖨️ **Format Cetak Laporan Resmi (Print-Ready):** Tampilan cetak laporan dokumen pengajuan dan realisasi anggaran berstandar dokumen resmi universitas (otomatis membersihkan navigasi dan sidebar saat dicetak).
+- ⚙️ **Panel Pengaturan Tampilan (Preferences):** Kustomisasi varian sidebar (*inset* atau *sidebar*), mode runtuh (*collapsible*), dan tata letak konten (*centered* atau *full-width*).
 - 📊 **Executive Dashboard Analytics:**
   - Ringkasan KPI: Total usulan, total realisasi cair, dokumen aktif menunggu tindakan, dan status perlu revisi.
   - Grafik tren pengajuan vs pencairan interaktif berbasis **Recharts** dengan filter rentang waktu (1 bulan, 3 bulan, semester).
-  - Quick Search & Pencarian Pintar (*smart search*) untuk menemukan nomor pengajuan (`PROP/2026/xxxx`) atau nama kegiatan seketika.
 - 🔐 **Role-Based Access Control (RBAC):** Proteksi hak akses bertingkat untuk **Pengusul**, **Staf Keuangan**, **Pimpinan**, dan **Admin Keuangan Pusat**.
 - 🌓 **Desain Modern & Responsif:** Menggunakan Tailwind CSS v4, Radix UI Primitives, Lucide Icons, serta tema light/dark mode yang elegan.
 
@@ -129,7 +138,7 @@ graph LR
 * **Charts & Visualisasi Data:** [Recharts 3.x](https://recharts.org)
 * **Icon Set:** [Lucide React](https://lucide.dev)
 * **Pustaka Form & Routing:** Inertia Form Helpers + Ziggy Route Helper
-* **Testing Framework:** [Pest PHP 3.8](https://pestphp.com) + Inertia Testing Finder
+* **Testing Framework:** [Pest PHP 3.8](https://pestphp.com) + Inertia Testing Finder (40 Tests, 176 Assertions)
 * **Code Formatter & Linter:** [Laravel Pint](https://laravel.com/docs/pint), [ESLint 9](https://eslint.org), [Prettier](https://prettier.io)
 
 ---
@@ -146,7 +155,7 @@ Database seeder telah dilengkapi dengan akun representatif dan data pengajuan re
 | **Pengusul (Fakultas Lain)** | `dosen.teknik@univ.ac.id` | Dr. Eng. Siti Nurhaliza, S.T. | Mengelola proposal kegiatan jurusan Teknik Elektro. |
 | **Staf Keuangan** | `stafkeuangan@univ.ac.id` | Siti Rahmawati, S.E. | Verifikasi proposal, minta revisi, validasi SBM, input SPJ, proses SAKTI, catat pencairan. |
 | **Pimpinan (Dekan)** | `pimpinan@univ.ac.id` | Prof. Dr. Ir. Bambang Sutrisno | Memberikan persetujuan resmi (*Disetujui, Kegiatan Berjalan*), melihat laporan eksekutif. |
-| **Administrator Pusat** | `admin@univ.ac.id` | Administrator Keuangan Pusat | Akses penuh direktori pengguna, data master SBM, dan seluruh laporan universitas. |
+| **Administrator Pusat** | `admin@univ.ac.id` | Administrator Keuangan Pusat | Akses penuh direktori pengguna (tambah/edit/hapus), data master SBM, dan seluruh laporan universitas. |
 
 ---
 
@@ -214,7 +223,7 @@ Buka peramban Anda di: **`http://127.0.0.1:8000`**
 Proyek ini menerapkan standar Continuous Integration (CI) yang ketat melalui **GitHub Actions** untuk menjamin kestabilan kode:
 
 ```bash
-# Menjalankan seluruh test suite Pest (38 Tests, 130 Assertions)
+# Menjalankan seluruh test suite Pest (40 Tests, 176 Assertions - PASS 100%)
 php artisan test
 
 # Memeriksa dan merapikan style kode PHP dengan Laravel Pint
@@ -240,8 +249,8 @@ npm run build
 rancang-status-dokumen/
 ├── app/
 │   ├── Enums/                     # State Machine: DocumentStatus & UserRole
-│   ├── Http/Controllers/          # RESTful Controllers & Status Tracking Handler
-│   ├── Models/                    # DokumenPengajuan, StatusTracking, StandarBiaya, BuktiPengeluaran
+│   ├── Http/Controllers/          # RESTful Controllers (Dokumen, Pengguna, SBM, Realisasi)
+│   ├── Models/                    # DokumenPengajuan, StatusTracking, StandarBiaya, BuktiPengeluaran, User
 │   └── Services/                  # DashboardAnalyticsService (KPI & Recharts processor)
 ├── config/
 │   └── inertia.php                # Konfigurasi testing view paths Inertia (Cross-platform CI)
@@ -251,16 +260,17 @@ rancang-status-dokumen/
 ├── resources/
 │   ├── css/                       # Tailwind CSS v4 stylesheets
 │   └── js/
-│       ├── components/            # Komponen modular: timeline, stepper, dialog update status, badge
+│       ├── components/            # Komponen modular: timeline, stepper, dialog update status, badge, command palette
+│       ├── hooks/                 # Custom React hooks (use-preferences, use-mobile, use-clipboard)
 │       ├── layouts/               # Shell layout autentikasi dan dashboard
-│       ├── pages/                 # Inertia React Pages (dashboard, dokumen, status-tracking, dll.)
+│       ├── pages/                 # Inertia React Pages (dashboard, dokumen, status-tracking, pengguna, dll.)
 │       └── types/                 # TypeScript typings & interfaces
 ├── routes/
-│   ├── web.php                    # Rute utama aplikasi SAK ITK
+│   ├── web.php                    # Rute utama aplikasi SAK ITK (Dokumen, Pengguna CRUD, Laporan, SBM)
 │   └── auth.php                   # Rute autentikasi
 └── tests/
     └── Feature/
-        ├── DokumenStatusTrackingTest.php  # Test suite lengkap alur 8 tahap & kepatuhan hak akses
+        ├── DokumenStatusTrackingTest.php  # Test suite lengkap alur 8 tahap, SBM, SAKTI, & User Management
         └── DashboardTest.php              # Test suite dasbor analitik
 ```
 
