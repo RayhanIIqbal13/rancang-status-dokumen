@@ -67,7 +67,7 @@ class PenggunaController extends Controller
             'nip_nim' => 'nullable|string|max:50',
             'unit' => 'nullable|string|max:255',
             'role' => ['required', new Enum(UserRole::class)],
-            'password' => 'nullable|string|min:6',
+            'password' => 'nullable|string|min:6|confirmed',
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Alamat email wajib diisi.',
@@ -75,6 +75,7 @@ class PenggunaController extends Controller
             'email.email' => 'Format email tidak valid.',
             'role.required' => 'Peran pengguna wajib dipilih.',
             'password.min' => 'Kata sandi minimal 6 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
 
         $user = User::create([
@@ -100,13 +101,14 @@ class PenggunaController extends Controller
             'nip_nim' => 'nullable|string|max:50',
             'unit' => 'nullable|string|max:255',
             'role' => ['required', new Enum(UserRole::class)],
-            'password' => 'nullable|string|min:6',
+            'password' => 'nullable|string|min:6|confirmed',
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Alamat email wajib diisi.',
             'email.unique' => 'Email ini sudah digunakan oleh pengguna lain.',
             'role.required' => 'Peran pengguna wajib dipilih.',
             'password.min' => 'Kata sandi minimal 6 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
 
         $data = [

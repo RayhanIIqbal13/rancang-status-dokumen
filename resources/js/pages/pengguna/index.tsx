@@ -17,6 +17,9 @@ import {
     AlertTriangle,
     Briefcase,
     Building2,
+    Check,
+    Eye,
+    EyeOff,
     FileText,
     GraduationCap,
     Info,
@@ -61,6 +64,8 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
 
     // Create Modal State & Form
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [showCreatePassword, setShowCreatePassword] = useState(false);
+    const [showCreateConfirmPassword, setShowCreateConfirmPassword] = useState(false);
     const createForm = useForm({
         name: '',
         email: '',
@@ -68,10 +73,13 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
         unit: '',
         role: 'pengusul' as 'pengusul' | 'staf_keuangan' | 'pimpinan' | 'admin',
         password: '',
+        password_confirmation: '',
     });
 
     // Edit Modal State & Form
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [showEditPassword, setShowEditPassword] = useState(false);
+    const [showEditConfirmPassword, setShowEditConfirmPassword] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UserWithCount | null>(null);
     const editForm = useForm({
         name: '',
@@ -80,6 +88,7 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
         unit: '',
         role: 'pengusul' as 'pengusul' | 'staf_keuangan' | 'pimpinan' | 'admin',
         password: '',
+        password_confirmation: '',
     });
 
     // Delete Modal State
@@ -101,8 +110,23 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
         router.get(route('pengguna.index'));
     };
 
+    const handleOpenCreate = () => {
+        createForm.reset();
+        createForm.clearErrors();
+        setShowCreatePassword(false);
+        setShowCreateConfirmPassword(false);
+        setIsCreateOpen(true);
+    };
+
     const handleCreateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Client-side confirmation check if password is provided
+        if (createForm.data.password && createForm.data.password !== createForm.data.password_confirmation) {
+            createForm.setError('password_confirmation', 'Konfirmasi kata sandi tidak cocok.');
+            return;
+        }
+
         createForm.post(route('pengguna.store'), {
             preserveScroll: true,
             onSuccess: () => {
@@ -121,14 +145,24 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
             unit: user.unit || '',
             role: user.role,
             password: '',
+            password_confirmation: '',
         });
         editForm.clearErrors();
+        setShowEditPassword(false);
+        setShowEditConfirmPassword(false);
         setIsEditOpen(true);
     };
 
     const handleEditSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedUser) return;
+
+        // Client-side confirmation check if password is provided
+        if (editForm.data.password && editForm.data.password !== editForm.data.password_confirmation) {
+            editForm.setError('password_confirmation', 'Konfirmasi kata sandi tidak cocok.');
+            return;
+        }
+
         editForm.put(route('pengguna.update', selectedUser.id), {
             preserveScroll: true,
             onSuccess: () => {
@@ -224,11 +258,7 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
 
                     <div className="flex items-center gap-2">
                         <Button
-                            onClick={() => {
-                                createForm.reset();
-                                createForm.clearErrors();
-                                setIsCreateOpen(true);
-                            }}
+                            onClick={handleOpenCreate}
                             size="sm"
                             className="h-8 gap-1.5 text-xs shadow-xs"
                         >
@@ -320,7 +350,7 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
                                     <button
                                         type="button"
                                         onClick={handleReset}
-                                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2"
+                                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer"
                                     >
                                         <X className="size-3.5" />
                                     </button>
@@ -346,7 +376,7 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
                                     key={tab.id}
                                     type="button"
                                     onClick={() => handleRoleFilter(tab.id)}
-                                    className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    className={`rounded-4xl px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer ${
                                         filters.role === tab.id || (!filters.role && tab.id === 'all')
                                             ? 'bg-primary text-primary-foreground shadow-xs'
                                             : 'bg-muted/70 text-muted-foreground hover:bg-muted'
@@ -577,7 +607,7 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
                                         id="create-role"
                                         value={createForm.data.role}
                                         onChange={(e) => createForm.setData('role', e.target.value as any)}
-                                        className="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-xs text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
+                                        className="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-xs text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
                                         required
                                     >
                                         <option value="pengusul">Pengusul (Dosen / Tendik)</option>
@@ -608,28 +638,89 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
                                 )}
                             </div>
 
-                            {/* Password */}
-                            <div className="space-y-1.5">
-                                <Label htmlFor="create-password" className="text-xs font-medium">
-                                    Kata Sandi (Opsional)
-                                </Label>
-                                <Input
-                                    id="create-password"
-                                    type="password"
-                                    placeholder="Minimal 6 karakter"
-                                    value={createForm.data.password}
-                                    onChange={(e) => createForm.setData('password', e.target.value)}
-                                    className="h-8 text-xs"
-                                />
-                                <div className="flex items-start gap-1.5 rounded-md border border-sky-200/50 bg-sky-50/50 p-2 text-[11px] text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/20 dark:text-sky-300">
-                                    <Info className="size-3.5 shrink-0 mt-0.5 text-sky-600 dark:text-sky-400" />
-                                    <span>
-                                        Jika dikosongkan, kata sandi otomatis diset ke <strong className="font-mono font-semibold">password</strong>. Pengguna dapat mengubah kata sandi kapan saja di profil mereka.
-                                    </span>
+                            {/* Kata Sandi & Konfirmasi Grid */}
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="create-password" className="text-xs font-medium">
+                                        Kata Sandi (Opsional)
+                                    </Label>
+                                    <div className="relative">
+                                        <Input
+                                            id="create-password"
+                                            type={showCreatePassword ? 'text' : 'password'}
+                                            placeholder="Minimal 6 karakter"
+                                            value={createForm.data.password}
+                                            onChange={(e) => createForm.setData('password', e.target.value)}
+                                            className="h-8 pr-8 text-xs"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowCreatePassword(!showCreatePassword)}
+                                            className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer transition-colors"
+                                            tabIndex={-1}
+                                            title={showCreatePassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi'}
+                                        >
+                                            {showCreatePassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                                        </button>
+                                    </div>
+                                    {createForm.errors.password && (
+                                        <p className="text-destructive text-[11px]">{createForm.errors.password}</p>
+                                    )}
                                 </div>
-                                {createForm.errors.password && (
-                                    <p className="text-destructive text-[11px]">{createForm.errors.password}</p>
-                                )}
+
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="create-password-confirmation" className="text-xs font-medium">
+                                        Konfirmasi Kata Sandi
+                                    </Label>
+                                    <div className="relative">
+                                        <Input
+                                            id="create-password-confirmation"
+                                            type={showCreateConfirmPassword ? 'text' : 'password'}
+                                            placeholder="Ketik ulang kata sandi"
+                                            value={createForm.data.password_confirmation}
+                                            onChange={(e) => createForm.setData('password_confirmation', e.target.value)}
+                                            className="h-8 pr-8 text-xs"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowCreateConfirmPassword(!showCreateConfirmPassword)}
+                                            className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer transition-colors"
+                                            tabIndex={-1}
+                                            title={showCreateConfirmPassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi'}
+                                        >
+                                            {showCreateConfirmPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                                        </button>
+                                    </div>
+                                    {createForm.errors.password_confirmation && (
+                                        <p className="text-destructive text-[11px]">{createForm.errors.password_confirmation}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Indicator if password is being typed */}
+                            {createForm.data.password && (
+                                <div className="text-[11px]">
+                                    {createForm.data.password_confirmation ? (
+                                        createForm.data.password === createForm.data.password_confirmation ? (
+                                            <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium">
+                                                <Check className="size-3" /> Kata sandi cocok
+                                            </span>
+                                        ) : (
+                                            <span className="text-destructive flex items-center gap-1">
+                                                <AlertTriangle className="size-3" /> Konfirmasi kata sandi belum sama
+                                            </span>
+                                        )
+                                    ) : (
+                                        <span className="text-muted-foreground">Silakan ketik ulang kata sandi di bidang konfirmasi.</span>
+                                    )}
+                                </div>
+                            )}
+
+                            <div className="flex items-start gap-1.5 rounded-md border border-sky-200/50 bg-sky-50/50 p-2 text-[11px] text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/20 dark:text-sky-300">
+                                <Info className="size-3.5 shrink-0 mt-0.5 text-sky-600 dark:text-sky-400" />
+                                <span>
+                                    Jika dikosongkan, kata sandi otomatis diset ke <strong className="font-mono font-semibold">password</strong>. Pengguna dapat mengubah kata sandi kapan saja di profil mereka.
+                                </span>
                             </div>
                         </div>
 
@@ -728,7 +819,7 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
                                         id="edit-role"
                                         value={editForm.data.role}
                                         onChange={(e) => editForm.setData('role', e.target.value as any)}
-                                        className="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-xs text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
+                                        className="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-xs text-foreground shadow-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
                                         required
                                     >
                                         <option value="pengusul">Pengusul (Dosen / Tendik)</option>
@@ -758,26 +849,87 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
                                 )}
                             </div>
 
-                            {/* Reset Password */}
-                            <div className="space-y-1.5">
-                                <Label htmlFor="edit-password" className="text-xs font-medium">
-                                    Ganti Kata Sandi (Opsional)
-                                </Label>
-                                <Input
-                                    id="edit-password"
-                                    type="password"
-                                    placeholder="Biarkan kosong jika tidak ingin mengubah password"
-                                    value={editForm.data.password}
-                                    onChange={(e) => editForm.setData('password', e.target.value)}
-                                    className="h-8 text-xs"
-                                />
-                                <p className="text-[11px] text-muted-foreground">
-                                    Kosongkan bidang ini jika tidak ingin memperbarui kata sandi pengguna.
-                                </p>
-                                {editForm.errors.password && (
-                                    <p className="text-destructive text-[11px]">{editForm.errors.password}</p>
-                                )}
+                            {/* Reset Password & Konfirmasi Grid */}
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="edit-password" className="text-xs font-medium">
+                                        Ganti Kata Sandi (Opsional)
+                                    </Label>
+                                    <div className="relative">
+                                        <Input
+                                            id="edit-password"
+                                            type={showEditPassword ? 'text' : 'password'}
+                                            placeholder="Kosongkan jika tidak diganti"
+                                            value={editForm.data.password}
+                                            onChange={(e) => editForm.setData('password', e.target.value)}
+                                            className="h-8 pr-8 text-xs"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowEditPassword(!showEditPassword)}
+                                            className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer transition-colors"
+                                            tabIndex={-1}
+                                            title={showEditPassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi'}
+                                        >
+                                            {showEditPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                                        </button>
+                                    </div>
+                                    {editForm.errors.password && (
+                                        <p className="text-destructive text-[11px]">{editForm.errors.password}</p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="edit-password-confirmation" className="text-xs font-medium">
+                                        Konfirmasi Kata Sandi Baru
+                                    </Label>
+                                    <div className="relative">
+                                        <Input
+                                            id="edit-password-confirmation"
+                                            type={showEditConfirmPassword ? 'text' : 'password'}
+                                            placeholder="Ketik ulang kata sandi baru"
+                                            value={editForm.data.password_confirmation}
+                                            onChange={(e) => editForm.setData('password_confirmation', e.target.value)}
+                                            className="h-8 pr-8 text-xs"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowEditConfirmPassword(!showEditConfirmPassword)}
+                                            className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer transition-colors"
+                                            tabIndex={-1}
+                                            title={showEditConfirmPassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi'}
+                                        >
+                                            {showEditConfirmPassword ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                                        </button>
+                                    </div>
+                                    {editForm.errors.password_confirmation && (
+                                        <p className="text-destructive text-[11px]">{editForm.errors.password_confirmation}</p>
+                                    )}
+                                </div>
                             </div>
+
+                            {/* Indicator if edit password is being typed */}
+                            {editForm.data.password && (
+                                <div className="text-[11px]">
+                                    {editForm.data.password_confirmation ? (
+                                        editForm.data.password === editForm.data.password_confirmation ? (
+                                            <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium">
+                                                <Check className="size-3" /> Kata sandi cocok
+                                            </span>
+                                        ) : (
+                                            <span className="text-destructive flex items-center gap-1">
+                                                <AlertTriangle className="size-3" /> Konfirmasi kata sandi belum sama
+                                            </span>
+                                        )
+                                    ) : (
+                                        <span className="text-muted-foreground">Silakan ketik ulang kata sandi baru di bidang konfirmasi.</span>
+                                    )}
+                                </div>
+                            )}
+
+                            <p className="text-[11px] text-muted-foreground">
+                                Kosongkan kedua bidang kata sandi jika tidak ingin memperbarui kata sandi pengguna.
+                            </p>
                         </div>
 
                         <DialogFooter className="gap-2 border-t pt-3">
@@ -861,4 +1013,3 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
         </AppLayout>
     );
 }
-

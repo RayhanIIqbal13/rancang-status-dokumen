@@ -389,6 +389,17 @@ test('global search api returns matching documents and sbm items for command pal
 });
 
 test('administrator or staff can register, update, and delete users from directory', function () {
+    // 0. Mismatched password fails
+    $mismatchResponse = $this->actingAs($this->financeStaff)
+        ->post(route('pengguna.store'), [
+            'name' => 'Test User',
+            'email' => 'test.mismatch@itk.ac.id',
+            'role' => 'pengusul',
+            'password' => 'password123',
+            'password_confirmation' => 'different123',
+        ]);
+    $mismatchResponse->assertSessionHasErrors(['password']);
+
     // 1. Register new user
     $response = $this->actingAs($this->financeStaff)
         ->post(route('pengguna.store'), [
@@ -398,6 +409,7 @@ test('administrator or staff can register, update, and delete users from directo
             'unit' => 'Fakultas Sains dan Teknologi',
             'role' => 'pengusul',
             'password' => '',
+            'password_confirmation' => '',
         ]);
 
     $response->assertRedirect(route('pengguna.index'))
@@ -420,6 +432,7 @@ test('administrator or staff can register, update, and delete users from directo
             'unit' => 'Dekanat Sains dan Teknologi',
             'role' => 'pimpinan',
             'password' => 'newpassword123',
+            'password_confirmation' => 'newpassword123',
         ]);
 
     $updateResponse->assertRedirect(route('pengguna.index'))
