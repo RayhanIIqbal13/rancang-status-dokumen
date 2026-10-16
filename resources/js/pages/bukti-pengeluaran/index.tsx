@@ -75,59 +75,65 @@ export default function BuktiPengeluaranIndex({ buktiList, filters, stats }: Buk
                 </div>
 
                 {/* Studio Admin KPI Stat Tiles */}
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                     {/* Total Bukti */}
-                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
-                        <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs font-medium">Total Bukti SPJ</span>
-                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
+                    <div className="from-primary/5 to-card ring-foreground/10 overflow-hidden rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-muted-foreground text-xs font-medium truncate">Total Bukti SPJ</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg border">
                                 <Receipt className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-foreground text-2xl font-medium tabular-nums">{stats.total_bukti}</span>
+                            <span className="text-foreground text-2xl font-bold tabular-nums tracking-tight">{stats.total_bukti}</span>
                             <span className="text-muted-foreground text-[11px]">kuitansi</span>
                         </div>
                     </div>
 
                     {/* Total Nominal */}
-                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
-                        <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs font-medium">Total Nominal Bukti</span>
-                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
+                    <div className="from-primary/5 to-card ring-foreground/10 overflow-hidden rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-muted-foreground text-xs font-medium truncate">Total Nominal Bukti</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg border">
                                 <Scale className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-foreground text-xl font-medium tabular-nums">{formatCurrency(stats.total_nominal)}</span>
-                            <p className="text-muted-foreground mt-0.5 text-[11px]">Seluruh kuitansi SPJ</p>
+                            <span className="text-foreground text-xl sm:text-2xl font-bold tabular-nums tracking-tight truncate block">
+                                {formatCurrency(stats.total_nominal)}
+                            </span>
+                            <p className="text-muted-foreground mt-0.5 text-[11px] truncate">Seluruh kuitansi SPJ</p>
                         </div>
                     </div>
 
                     {/* Sesuai Standar SBM */}
-                    <div className="to-card rounded-xl bg-linear-to-t from-emerald-500/10 p-4 shadow-xs ring-1 ring-emerald-500/30">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Sesuai Standar SBM</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    <div className="to-card overflow-hidden rounded-xl bg-linear-to-t from-emerald-500/10 p-4 shadow-xs ring-1 ring-emerald-500/30">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400 truncate">Sesuai Standar SBM</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                                 <ShieldCheck className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium text-emerald-700 tabular-nums dark:text-emerald-400">{stats.sesuai_sbm}</span>
+                            <span className="text-2xl font-bold text-emerald-700 tabular-nums tracking-tight dark:text-emerald-400">
+                                {stats.sesuai_sbm}
+                            </span>
                             <span className="text-[11px] text-emerald-600/80">valid 100%</span>
                         </div>
                     </div>
 
                     {/* Perlu Verifikasi */}
-                    <div className="to-card rounded-xl bg-linear-to-t from-amber-500/10 p-4 shadow-xs ring-1 ring-amber-500/30">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-amber-700 dark:text-amber-400">Perlu Verifikasi</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                    <div className="to-card overflow-hidden rounded-xl bg-linear-to-t from-amber-500/10 p-4 shadow-xs ring-1 ring-amber-500/30">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-amber-700 dark:text-amber-400 truncate">Perlu Verifikasi</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-amber-500/10 text-amber-600 dark:text-amber-400">
                                 <AlertCircle className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium text-amber-700 tabular-nums dark:text-amber-400">{stats.perlu_verifikasi}</span>
+                            <span className="text-2xl font-bold text-amber-700 tabular-nums tracking-tight dark:text-amber-400">
+                                {stats.perlu_verifikasi}
+                            </span>
                             <span className="text-[11px] text-amber-600/80">dalam review</span>
                         </div>
                     </div>

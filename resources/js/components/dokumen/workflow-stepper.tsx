@@ -125,7 +125,7 @@ export function WorkflowStepper({ currentStatus, stages, className = '' }: Workf
                 </div>
 
                 {/* Stepper Horizontal Trail with Increased Width & Calming Smooth Animations */}
-                <div className="scrollbar-thin touch-pan-x relative overflow-x-auto pt-2 pb-4">
+                <div className="touch-pan-x relative overflow-x-auto no-scrollbar [scrollbar-width:none] [-webkit-overflow-scrolling:touch] pt-2 pb-2">
                     <ol className="relative flex w-full min-w-[1040px] items-start justify-between px-2">
                         {allStages.map((stepName, index) => {
                             const stageInfo = stages.find((s) => s.value === stepName);

@@ -168,51 +168,58 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                                     </div>
                                 </div>
                             </CardContent>
-                        </Card>
-
-                        {/* Interactive Tabs Header */}
-                        <div className="border-border flex border-b overflow-x-auto no-scrollbar whitespace-nowrap">
+                        </Card>                        {/* Interactive Tabs Header */}
+                        <div className="border-border flex border-b overflow-x-auto no-scrollbar">
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('timeline')}
-                                className={`flex shrink-0 items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
+                                className={`flex flex-1 sm:flex-initial items-center justify-center gap-1.5 sm:gap-2 border-b-2 px-2 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-colors text-center whitespace-nowrap ${
                                     activeTab === 'timeline'
                                         ? 'border-primary text-primary'
                                         : 'text-muted-foreground hover:text-foreground border-transparent'
                                 }`}
                             >
-                                <Clock className="size-4" />
-                                <span>Riwayat Status ({document.status_timeline?.length ?? 0})</span>
+                                <Clock className="size-3.5 sm:size-4 shrink-0" />
+                                <span>
+                                    <span className="hidden sm:inline">Riwayat Status</span>
+                                    <span className="sm:hidden">Riwayat</span> ({document.status_timeline?.length ?? 0})
+                                </span>
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('spj')}
-                                className={`flex shrink-0 items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
+                                className={`flex flex-1 sm:flex-initial items-center justify-center gap-1.5 sm:gap-2 border-b-2 px-2 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-colors text-center whitespace-nowrap ${
                                     activeTab === 'spj'
                                         ? 'border-primary text-primary'
                                         : 'text-muted-foreground hover:text-foreground border-transparent'
                                 }`}
                             >
-                                <Receipt className="size-4" />
-                                <span>Bukti SPJ & SBM ({document.bukti_pengeluarans?.length ?? 0})</span>
+                                <Receipt className="size-3.5 sm:size-4 shrink-0" />
+                                <span>
+                                    <span className="hidden sm:inline">Bukti SPJ & SBM</span>
+                                    <span className="sm:hidden">SPJ & SBM</span> ({document.bukti_pengeluarans?.length ?? 0})
+                                </span>
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('realisasi')}
-                                className={`flex shrink-0 items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition-colors ${
+                                className={`flex flex-1 sm:flex-initial items-center justify-center gap-1.5 sm:gap-2 border-b-2 px-2 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-colors text-center whitespace-nowrap ${
                                     activeTab === 'realisasi'
                                         ? 'border-primary text-primary'
                                         : 'text-muted-foreground hover:text-foreground border-transparent'
                                 }`}
                             >
-                                <Landmark className="size-4" />
-                                <span>Realisasi & SAKTI</span>
+                                <Landmark className="size-3.5 sm:size-4 shrink-0" />
+                                <span>
+                                    <span className="hidden sm:inline">Realisasi & SAKTI</span>
+                                    <span className="sm:hidden">Realisasi</span>
+                                </span>
                             </button>
                         </div>
 
                         {/* Tab Content 1: Status Tracking Timeline */}
                         {activeTab === 'timeline' && (
-                            <div className="border-border/80 bg-card rounded-xl border p-5 shadow-xs">
+                            <div className="border-border/80 bg-card rounded-xl border p-4 sm:p-5 shadow-xs">
                                 <div className="border-border/60 mb-4 flex flex-col gap-3 border-b pb-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div>
                                         <h3 className="text-foreground text-base font-bold">Log Riwayat Status & Catatan</h3>
@@ -220,10 +227,10 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                                             Rekam jejak setiap perpindahan status, petugas pemeriksa, posisi dokumen, dan catatan revisi
                                         </p>
                                     </div>
-                                    <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs shadow-xs">
-                                        <Link href={route('status-tracking.show', document.id)}>
-                                            Lihat Tracking Interaktif
-                                            <ArrowUpRight className="size-3.5" />
+                                    <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs shadow-xs w-full sm:w-auto self-start sm:self-auto">
+                                        <Link href={route('status-tracking.show', document.id)} className="w-full justify-center flex items-center gap-1.5">
+                                            <span>Lihat Tracking Interaktif</span>
+                                            <ArrowUpRight className="size-3.5 shrink-0" />
                                         </Link>
                                     </Button>
                                 </div>

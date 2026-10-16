@@ -88,24 +88,24 @@ export default function VerifikasiIndex({ documents, filters, stats, stages }: V
                 </div>
 
                 {/* Studio Admin KPI Stat Tiles */}
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                     {/* All queue */}
                     <div
                         onClick={() => handleStatusFilter('all')}
-                        className={`cursor-pointer rounded-xl p-4 transition-all ${
+                        className={`cursor-pointer overflow-hidden rounded-xl p-4 transition-all ${
                             filters.status === 'all' || !filters.status
                                 ? 'from-primary/10 to-card ring-primary bg-linear-to-t shadow-xs ring-2'
                                 : 'from-primary/5 to-card ring-foreground/10 hover:ring-primary/40 bg-linear-to-t ring-1'
                         }`}
                     >
-                        <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs font-medium">Total Antrean</span>
-                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-muted-foreground text-xs font-medium truncate">Total Antrean</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg border">
                                 <Inbox className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-foreground text-2xl font-medium tabular-nums">{stats.total_queue}</span>
+                            <span className="text-foreground text-2xl font-bold tabular-nums tracking-tight">{stats.total_queue}</span>
                             <span className="text-muted-foreground text-[11px]">berkas aktif</span>
                         </div>
                     </div>
@@ -113,20 +113,22 @@ export default function VerifikasiIndex({ documents, filters, stats, stages }: V
                     {/* Menunggu Verifikasi */}
                     <div
                         onClick={() => handleStatusFilter('Verifikasi Fakultas')}
-                        className={`cursor-pointer rounded-xl p-4 transition-all ${
+                        className={`cursor-pointer overflow-hidden rounded-xl p-4 transition-all ${
                             filters.status === 'Verifikasi Fakultas'
                                 ? 'to-card bg-linear-to-t from-amber-500/10 shadow-xs ring-2 ring-amber-500'
                                 : 'from-primary/5 to-card ring-foreground/10 bg-linear-to-t ring-1 hover:ring-amber-500/40'
                         }`}
                     >
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-amber-700 dark:text-amber-400">Verifikasi Fakultas</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-amber-700 dark:text-amber-400 truncate">Verifikasi Fakultas</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-amber-500/10 text-amber-600 dark:text-amber-400">
                                 <FileCheck className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium text-amber-700 tabular-nums dark:text-amber-400">{stats.menunggu_verifikasi}</span>
+                            <span className="text-2xl font-bold text-amber-700 tabular-nums tracking-tight dark:text-amber-400">
+                                {stats.menunggu_verifikasi}
+                            </span>
                             <span className="text-[11px] text-amber-600/80">perlu diperiksa</span>
                         </div>
                     </div>
@@ -134,20 +136,22 @@ export default function VerifikasiIndex({ documents, filters, stats, stages }: V
                     {/* Perlu Revisi */}
                     <div
                         onClick={() => handleStatusFilter('Perlu Revisi')}
-                        className={`cursor-pointer rounded-xl p-4 transition-all ${
+                        className={`cursor-pointer overflow-hidden rounded-xl p-4 transition-all ${
                             filters.status === 'Perlu Revisi'
                                 ? 'to-card bg-linear-to-t from-rose-500/10 shadow-xs ring-2 ring-rose-500'
                                 : 'from-primary/5 to-card ring-foreground/10 bg-linear-to-t ring-1 hover:ring-rose-500/40'
                         }`}
                     >
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-rose-700 dark:text-rose-400">Perlu Revisi</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-rose-700 dark:text-rose-400 truncate">Perlu Revisi</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-rose-500/10 text-rose-600 dark:text-rose-400">
                                 <AlertTriangle className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium text-rose-700 tabular-nums dark:text-rose-400">{stats.perlu_revisi}</span>
+                            <span className="text-2xl font-bold text-rose-700 tabular-nums tracking-tight dark:text-rose-400">
+                                {stats.perlu_revisi}
+                            </span>
                             <span className="text-[11px] text-rose-600/80">di pengusul</span>
                         </div>
                     </div>
@@ -155,20 +159,22 @@ export default function VerifikasiIndex({ documents, filters, stats, stages }: V
                     {/* SPJ Masuk */}
                     <div
                         onClick={() => handleStatusFilter('SPJ Diterima & Diverifikasi')}
-                        className={`cursor-pointer rounded-xl p-4 transition-all ${
+                        className={`cursor-pointer overflow-hidden rounded-xl p-4 transition-all ${
                             filters.status === 'SPJ Diterima & Diverifikasi'
                                 ? 'to-card bg-linear-to-t from-purple-500/10 shadow-xs ring-2 ring-purple-500'
                                 : 'from-primary/5 to-card ring-foreground/10 bg-linear-to-t ring-1 hover:ring-purple-500/40'
                         }`}
                     >
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-purple-700 dark:text-purple-400">Verifikasi SPJ</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-purple-700 dark:text-purple-400 truncate">Verifikasi SPJ</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-purple-500/10 text-purple-600 dark:text-purple-400">
                                 <Receipt className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium text-purple-700 tabular-nums dark:text-purple-400">{stats.spj_masuk}</span>
+                            <span className="text-2xl font-bold text-purple-700 tabular-nums tracking-tight dark:text-purple-400">
+                                {stats.spj_masuk}
+                            </span>
                             <span className="text-[11px] text-purple-600/80">kuitansi masuk</span>
                         </div>
                     </div>

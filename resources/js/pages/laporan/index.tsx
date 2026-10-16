@@ -86,48 +86,52 @@ export default function LaporanIndex({ summary, anggaranByType, statusDistributi
                 </div>
 
                 {/* Studio Admin KPI Stat Tiles */}
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                     {/* Total Usulan */}
-                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
-                        <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs font-medium">Total Pagu Usulan</span>
-                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
+                    <div className="from-primary/5 to-card ring-foreground/10 overflow-hidden rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-muted-foreground text-xs font-medium truncate">Total Pagu Usulan</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg border">
                                 <Wallet className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-foreground text-xl font-medium tabular-nums">{formatCurrency(summary.total_usulan)}</span>
-                            <p className="text-muted-foreground mt-0.5 text-[11px]">Dari {summary.total_dokumen} berkas kegiatan</p>
+                            <span className="text-foreground text-xl sm:text-2xl font-bold tabular-nums tracking-tight truncate block">
+                                {formatCurrency(summary.total_usulan)}
+                            </span>
+                            <p className="text-muted-foreground mt-0.5 text-[11px] truncate">Dari {summary.total_dokumen} berkas kegiatan</p>
                         </div>
                     </div>
 
                     {/* Total Realisasi Cair */}
-                    <div className="to-card rounded-xl bg-linear-to-t from-emerald-500/10 p-4 shadow-xs ring-1 ring-emerald-500/30">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Total Realisasi Cair</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    <div className="to-card overflow-hidden rounded-xl bg-linear-to-t from-emerald-500/10 p-4 shadow-xs ring-1 ring-emerald-500/30">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400 truncate">Total Realisasi Cair</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                                 <DollarSign className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-xl font-medium text-emerald-700 tabular-nums dark:text-emerald-400">
+                            <span className="text-xl sm:text-2xl font-bold text-emerald-700 tabular-nums tracking-tight dark:text-emerald-400 truncate block">
                                 {formatCurrency(summary.total_realisasi)}
                             </span>
-                            <p className="mt-0.5 text-[11px] text-emerald-600/80">Status Dana Cair (SP2D Selesai)</p>
+                            <p className="mt-0.5 text-[11px] text-emerald-600/80 truncate">Status Dana Cair (SP2D Selesai)</p>
                         </div>
                     </div>
 
                     {/* Daya Serap */}
-                    <div className="to-card rounded-xl bg-linear-to-t from-blue-500/10 p-4 shadow-xs ring-1 ring-blue-500/30">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-blue-700 dark:text-blue-400">Daya Serap Pagu</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                    <div className="to-card overflow-hidden rounded-xl bg-linear-to-t from-blue-500/10 p-4 shadow-xs ring-1 ring-blue-500/30">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-blue-700 dark:text-blue-400 truncate">Daya Serap Pagu</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-blue-500/10 text-blue-600 dark:text-blue-400">
                                 <Percent className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
                             <div className="flex items-baseline gap-1.5">
-                                <span className="text-2xl font-medium text-blue-700 tabular-nums dark:text-blue-400">{summary.serapan_persen}%</span>
+                                <span className="text-2xl font-bold text-blue-700 tabular-nums tracking-tight dark:text-blue-400">
+                                    {summary.serapan_persen}%
+                                </span>
                                 <span className="text-muted-foreground text-[11px]">terserap</span>
                             </div>
                             <div className="bg-muted/60 mt-2 h-1 w-full overflow-hidden rounded-full">
@@ -140,15 +144,15 @@ export default function LaporanIndex({ summary, anggaranByType, statusDistributi
                     </div>
 
                     {/* Total Dokumen */}
-                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
-                        <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs font-medium">Total Dokumen</span>
-                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
+                    <div className="from-primary/5 to-card ring-foreground/10 overflow-hidden rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-muted-foreground text-xs font-medium truncate">Total Dokumen</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg border">
                                 <Layers className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-foreground text-2xl font-medium tabular-nums">{summary.total_dokumen}</span>
+                            <span className="text-foreground text-2xl font-bold tabular-nums tracking-tight">{summary.total_dokumen}</span>
                             <span className="text-muted-foreground text-[11px]">berkas aktif</span>
                         </div>
                     </div>

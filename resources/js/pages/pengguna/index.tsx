@@ -110,59 +110,65 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
                 </div>
 
                 {/* Studio Admin KPI Stat Tiles */}
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                     {/* Total Pengguna */}
-                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
-                        <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs font-medium">Total Pengguna</span>
-                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
+                    <div className="from-primary/5 to-card ring-foreground/10 overflow-hidden rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-muted-foreground text-xs font-medium truncate">Total Pengguna</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg border">
                                 <Users className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-foreground text-2xl font-medium tabular-nums">{stats.total_users}</span>
+                            <span className="text-foreground text-2xl font-bold tabular-nums tracking-tight">{stats.total_users}</span>
                             <span className="text-muted-foreground text-[11px]">akun terdaftar</span>
                         </div>
                     </div>
 
                     {/* Pengusul */}
-                    <div className="to-card rounded-xl bg-linear-to-t from-sky-500/10 p-4 shadow-xs ring-1 ring-sky-500/30">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-sky-700 dark:text-sky-400">Pengusul</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-sky-500/10 text-sky-600 dark:text-sky-400">
+                    <div className="to-card overflow-hidden rounded-xl bg-linear-to-t from-sky-500/10 p-4 shadow-xs ring-1 ring-sky-500/30">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-sky-700 dark:text-sky-400 truncate">Pengusul</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-sky-500/10 text-sky-600 dark:text-sky-400">
                                 <GraduationCap className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium text-sky-700 tabular-nums dark:text-sky-400">{stats.total_pengusul}</span>
+                            <span className="text-2xl font-bold text-sky-700 tabular-nums tracking-tight dark:text-sky-400">
+                                {stats.total_pengusul}
+                            </span>
                             <span className="text-[11px] text-sky-600/80">Dosen & Tendik</span>
                         </div>
                     </div>
 
                     {/* Verifikator */}
-                    <div className="to-card rounded-xl bg-linear-to-t from-indigo-500/10 p-4 shadow-xs ring-1 ring-indigo-500/30">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-indigo-700 dark:text-indigo-400">Verifikator Keuangan</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                    <div className="to-card overflow-hidden rounded-xl bg-linear-to-t from-indigo-500/10 p-4 shadow-xs ring-1 ring-indigo-500/30">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-indigo-700 dark:text-indigo-400 truncate">Verifikator Keuangan</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
                                 <Briefcase className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium text-indigo-700 tabular-nums dark:text-indigo-400">{stats.total_staf}</span>
+                            <span className="text-2xl font-bold text-indigo-700 tabular-nums tracking-tight dark:text-indigo-400">
+                                {stats.total_staf}
+                            </span>
                             <span className="text-[11px] text-indigo-600/80">Tim SBM & SAKTI</span>
                         </div>
                     </div>
 
                     {/* Pimpinan */}
-                    <div className="to-card rounded-xl bg-linear-to-t from-emerald-500/10 p-4 shadow-xs ring-1 ring-emerald-500/30">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Pimpinan / Pejabat</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    <div className="to-card overflow-hidden rounded-xl bg-linear-to-t from-emerald-500/10 p-4 shadow-xs ring-1 ring-emerald-500/30">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400 truncate">Pimpinan / Pejabat</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                                 <Shield className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline justify-between">
-                            <span className="text-2xl font-medium text-emerald-700 tabular-nums dark:text-emerald-400">{stats.total_pimpinan}</span>
+                            <span className="text-2xl font-bold text-emerald-700 tabular-nums tracking-tight dark:text-emerald-400">
+                                {stats.total_pimpinan}
+                            </span>
                             <span className="text-[11px] text-emerald-600/80">Otorisator SK</span>
                         </div>
                     </div>

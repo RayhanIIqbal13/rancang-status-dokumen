@@ -112,61 +112,67 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                 </div>
 
                 {/* Studio Admin KPI Stat Tiles */}
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                     {/* Total Usulan */}
-                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
-                        <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs font-medium">Total Pagu Usulan</span>
-                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
+                    <div className="from-primary/5 to-card ring-foreground/10 overflow-hidden rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-muted-foreground text-xs font-medium truncate">Total Pagu Usulan</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg border">
                                 <Wallet className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-foreground text-xl font-medium tabular-nums">{formatCurrency(stats.total_usulan)}</span>
-                            <p className="text-muted-foreground mt-0.5 text-[11px]">Total komitmen usulan</p>
+                            <span className="text-foreground text-xl sm:text-2xl font-bold tabular-nums tracking-tight truncate block">
+                                {formatCurrency(stats.total_usulan)}
+                            </span>
+                            <p className="text-muted-foreground mt-0.5 text-[11px] truncate">Total komitmen usulan</p>
                         </div>
                     </div>
 
                     {/* Total Realisasi Cair */}
-                    <div className="to-card rounded-xl bg-linear-to-t from-teal-500/10 p-4 shadow-xs ring-1 ring-teal-500/30">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-teal-700 dark:text-teal-400">Total Realisasi Cair</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-teal-500/10 text-teal-600 dark:text-teal-400">
+                    <div className="to-card overflow-hidden rounded-xl bg-linear-to-t from-teal-500/10 p-4 shadow-xs ring-1 ring-teal-500/30">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-teal-700 dark:text-teal-400 truncate">Total Realisasi Cair</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-teal-500/10 text-teal-600 dark:text-teal-400">
                                 <DollarSign className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-xl font-medium text-teal-700 tabular-nums dark:text-teal-400">
+                            <span className="text-xl sm:text-2xl font-bold text-teal-700 tabular-nums tracking-tight dark:text-teal-400 truncate block">
                                 {formatCurrency(stats.total_realisasi)}
                             </span>
-                            <p className="mt-0.5 text-[11px] text-teal-600/80">SP2D telah diterbitkan</p>
+                            <p className="mt-0.5 text-[11px] text-teal-600/80 truncate">SP2D telah diterbitkan</p>
                         </div>
                     </div>
 
                     {/* Sisa Alokasi */}
-                    <div className="from-primary/5 to-card ring-foreground/10 rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
-                        <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground text-xs font-medium">Sisa Alokasi Pagu</span>
-                            <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-lg border">
+                    <div className="from-primary/5 to-card ring-foreground/10 overflow-hidden rounded-xl bg-linear-to-t p-4 shadow-xs ring-1">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-muted-foreground text-xs font-medium truncate">Sisa Alokasi Pagu</span>
+                            <div className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg border">
                                 <Landmark className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2">
-                            <span className="text-foreground text-xl font-medium tabular-nums">{formatCurrency(stats.sisa_anggaran)}</span>
-                            <p className="text-muted-foreground mt-0.5 text-[11px]">Belum dicairkan</p>
+                            <span className="text-foreground text-xl sm:text-2xl font-bold tabular-nums tracking-tight truncate block">
+                                {formatCurrency(stats.sisa_anggaran)}
+                            </span>
+                            <p className="text-muted-foreground mt-0.5 text-[11px] truncate">Belum dicairkan</p>
                         </div>
                     </div>
 
                     {/* Persentase Serapan */}
-                    <div className="to-card rounded-xl bg-linear-to-t from-blue-500/10 p-4 shadow-xs ring-1 ring-blue-500/30">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-blue-700 dark:text-blue-400">Persentase Serapan</span>
-                            <div className="flex size-7 items-center justify-center rounded-lg border bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                    <div className="to-card overflow-hidden rounded-xl bg-linear-to-t from-blue-500/10 p-4 shadow-xs ring-1 ring-blue-500/30">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-medium text-blue-700 dark:text-blue-400 truncate">Persentase Serapan</span>
+                            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg border bg-blue-500/10 text-blue-600 dark:text-blue-400">
                                 <TrendingUp className="size-3.5" />
                             </div>
                         </div>
                         <div className="mt-2 flex items-baseline gap-1.5">
-                            <span className="text-2xl font-medium text-blue-700 tabular-nums dark:text-blue-400">{stats.serapan_persen}%</span>
+                            <span className="text-2xl font-bold text-blue-700 tabular-nums tracking-tight dark:text-blue-400">
+                                {stats.serapan_persen}%
+                            </span>
                             <span className="text-muted-foreground text-[11px]">daya serap</span>
                         </div>
                     </div>
