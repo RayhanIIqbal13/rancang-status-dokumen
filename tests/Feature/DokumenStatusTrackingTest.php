@@ -344,3 +344,46 @@ test('dedicated status tracking page loads active document and routes correctly'
         ->get(route('status-tracking.show', $document))
         ->assertRedirect(route('status-tracking.index', ['dokumen_id' => $document->id]));
 });
+
+test('global search api returns matching documents and sbm items for command palette', function () {
+    DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => 'PROP/2026/9999',
+        'nama_kegiatan' => 'Seminar Teknologi Cloud Balikpapan',
+        'jenis_anggaran' => 'BOPTN (Bantuan Operasional PTN)',
+        'uraian' => 'Pengujian pencarian sistem command palette.',
+        'tgl_pelaksanaan' => now()->addDays(14)->format('Y-m-d'),
+        'total_usulan' => 12000000,
+        'status_terkini' => DocumentStatus::Diajukan,
+    ]);
+
+    StandarBiaya::create([
+        'kategori' => 'Honorarium',
+        'uraian_belanja' => 'Honorarium Keynote Speaker Cloud',
+        'satuan' => 'Orang / Jam',
+        'batas_tarif' => 950000,
+        'tahun' => 2026,
+    ]);
+
+    // Unauthenticated request is rejected
+    $this->getJson(route('api.search'))->assertUnauthorized();
+
+    // Authenticated search query
+    $response = $this->actingAs($this->applicant)
+        ->getJson(route('api.search', ['q' => 'Cloud']))
+        ->assertOk();
+
+    $response->assertJsonStructure([
+        'documents' => [
+            '*' => ['id', 'nomor_pengajuan', 'nama_kegiatan', 'jenis_anggaran', 'total_usulan', 'status_terkini', 'url'],
+        ],
+        'sbm' => [
+            '*' => ['id', 'kategori', 'uraian_belanja', 'satuan', 'batas_tarif', 'tahun', 'url'],
+        ],
+    ]);
+
+    expect($response->json('documents'))->toHaveCount(1)
+        ->and($response->json('documents.0.nomor_pengajuan'))->toBe('PROP/2026/9999')
+        ->and($response->json('sbm'))->toHaveCount(1)
+        ->and($response->json('sbm.0.uraian_belanja'))->toBe('Honorarium Keynote Speaker Cloud');
+});

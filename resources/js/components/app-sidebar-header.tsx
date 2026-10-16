@@ -1,3 +1,4 @@
+import { SearchCommandDialog } from '@/components/search-command-dialog';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,9 +23,21 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
     const user = auth?.user;
 
     const [isDark, setIsDark] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     useEffect(() => {
         setIsDark(document.documentElement.classList.contains('dark'));
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                setIsSearchOpen((prev) => !prev);
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
 
     const toggleTheme = () => {
@@ -57,15 +70,17 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                     <SidebarTrigger className="text-muted-foreground hover:text-foreground -ml-1 size-7" />
                     <Separator orientation="vertical" className="mx-2 h-4 self-center" />
 
-                    <Link
-                        href="/dokumen-pengajuan"
-                        className="border-border/80 bg-background/60 text-muted-foreground hover:bg-muted/50 hover:text-foreground flex h-8 items-center gap-2 rounded-lg border px-3 text-xs shadow-2xs transition-all"
+                    <button
+                        type="button"
+                        onClick={() => setIsSearchOpen(true)}
+                        className="border-border/80 bg-background/60 text-muted-foreground hover:bg-muted/50 hover:text-foreground flex h-8 cursor-pointer items-center gap-2 rounded-lg border px-3 text-xs shadow-2xs transition-all"
+                        title="Cari Dokumen, Halaman & SBM (⌘K)"
                     >
                         <Search className="size-3.5" />
                         <span className="hidden sm:inline">Search documents, SBM, SPJ...</span>
                         <span className="sm:hidden">Search</span>
                         <Kbd className="ml-1 text-[10px]">⌘K</Kbd>
-                    </Link>
+                    </button>
                 </div>
 
                 {/* Right section: Theme Switcher, GitHub, Account Switcher */}
@@ -196,6 +211,9 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                     </DropdownMenu>
                 </div>
             </div>
+
+            {/* Global Command Palette & Search Dialog */}
+            <SearchCommandDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
         </header>
     );
 }

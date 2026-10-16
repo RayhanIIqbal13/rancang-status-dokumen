@@ -10,6 +10,7 @@ use App\Http\Controllers\StandarBiayaController;
 use App\Http\Controllers\StatusTrackingController;
 use App\Http\Controllers\VerifikasiDokumenController;
 use App\Models\DokumenPengajuan;
+use App\Models\StandarBiaya;
 use App\Services\DashboardAnalyticsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -127,6 +128,72 @@ Route::middleware(['auth'])->group(function () {
 
     // 9. Reports / Laporan
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
+
+    // 10. Global Search API for Command Palette
+    Route::get('api/search', function (Request $request) {
+        $q = trim((string) $request->input('q', ''));
+        $user = $request->user();
+
+        $documentsQuery = DokumenPengajuan::query()
+            ->accessibleBy($user)
+            ->with(['user:id,name,unit']);
+
+        if ($q !== '') {
+            $documentsQuery->search($q);
+        }
+
+        $documents = $documentsQuery->latest()->limit(8)->get([
+            'id',
+            'nomor_pengajuan',
+            'nama_kegiatan',
+            'jenis_anggaran',
+            'total_usulan',
+            'status_terkini',
+            'user_id',
+        ])->map(function ($doc) {
+            return [
+                'id' => $doc->id,
+                'nomor_pengajuan' => $doc->nomor_pengajuan,
+                'nama_kegiatan' => $doc->nama_kegiatan,
+                'jenis_anggaran' => $doc->jenis_anggaran,
+                'total_usulan' => (float) $doc->total_usulan,
+                'status_terkini' => $doc->status_terkini->value ?? (string) $doc->status_terkini,
+                'user_name' => $doc->user->name ?? null,
+                'url' => route('status-tracking.show', $doc->id),
+            ];
+        });
+
+        $sbmQuery = StandarBiaya::query();
+        if ($q !== '') {
+            $sbmQuery->where(function ($sq) use ($q) {
+                $sq->where('uraian_belanja', 'like', "%{$q}%")
+                    ->orWhere('kategori', 'like', "%{$q}%");
+            });
+        }
+        $sbm = $sbmQuery->orderBy('kategori')->limit(8)->get([
+            'id',
+            'kategori',
+            'uraian_belanja',
+            'satuan',
+            'batas_tarif',
+            'tahun',
+        ])->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'kategori' => $item->kategori,
+                'uraian_belanja' => $item->uraian_belanja,
+                'satuan' => $item->satuan,
+                'batas_tarif' => (float) $item->batas_tarif,
+                'tahun' => $item->tahun,
+                'url' => route('standar-biaya.index'),
+            ];
+        });
+
+        return response()->json([
+            'documents' => $documents,
+            'sbm' => $sbm,
+        ]);
+    })->name('api.search');
 });
 
 require __DIR__.'/settings.php';
