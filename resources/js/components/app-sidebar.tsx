@@ -13,6 +13,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { usePreferences } from '@/hooks/use-preferences';
 import { SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
@@ -34,6 +35,7 @@ export function AppSidebar() {
     const page = usePage<SharedData>();
     const currentUrl = page.url;
     const userRole = page.props.auth?.user?.role;
+    const { preferences } = usePreferences();
 
     const navGroups = [
         {
@@ -114,7 +116,11 @@ export function AppSidebar() {
     ];
 
     return (
-        <Sidebar collapsible="icon" variant="sidebar" className="border-sidebar-border bg-sidebar border-r">
+        <Sidebar
+            collapsible={preferences.sidebarCollapseMode}
+            variant={preferences.sidebarStyle}
+            className="border-sidebar-border bg-sidebar border-r"
+        >
             <SidebarHeader className="p-3">
                 <SidebarMenu>
                     <SidebarMenuItem>
