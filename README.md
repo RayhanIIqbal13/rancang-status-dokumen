@@ -276,6 +276,33 @@ rancang-status-dokumen/
 
 ---
 
+## 👥 Tim Pengembang & Kontributor
+
+Terima kasih dan apresiasi kepada seluruh kontributor yang telah berkolaborasi dalam merancang, membangun, dan mengembangkan platform **SAK ITK**:
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center" width="180px">
+        <a href="https://github.com/RayhanIIqbal13">
+          <img src="https://github.com/RayhanIIqbal13.png?size=100" width="90px;" alt="Rayhan Iqbal" style="border-radius: 50%;" /><br />
+          <sub><b>Rayhan Iqbal</b></sub>
+        </a><br />
+        <span style="font-size: 11px; color: #888;">Project Lead & Developer</span>
+      </td>
+      <td align="center" width="180px">
+        <a href="https://github.com/justdyn">
+          <img src="https://github.com/justdyn.png?size=100" width="90px;" alt="justdyn" style="border-radius: 50%;" /><br />
+          <sub><b>justdyn</b></sub>
+        </a><br />
+        <span style="font-size: 11px; color: #888;">Core Contributor</span>
+      </td>
+    </tr>
+  </table>
+</div>
+
+---
+
 ## 📄 Lisensi & Kontribusi
 
 Proyek ini dikembangkan di bawah lisensi open-source **[MIT License](LICENSE)**. Kontribusi berupa bug report, saran perbaikan alur, maupun pull request sangat disambut baik.
