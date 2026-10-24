@@ -1,3 +1,4 @@
+import { ProposalPreviewModal } from '@/components/dokumen/proposal-preview-modal';
 import { StatusBadge } from '@/components/dokumen/status-badge';
 import { StatusUpdateDialog } from '@/components/dokumen/status-update-dialog';
 import { Button } from '@/components/ui/button';
@@ -5,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DokumenPengajuan, PaginatedData, StandarBiaya, StatusStageInfo } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { AlertTriangle, ArrowUpRight, Building2, Calendar, FileCheck, FileSearch, Inbox, MapPin, Receipt, Search, User, X } from 'lucide-react';
+import { AlertTriangle, ArrowUpRight, Building2, Calendar, Eye, FileCheck, FileSearch, Inbox, MapPin, Receipt, Search, User, X } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface VerifikasiIndexProps {
@@ -362,6 +363,16 @@ export default function VerifikasiIndex({ documents, filters, stats, stages }: V
                                             </div>
 
                                             <div className="flex flex-wrap items-center gap-1.5">
+                                                <ProposalPreviewModal
+                                                    document={doc}
+                                                    triggerButton={
+                                                        <Button size="sm" variant="outline" className="h-7 gap-1 text-xs border-primary/30 text-primary hover:bg-primary/5">
+                                                            <Eye className="size-3" />
+                                                            <span>Lihat Proposal</span>
+                                                        </Button>
+                                                    }
+                                                />
+
                                                 <StatusUpdateDialog
                                                     document={doc}
                                                     stages={stages}

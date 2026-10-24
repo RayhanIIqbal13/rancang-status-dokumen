@@ -9,6 +9,7 @@ use App\Models\StatusTracking;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -135,7 +136,17 @@ class StatusTrackingController extends Controller
             ]);
         }
 
-        DB::transaction(function () use ($dokumenPengajuan, $user, $targetStatus, $validated) {
+        DB::transaction(function () use ($dokumenPengajuan, $user, $targetStatus, $validated, $request) {
+            // Handle file re-upload if revision includes updated proposal document
+            if ($request->hasFile('file_proposal')) {
+                // Delete previous file if exists
+                if ($dokumenPengajuan->file_proposal) {
+                    Storage::disk('public')->delete($dokumenPengajuan->file_proposal);
+                }
+                $newPath = $request->file('file_proposal')->store('proposals', 'public');
+                $dokumenPengajuan->file_proposal = $newPath;
+            }
+
             StatusTracking::create([
                 'dokumen_pengajuan_id' => $dokumenPengajuan->id,
                 'user_id' => $user->id,
@@ -145,9 +156,8 @@ class StatusTrackingController extends Controller
                 'waktu_update' => now(),
             ]);
 
-            $dokumenPengajuan->update([
-                'status_terkini' => $targetStatus,
-            ]);
+            $dokumenPengajuan->status_terkini = $targetStatus;
+            $dokumenPengajuan->save();
         });
 
         return back()->with('success', "Status dokumen berhasil diperbarui menjadi: {$targetStatus->label()}.");

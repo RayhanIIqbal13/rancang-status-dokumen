@@ -34,6 +34,7 @@ class UpdateStatusTrackingRequest extends FormRequest
                 'string',
                 'max:2000',
             ],
+            'file_proposal' => ['nullable', 'file', 'mimes:pdf,doc,docx,zip', 'max:25600'],
         ];
     }
 
@@ -46,6 +47,9 @@ class UpdateStatusTrackingRequest extends FormRequest
     {
         return [
             'catatan.required' => 'Catatan revisi wajib diisi apabila status diubah menjadi Perlu Revisi.',
+            'file_proposal.file' => 'Berkas perbaikan proposal tidak valid.',
+            'file_proposal.mimes' => 'Format berkas harus PDF, DOCX, DOC, atau ZIP.',
+            'file_proposal.max' => 'Ukuran berkas perbaikan tidak boleh melebihi 25 MB.',
         ];
     }
 }

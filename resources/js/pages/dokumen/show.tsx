@@ -1,3 +1,4 @@
+import { ProposalPreviewModal } from '@/components/dokumen/proposal-preview-modal';
 import { RevisionAlertBanner } from '@/components/dokumen/revision-alert-banner';
 import { StatusBadge } from '@/components/dokumen/status-badge';
 import { StatusTimeline } from '@/components/dokumen/status-timeline';
@@ -12,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DokumenPengajuan, StandarBiaya, StatusStageInfo, User } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { ArrowLeft, ArrowUpRight, Building2, Clock, Download, Landmark, MapPin, Plus, Receipt, Trash2, User as UserIcon } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Building2, Clock, Download, Eye, FileText, Landmark, MapPin, Plus, Receipt, Sparkles, Trash2, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 
 interface ShowProps {
@@ -116,6 +117,17 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
+                        {/* Proposal & RAB Preview Modal Trigger */}
+                        <ProposalPreviewModal
+                            document={document}
+                            triggerButton={
+                                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs font-semibold shadow-2xs border-primary/30 text-primary hover:bg-primary/5">
+                                    <Eye className="size-3.5" />
+                                    <span>Tinjau Proposal & RAB (PDF)</span>
+                                </Button>
+                            }
+                        />
+
                         <StatusBadge status={document.status_terkini} size="lg" />
                         {canUpdateStatus && <StatusUpdateDialog document={document} stages={stages} />}
                     </div>
@@ -241,6 +253,19 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                         {/* Tab Content 2: Bukti SPJ & Validasi SBM */}
                         {activeTab === 'spj' && (
                             <div className="bg-card space-y-4 rounded-xl border p-5 shadow-xs dark:border-neutral-800">
+                                {/* SOP Workflow Guidance Banner (Addressing simulation feedback) */}
+                                <div className="p-4 rounded-xl border bg-blue-50/70 border-blue-200 dark:bg-blue-950/30 dark:border-blue-900 flex items-start gap-3 text-xs text-blue-900 dark:text-blue-200">
+                                    <Sparkles className="size-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-blue-950 dark:text-blue-100">
+                                            Alur Dokumen: Proposal & RAB di Awal, SPJ/LPJ Pasca-Kegiatan (H+3)
+                                        </p>
+                                        <p className="text-[11px] leading-relaxed text-blue-800/90 dark:text-blue-300">
+                                            Sebelum kegiatan dilaksanakan, mahasiswa mengunggah berkas <strong>Proposal & RAB</strong>. Setelah usulan diverifikasi dan disetujui hingga kegiatan selesai, mahasiswa menginput dan mengunggah bukti pengeluaran (SPJ) dalam batas waktu maksimal 3 hari kerja (H+3).
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
                                     <div>
                                         <h3 className="text-foreground text-base font-bold">Bukti Pengeluaran & Validasi SBM</h3>
@@ -547,16 +572,29 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                                     </p>
                                 </div>
 
-                                {document.file_proposal && (
-                                    <div className="border-t pt-3">
-                                        <Button asChild variant="outline" size="sm" className="w-full gap-2">
-                                            <a href={`/storage/${document.file_proposal}`} target="_blank" rel="noreferrer">
-                                                <Download className="size-3.5" />
-                                                <span>Unduh Berkas Proposal</span>
+                                <div className="border-t pt-3 space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-muted-foreground font-medium">Lampiran Berkas:</span>
+                                        <span className="text-[10px] text-muted-foreground">Proposal & RAB</span>
+                                    </div>
+                                    <ProposalPreviewModal
+                                        document={document}
+                                        triggerButton={
+                                            <Button variant="outline" size="sm" className="w-full gap-2 border-primary/30 text-primary hover:bg-primary/5 font-semibold text-xs h-8">
+                                                <Eye className="size-3.5" />
+                                                <span>Tinjau Berkas Proposal (PDF)</span>
+                                            </Button>
+                                        }
+                                    />
+                                    {document.file_proposal && (
+                                        <Button asChild variant="ghost" size="sm" className="w-full gap-2 text-xs h-7 text-muted-foreground hover:text-foreground">
+                                            <a href={route('dokumen-pengajuan.proposal.download', document.id)} download>
+                                                <Download className="size-3" />
+                                                <span>Unduh File Asli (.PDF)</span>
                                             </a>
                                         </Button>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </CardContent>
                         </Card>
 

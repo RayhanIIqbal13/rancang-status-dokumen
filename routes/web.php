@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\DocumentStatus;
+use App\Enums\UserRole;
 use App\Http\Controllers\BuktiPengeluaranController;
 use App\Http\Controllers\DokumenPengajuanController;
 use App\Http\Controllers\LaporanController;
@@ -11,8 +12,10 @@ use App\Http\Controllers\StatusTrackingController;
 use App\Http\Controllers\VerifikasiDokumenController;
 use App\Models\DokumenPengajuan;
 use App\Models\StandarBiaya;
+use App\Models\User;
 use App\Services\DashboardAnalyticsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -92,9 +95,46 @@ Route::middleware(['auth'])->group(function () {
         ->parameters(['dokumen-pengajuan' => 'dokumenPengajuan'])
         ->except(['edit', 'update']);
 
+    // Proposal & RAB document preview & download routes
+    Route::get('dokumen-pengajuan/{dokumenPengajuan}/proposal/view', [DokumenPengajuanController::class, 'viewProposal'])
+        ->name('dokumen-pengajuan.proposal.view');
+    Route::get('dokumen-pengajuan/{dokumenPengajuan}/proposal/download', [DokumenPengajuanController::class, 'downloadProposal'])
+        ->name('dokumen-pengajuan.proposal.download');
+
     // Status Tracking update action
     Route::post('dokumen-pengajuan/{dokumenPengajuan}/status', [StatusTrackingController::class, 'store'])
         ->name('dokumen-pengajuan.status.store');
+
+    // Demo Account Quick Switcher (Live Role Presentation Switcher)
+    Route::post('demo-switch-user', function (Request $request) {
+        $validated = $request->validate([
+            'role' => ['nullable', 'string', 'in:mahasiswa,pengusul,tendik,staf_keuangan,admin,pimpinan'],
+            'email' => ['nullable', 'email'],
+        ]);
+
+        $query = User::query();
+
+        if (! empty($validated['email'])) {
+            $user = $query->where('email', $validated['email'])->first();
+        } else {
+            $roleKey = match ($validated['role'] ?? 'pengusul') {
+                'mahasiswa', 'pengusul' => UserRole::Pengusul,
+                'tendik', 'staf_keuangan' => UserRole::StafKeuangan,
+                'pimpinan' => UserRole::Pimpinan,
+                'admin' => UserRole::Admin,
+                default => UserRole::Pengusul,
+            };
+            $user = $query->where('role', $roleKey)->first();
+        }
+
+        if ($user) {
+            Auth::login($user);
+
+            return back()->with('success', "Beralih peran ke: {$user->name} ({$user->role->label()}).");
+        }
+
+        return back()->with('error', 'Akun demo untuk peran tersebut tidak ditemukan.');
+    })->name('demo.switch-user');
 
     // Bukti Pengeluaran & Realisasi sub-actions
     Route::post('dokumen-pengajuan/{dokumenPengajuan}/bukti-pengeluaran', [BuktiPengeluaranController::class, 'store'])

@@ -5,8 +5,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, CheckCircle2, FileText, FileUp, Send, Sparkles } from 'lucide-react';
-import React from 'react';
+import { ArrowLeft, CheckCircle2, FileText, FileUp, Info, Send, Sparkles, X } from 'lucide-react';
+import React, { useRef, useState } from 'react';
 
 interface CreateProps {
     budgetTypes: string[];
@@ -18,10 +18,23 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Pengajuan Baru', href: '/dokumen-pengajuan/create' },
 ];
 
-export default function DokumenCreate({ budgetTypes }: CreateProps) {
+export default function DokumenCreate({ budgetTypes: initialBudgetTypes }: CreateProps) {
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
+
+    // Ensure PNBP Fakultas and BOPTN are at top
+    const budgetTypes = [
+        'PNBP Fakultas (RAB Mahasiswa/Fakultas)',
+        'BOPTN (Bantuan Operasional PTN)',
+        'RKA-K/L Universitas',
+        'Hibah Pengabdian Masyarakat',
+        'Dana Riset & Publikasi',
+        'Kegiatan Kemahasiswaan (FSTI ITK)',
+    ];
+
     const { data, setData, post, processing, errors } = useForm({
         nama_kegiatan: '',
-        jenis_anggaran: budgetTypes[0] || 'BOPTN (Bantuan Operasional PTN)',
+        jenis_anggaran: budgetTypes[0],
         uraian: '',
         tgl_pelaksanaan: '',
         total_usulan: '',
@@ -39,15 +52,38 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('dokumen-pengajuan.store'));
+        post(route('dokumen-pengajuan.store'), {
+            forceFormData: true,
+        });
+    };
+
+    const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setIsDragging(false);
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            setData('file_proposal', e.dataTransfer.files[0]);
+        }
+    };
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setData('file_proposal', e.target.files[0]);
+        }
+    };
+
+    const removeFile = () => {
+        setData('file_proposal', null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Pengajuan Dokumen Anggaran - Studio Admin SAK ITK" />
+            <Head title="Pengajuan Usulan Kegiatan (Proposal & RAB) - SAK ITK" />
 
             <div className="flex max-w-5xl flex-col gap-5 p-4 md:p-6">
-                {/* Page Header (Studio Admin style) */}
+                {/* Page Header */}
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
                         <Button asChild variant="outline" size="icon" className="size-8 rounded-lg">
@@ -57,13 +93,15 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                         </Button>
                         <div>
                             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-                                <h1 className="text-foreground text-lg sm:text-xl font-semibold tracking-tight">Pengajuan Usulan Anggaran</h1>
-                                <span className="border-primary/20 bg-primary/10 text-primary inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium whitespace-nowrap">
-                                    Form Baru
+                                <h1 className="text-foreground text-lg sm:text-xl font-semibold tracking-tight">
+                                    Pengajuan Usulan Kegiatan (Proposal & RAB)
+                                </h1>
+                                <span className="border-primary/20 bg-primary/10 text-primary inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold whitespace-nowrap">
+                                    Tahap Pra-Kegiatan
                                 </span>
                             </div>
                             <p className="text-muted-foreground mt-0.5 text-xs">
-                                Formulir pendaftaran usulan kegiatan dan anggaran fakultas/unit kerja ITK
+                                Form pendaftaran usulan kegiatan mahasiswa/fakultas beserta berkas Proposal dan Rencana Anggaran Biaya (RAB)
                             </p>
                         </div>
                     </div>
@@ -72,10 +110,25 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                         <Button asChild variant="outline" size="sm" className="h-8 text-xs">
                             <Link href={route('dokumen-pengajuan.index')}>Batal</Link>
                         </Button>
-                        <Button type="button" size="sm" onClick={submit} disabled={processing} className="h-8 gap-1.5 text-xs shadow-xs">
+                        <Button type="button" size="sm" onClick={submit} disabled={processing} className="h-8 gap-1.5 text-xs shadow-xs font-semibold">
                             <Send className="size-3.5" />
-                            <span>{processing ? 'Menyimpan...' : 'Kirim Pengajuan'}</span>
+                            <span>{processing ? 'Mengunggah & Menyimpan...' : 'Kirim Usulan & Berkas'}</span>
                         </Button>
+                    </div>
+                </div>
+
+                {/* Workflow Guidance Notice */}
+                <div className="p-4 rounded-xl border bg-blue-50/70 border-blue-200 dark:bg-blue-950/30 dark:border-blue-900 flex items-start gap-3 text-xs text-blue-900 dark:text-blue-200">
+                    <Info className="size-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                        <p className="font-semibold text-blue-950 dark:text-blue-100">
+                            Ketentuan Alur Dokumen FSTI ITK:
+                        </p>
+                        <p className="text-[11px] leading-relaxed text-blue-800/90 dark:text-blue-300">
+                            1. Dokumen yang diunggah saat ini adalah <strong>Proposal dan RAB</strong> (dengan acuan pagu SBM ITK 2026).<br />
+                            2. Tendik verifikator akan memeriksa rincian biaya. Jika ada anggaran yang dinilai terlalu besar (misal konsumsi), berkas akan dikembalikan dengan status <strong>Perlu Revisi</strong>.<br />
+                            3. Bukti kuitansi dan dokumen <strong>SPJ/LPJ</strong> diunggah setelah kegiatan berstatus disetujui dan telah selesai dilaksanakan (maksimal 3 hari / H+3).
+                        </p>
                     </div>
                 </div>
 
@@ -97,7 +150,7 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                                     id="nama_kegiatan"
                                     value={data.nama_kegiatan}
                                     onChange={(e) => setData('nama_kegiatan', e.target.value)}
-                                    placeholder="Contoh: Workshop Penguatan Kurikulum OBE Program Studi 2026"
+                                    placeholder="Contoh: Seminar Nasional Kecerdasan Buatan & Big Data 2026"
                                     className="h-8 text-xs"
                                     required
                                 />
@@ -143,7 +196,7 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
 
                                 <div className="space-y-1.5">
                                     <Label htmlFor="total_usulan" className="text-xs font-medium">
-                                        Estimasi Total Biaya (Rp) <span className="text-destructive">*</span>
+                                        Estimasi Total Biaya RAB (Rp) <span className="text-destructive">*</span>
                                     </Label>
                                     <Input
                                         id="total_usulan"
@@ -152,7 +205,7 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                                         step="1000"
                                         value={data.total_usulan}
                                         onChange={(e) => setData('total_usulan', e.target.value)}
-                                        placeholder="Contoh: 15000000"
+                                        placeholder="Contoh: 18500000"
                                         className="h-8 text-xs"
                                         required
                                     />
@@ -182,49 +235,77 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                             </div>
                         </div>
 
-                        {/* File Upload Card */}
+                        {/* File Upload Card (Fixed Drag & Drop + PDF Support) */}
                         <div className="bg-card space-y-3 rounded-xl border p-5 shadow-2xs">
                             <div className="border-b pb-3">
-                                <h2 className="text-foreground text-sm font-semibold tracking-tight">Lampiran Berkas Proposal & RAB</h2>
-                                <p className="text-muted-foreground mt-0.5 text-xs">Format berkas: .PDF, .DOCX, atau .ZIP (maksimal 10MB)</p>
+                                <h2 className="text-foreground text-sm font-semibold tracking-tight">Lampiran Berkas Proposal & RAB (Wajib PDF)</h2>
+                                <p className="text-muted-foreground mt-0.5 text-xs">
+                                    Unggah dokumen lengkap Proposal Kegiatan beserta rincian Rencana Anggaran Biaya (RAB). Format: .PDF, .DOCX, atau .ZIP (maksimal 25MB)
+                                </p>
                             </div>
 
-                            <div className="border-input hover:border-primary/50 bg-muted/20 rounded-xl border-2 border-dashed p-6 text-center transition-colors">
-                                <div className="bg-card text-muted-foreground mx-auto flex size-10 items-center justify-center rounded-lg border">
-                                    <FileUp className="size-5" />
+                            <div
+                                onDragOver={(e) => {
+                                    e.preventDefault();
+                                    setIsDragging(true);
+                                }}
+                                onDragLeave={() => setIsDragging(false)}
+                                onDrop={handleFileDrop}
+                                onClick={() => fileInputRef.current?.click()}
+                                className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-all ${
+                                    isDragging
+                                        ? 'border-primary bg-primary/10 scale-[0.99]'
+                                        : 'border-input hover:border-primary/50 bg-muted/20 hover:bg-muted/30'
+                                }`}
+                            >
+                                <div className="bg-card text-primary mx-auto flex size-12 items-center justify-center rounded-xl border shadow-2xs">
+                                    <FileUp className="size-6" />
                                 </div>
                                 <div className="text-muted-foreground mt-3 text-xs">
-                                    <label htmlFor="file_proposal" className="text-primary cursor-pointer font-medium hover:underline">
-                                        Klik untuk memilih file dokumen
-                                    </label>
-                                    <span className="text-muted-foreground"> atau seret ke area ini</span>
+                                    <span className="text-primary font-semibold hover:underline">
+                                        Klik untuk memilih file dokumen PDF
+                                    </span>
+                                    <span> atau seret dan jatuhkan file ke area ini</span>
                                     <input
+                                        ref={fileInputRef}
                                         id="file_proposal"
                                         type="file"
                                         className="sr-only"
-                                        accept=".pdf,.doc,.docx,.zip"
-                                        onChange={(e) => {
-                                            if (e.target.files && e.target.files[0]) {
-                                                setData('file_proposal', e.target.files[0]);
-                                            }
-                                        }}
+                                        accept=".pdf,.doc,.docx,.zip,application/pdf"
+                                        onChange={handleFileSelect}
                                     />
+
                                     {data.file_proposal ? (
-                                        <div className="border-primary/20 bg-primary/5 text-primary mt-3 inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium">
-                                            <FileText className="size-3.5" />
-                                            <span>{data.file_proposal.name}</span>
-                                            <span className="text-muted-foreground text-[10px]">
-                                                ({(data.file_proposal.size / 1024).toFixed(0)} KB)
-                                            </span>
+                                        <div
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="border-primary/30 bg-primary/10 text-primary mt-4 inline-flex items-center gap-3 rounded-xl border px-4 py-2 text-xs font-semibold shadow-2xs"
+                                        >
+                                            <FileText className="size-4 shrink-0" />
+                                            <div className="text-left">
+                                                <div className="font-bold text-foreground line-clamp-1">{data.file_proposal.name}</div>
+                                                <div className="text-[10px] text-muted-foreground">
+                                                    Ukuran: {(data.file_proposal.size / (1024 * 1024)).toFixed(2)} MB &bull; Status: Siap Diunggah
+                                                </div>
+                                            </div>
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={removeFile}
+                                                className="size-6 rounded-md hover:bg-destructive/10 hover:text-destructive text-muted-foreground ml-2"
+                                                title="Hapus / Ganti File"
+                                            >
+                                                <X className="size-3.5" />
+                                            </Button>
                                         </div>
                                     ) : (
-                                        <p className="text-muted-foreground mt-1 text-[11px]">
-                                            Pastikan rincian RAB di dalam proposal telah sesuai batas SBM ITK 2026
+                                        <p className="text-muted-foreground mt-2 text-[11px]">
+                                            Pastikan rincian konsumsi rapat (maksimal Rp 40.000/porsi) telah sesuai Standar Biaya Masukan ITK 2026
                                         </p>
                                     )}
                                 </div>
                             </div>
-                            {errors.file_proposal && <p className="text-destructive text-[11px]">{errors.file_proposal}</p>}
+                            {errors.file_proposal && <p className="text-destructive text-[11px] font-medium mt-1">{errors.file_proposal}</p>}
                         </div>
 
                         {/* Bottom Actions */}
@@ -232,9 +313,9 @@ export default function DokumenCreate({ budgetTypes }: CreateProps) {
                             <Button asChild variant="outline" size="sm" className="h-8 text-xs">
                                 <Link href={route('dokumen-pengajuan.index')}>Batal</Link>
                             </Button>
-                            <Button type="submit" disabled={processing} size="sm" className="h-8 gap-1.5 text-xs shadow-xs">
+                            <Button type="submit" disabled={processing} size="sm" className="h-8 gap-1.5 text-xs shadow-xs font-semibold">
                                 <Send className="size-3.5" />
-                                <span>{processing ? 'Menyimpan...' : 'Kirimkan Usulan Dokumen'}</span>
+                                <span>{processing ? 'Menyimpan & Mengunggah...' : 'Kirimkan Usulan Dokumen'}</span>
                             </Button>
                         </div>
                     </form>

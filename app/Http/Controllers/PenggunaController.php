@@ -119,7 +119,7 @@ class PenggunaController extends Controller
             'role' => $validated['role'],
         ];
 
-        if (!empty($validated['password'])) {
+        if (! empty($validated['password'])) {
             $data['password'] = Hash::make($validated['password']);
         }
 

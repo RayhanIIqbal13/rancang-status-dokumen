@@ -161,6 +161,8 @@ export interface DokumenPengajuan {
     tgl_pelaksanaan: string;
     total_usulan: string | number;
     file_proposal: string | null;
+    file_proposal_url?: string | null;
+    has_file_proposal?: boolean;
     status_terkini: DocumentStatusType;
     created_at: string;
     updated_at: string;

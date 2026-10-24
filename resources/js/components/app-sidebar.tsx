@@ -73,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     icon: CheckSquare,
                     active: currentUrl.startsWith('/verifikasi-dokumen'),
                     show: userRole === 'admin' || userRole === 'staf_keuangan' || userRole === 'pimpinan',
-                    badge: 'Admin',
+                    badge: userRole === 'staf_keuangan' ? 'Tendik' : 'Admin',
                 },
             ],
         },

@@ -1,3 +1,4 @@
+import { ProposalPreviewModal } from '@/components/dokumen/proposal-preview-modal';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -5,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DocumentStatusType, DokumenPengajuan, StatusStageInfo, User } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
-import { AlertCircle, ArrowRight, RefreshCw, Send } from 'lucide-react';
+import { AlertCircle, ArrowRight, Eye, FileText, FileUp, RefreshCw, Send } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface StatusUpdateDialogProps {
@@ -16,6 +17,7 @@ interface StatusUpdateDialogProps {
 
 export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUpdateDialogProps) {
     const [open, setOpen] = useState(false);
+    const [openPreview, setOpenPreview] = useState(false);
     const { auth } = usePage<{ auth: { user: User } }>().props;
     const currentUser = auth.user;
 
@@ -55,6 +57,7 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
         tahap: initialStage,
         posisi_berkas: stageMeta?.default_posisi || document.latest_status_tracking?.posisi_berkas || '',
         catatan: '',
+        file_proposal: null as File | null,
     });
 
     // Update suggested default document position when stage changes
@@ -98,10 +101,11 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
         post(route('dokumen-pengajuan.status.store', document.id), {
+            forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
                 setOpen(false);
-                reset('catatan');
+                reset('catatan', 'file_proposal');
             },
         });
     };
@@ -113,37 +117,87 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
     }, [open, clearErrors]);
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                {triggerButton ? (
-                    triggerButton
-                ) : (
-                    <Button size="sm" className="h-8 gap-1.5 text-xs shadow-xs">
-                        {isApplicant && isRevision ? (
-                            <>
-                                <RefreshCw className="size-3.5" />
-                                <span>Kirimkan Revisi</span>
-                            </>
-                        ) : (
-                            <>
-                                <ArrowRight className="size-3.5" />
-                                <span>Perbarui Status</span>
-                            </>
-                        )}
-                    </Button>
-                )}
-            </DialogTrigger>
-            <DialogContent className="max-w-lg rounded-xl">
-                <DialogHeader className="border-b pb-3">
-                    <DialogTitle className="text-base font-semibold tracking-tight">
-                        {isApplicant && isRevision ? 'Kirimkan Revisi Dokumen' : 'Perbarui Status Dokumen'}
-                    </DialogTitle>
-                    <DialogDescription className="text-muted-foreground text-xs">
-                        Dokumen: <strong className="text-foreground">{document.nomor_pengajuan}</strong> — {document.nama_kegiatan}
-                    </DialogDescription>
-                </DialogHeader>
+        <>
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                    {triggerButton ? (
+                        triggerButton
+                    ) : (
+                        <Button size="sm" className="h-8 gap-1.5 text-xs shadow-xs">
+                            {isApplicant && isRevision ? (
+                                <>
+                                    <RefreshCw className="size-3.5" />
+                                    <span>Kirimkan Revisi</span>
+                                </>
+                            ) : (
+                                <>
+                                    <ArrowRight className="size-3.5" />
+                                    <span>Perbarui Status</span>
+                                </>
+                            )}
+                        </Button>
+                    )}
+                </DialogTrigger>
+                <DialogContent className="max-w-lg rounded-xl">
+                    <DialogHeader className="border-b pb-3">
+                        <DialogTitle className="text-base font-semibold tracking-tight">
+                            {isApplicant && isRevision ? 'Kirimkan Revisi Dokumen' : 'Perbarui Status Dokumen'}
+                        </DialogTitle>
+                        <DialogDescription className="text-muted-foreground text-xs">
+                            Dokumen: <strong className="text-foreground">{document.nomor_pengajuan}</strong> — {document.nama_kegiatan}
+                        </DialogDescription>
+                    </DialogHeader>
 
-                <form onSubmit={submit} className="space-y-4 pt-2">
+                    {/* Prominent Proposal & RAB Inspection Bar for Reviewer / Tendik */}
+                    <div className="flex items-center justify-between p-3 rounded-lg border bg-primary/5 border-primary/20 text-xs">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                            <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                                <FileText className="size-4" />
+                            </div>
+                            <div className="min-w-0">
+                                <div className="font-semibold text-foreground truncate">Dokumen Proposal & RAB Mahasiswa</div>
+                                <div className="text-[11px] text-muted-foreground">Periksa rincian konsumsi & kesesuaian SBM</div>
+                            </div>
+                        </div>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setOpenPreview(true)}
+                            className="h-7 text-xs gap-1.5 shrink-0 bg-background font-medium hover:bg-muted"
+                        >
+                            <Eye className="size-3 text-primary" />
+                            <span>Lihat Berkas (PDF)</span>
+                        </Button>
+                    </div>
+
+                    <form onSubmit={submit} className="space-y-4 pt-1">
+                        {/* If student is submitting revision, provide file re-upload field */}
+                        {isApplicant && isRevision && (
+                            <div className="space-y-1.5 p-3 rounded-lg border bg-muted/20">
+                                <Label htmlFor="file_proposal_revisi" className="text-xs font-semibold flex items-center gap-1.5">
+                                    <FileUp className="size-3.5 text-primary" />
+                                    <span>Unggah Berkas Proposal & RAB yang Telah Direvisi (PDF)</span>
+                                </Label>
+                                <input
+                                    id="file_proposal_revisi"
+                                    type="file"
+                                    accept=".pdf,.doc,.docx,.zip"
+                                    className="text-xs file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 cursor-pointer w-full"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            setData('file_proposal', e.target.files[0]);
+                                        }
+                                    }}
+                                />
+                                {data.file_proposal && (
+                                    <p className="text-[11px] text-primary font-medium mt-1">
+                                        Berkas perbaikan: {data.file_proposal.name} ({(data.file_proposal.size / 1024).toFixed(0)} KB)
+                                    </p>
+                                )}
+                                {errors.file_proposal && <p className="text-destructive text-[11px]">{errors.file_proposal}</p>}
+                            </div>
+                        )}
                     {/* Stage Selection */}
                     <div className="space-y-1.5">
                         <Label htmlFor="tahap" className="text-xs font-medium">
@@ -237,5 +291,13 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
                 </form>
             </DialogContent>
         </Dialog>
+
+        {/* Dedicated PDF & RAB Viewer Modal for live inspection */}
+        <ProposalPreviewModal
+            open={openPreview}
+            onOpenChange={setOpenPreview}
+            document={document}
+        />
+        </>
     );
 }

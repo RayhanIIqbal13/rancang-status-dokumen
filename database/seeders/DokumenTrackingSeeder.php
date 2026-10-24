@@ -20,14 +20,26 @@ class DokumenTrackingSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Ensure representative users exist
+        // 1. Ensure representative users exist (FSTI ITK Capstone roles)
+        // Mahasiswa / Pengusul
+        $mahasiswa = User::updateOrCreate(
+            ['email' => 'mahasiswa@itk.ac.id'],
+            [
+                'name' => 'Raihan Iqbal',
+                'nip_nim' => '10211068',
+                'role' => UserRole::Pengusul,
+                'unit' => 'S1 Sistem Informasi - FSTI ITK',
+                'password' => Hash::make('password'),
+            ]
+        );
+
         $applicant1 = User::updateOrCreate(
             ['email' => 'pengusul@univ.ac.id'],
             [
-                'name' => 'Dr. Ahmad Hidayat, M.Kom.',
-                'nip_nim' => '198507142010121002',
+                'name' => 'Raihan Iqbal (Mahasiswa)',
+                'nip_nim' => '10211068',
                 'role' => UserRole::Pengusul,
-                'unit' => 'Fakultas Ilmu Komputer (Prodi Informatika)',
+                'unit' => 'Himpunan Mahasiswa Sistem Informasi (HMSI) FSTI',
                 'password' => Hash::make('password'),
             ]
         );
@@ -38,7 +50,19 @@ class DokumenTrackingSeeder extends Seeder
                 'name' => 'Dr. Eng. Siti Nurhaliza, S.T., M.T.',
                 'nip_nim' => '198902112015042001',
                 'role' => UserRole::Pengusul,
-                'unit' => 'Fakultas Teknik (Teknik Elektro)',
+                'unit' => 'Fakultas Sains dan Teknologi Informasi (FSTI)',
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        // Tendik (Verifikator Keuangan FSTI)
+        $tendikFsti = User::updateOrCreate(
+            ['email' => 'tendik@itk.ac.id'],
+            [
+                'name' => 'Dwitami, S.E. (Tendik Verifikator)',
+                'nip_nim' => '199304122019032014',
+                'role' => UserRole::StafKeuangan,
+                'unit' => 'Subbag Keuangan & Verifikasi FSTI ITK',
                 'password' => Hash::make('password'),
             ]
         );
@@ -46,32 +70,56 @@ class DokumenTrackingSeeder extends Seeder
         $financeStaff = User::updateOrCreate(
             ['email' => 'stafkeuangan@univ.ac.id'],
             [
-                'name' => 'Siti Rahmawati, S.E.',
-                'nip_nim' => '199003252014042001',
+                'name' => 'Dwitami, S.E. (Tendik Verifikator)',
+                'nip_nim' => '199304122019032014',
                 'role' => UserRole::StafKeuangan,
-                'unit' => 'Subbag Keuangan Fakultas Ilmu Komputer',
+                'unit' => 'Subbag Keuangan & Verifikasi FSTI ITK',
                 'password' => Hash::make('password'),
             ]
         );
 
+        // Pimpinan / Dekan
         $leader = User::updateOrCreate(
+            ['email' => 'pimpinan@itk.ac.id'],
+            [
+                'name' => 'Prof. Dr. Ir. Dekan FSTI ITK',
+                'nip_nim' => '196811201993031003',
+                'role' => UserRole::Pimpinan,
+                'unit' => 'Dekanat FSTI ITK',
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        User::updateOrCreate(
             ['email' => 'pimpinan@univ.ac.id'],
             [
                 'name' => 'Prof. Dr. Ir. Bambang Sutrisno, M.Eng.',
                 'nip_nim' => '196811201993031003',
                 'role' => UserRole::Pimpinan,
-                'unit' => 'Dekanat Fakultas Ilmu Komputer',
+                'unit' => 'Dekanat FSTI ITK',
                 'password' => Hash::make('password'),
             ]
         );
 
+        // Admin Sistem
         $admin = User::updateOrCreate(
-            ['email' => 'admin@univ.ac.id'],
+            ['email' => 'admin@itk.ac.id'],
             [
-                'name' => 'Administrator Keuangan Pusat',
+                'name' => 'Administrator Sistem SAK ITK',
                 'nip_nim' => '199201012018011001',
                 'role' => UserRole::Admin,
-                'unit' => 'Biro Perencanaan dan Keuangan',
+                'unit' => 'Biro Perencanaan dan Keuangan ITK',
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'admin@univ.ac.id'],
+            [
+                'name' => 'Administrator Sistem SAK ITK',
+                'nip_nim' => '199201012018011001',
+                'role' => UserRole::Admin,
+                'unit' => 'Biro Perencanaan dan Keuangan ITK',
                 'password' => Hash::make('password'),
             ]
         );
@@ -88,6 +136,7 @@ class DokumenTrackingSeeder extends Seeder
                 'uraian' => 'Penyelenggaraan seminar nasional tahunan bidang AI dengan menghadirkan 2 pakar industri dan 1 akademisi luar negeri.',
                 'tgl_pelaksanaan' => now()->addMonths(2)->format('Y-m-d'),
                 'total_usulan' => 18500000.00,
+                'file_proposal' => 'proposals/sample_proposal_kegiatan.pdf',
                 'status_terkini' => DocumentStatus::Diajukan,
             ]
         );
@@ -111,6 +160,7 @@ class DokumenTrackingSeeder extends Seeder
                 'uraian' => 'Pelatihan dan lokakarya penyusunan RPS dan portofolio asesmen OBE untuk akreditasi IABEE prodi S1 Teknik Elektro.',
                 'tgl_pelaksanaan' => now()->addWeeks(6)->format('Y-m-d'),
                 'total_usulan' => 24000000.00,
+                'file_proposal' => 'proposals/sample_proposal_kegiatan.pdf',
                 'status_terkini' => DocumentStatus::VerifikasiFakultas,
             ]
         );
@@ -132,7 +182,7 @@ class DokumenTrackingSeeder extends Seeder
             'waktu_update' => now()->subDays(1),
         ]);
 
-        // Document 3: Perlu Revisi (Stage 3 - with revision notes)
+        // Document 3: Perlu Revisi (Stage 3 - with revision notes from simulation)
         $doc3 = DokumenPengajuan::updateOrCreate(
             ['nomor_pengajuan' => 'PROP/2026/0003'],
             [
@@ -142,6 +192,7 @@ class DokumenTrackingSeeder extends Seeder
                 'uraian' => 'Pelatihan digital marketing dan pendampingan implementasi pencatatan pembukuan digital bagi 30 UMKM binaan fakultas.',
                 'tgl_pelaksanaan' => now()->addMonth()->format('Y-m-d'),
                 'total_usulan' => 15000000.00,
+                'file_proposal' => 'proposals/sample_proposal_kegiatan.pdf',
                 'status_terkini' => DocumentStatus::PerluRevisi,
             ]
         );
@@ -167,7 +218,7 @@ class DokumenTrackingSeeder extends Seeder
             'user_id' => $financeStaff->id,
             'tahap' => DocumentStatus::PerluRevisi,
             'posisi_berkas' => DocumentStatus::PerluRevisi->defaultPosisiBerkas(),
-            'catatan' => '1. Honorarium narasumber sebesar Rp 1.500.000/OJ melebihi batas SBM (maks. Rp 900.000/OJ). Mohon disesuaikan. 2. Lampirkan lembar persetujuan Kepala Departemen yang telah bertanda tangan.',
+            'catatan' => '1. Honorarium narasumber sebesar Rp 1.500.000/OJ melebihi batas SBM (maks. Rp 900.000/OJ). 2. Anggaran konsumsi rapat panitia Rp 70.000 dinilai terlalu besar (maksimal batas SBM FSTI Rp 40.000/porsi). Mohon sesuaikan rincian RAB di proposal berkas PDF.',
             'waktu_update' => now()->subDays(2),
         ]);
 

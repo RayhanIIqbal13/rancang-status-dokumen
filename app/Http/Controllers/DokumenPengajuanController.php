@@ -175,4 +175,41 @@ class DokumenPengajuanController extends Controller
         return redirect()->route('dokumen-pengajuan.index')
             ->with('success', 'Dokumen pengajuan berhasil dihapus.');
     }
+
+    /**
+     * View/stream the uploaded proposal & RAB document inline in browser.
+     */
+    public function viewProposal(DokumenPengajuan $dokumenPengajuan)
+    {
+        $this->authorize('view', $dokumenPengajuan);
+
+        if (! $dokumenPengajuan->file_proposal || ! Storage::disk('public')->exists($dokumenPengajuan->file_proposal)) {
+            abort(404, 'Berkas proposal tidak ditemukan.');
+        }
+
+        $fullPath = Storage::disk('public')->path($dokumenPengajuan->file_proposal);
+        $mime = Storage::disk('public')->mimeType($dokumenPengajuan->file_proposal) ?? 'application/pdf';
+        $safeFileName = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $dokumenPengajuan->nomor_pengajuan).'_Proposal_RAB.pdf';
+
+        return response()->file($fullPath, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="'.$safeFileName.'"',
+        ]);
+    }
+
+    /**
+     * Download the uploaded proposal & RAB document.
+     */
+    public function downloadProposal(DokumenPengajuan $dokumenPengajuan)
+    {
+        $this->authorize('view', $dokumenPengajuan);
+
+        if (! $dokumenPengajuan->file_proposal || ! Storage::disk('public')->exists($dokumenPengajuan->file_proposal)) {
+            abort(404, 'Berkas proposal tidak ditemukan.');
+        }
+
+        $safeFileName = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $dokumenPengajuan->nomor_pengajuan).'_Proposal_RAB.pdf';
+
+        return Storage::disk('public')->download($dokumenPengajuan->file_proposal, $safeFileName);
+    }
 }

@@ -17,8 +17,21 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { usePreferences } from '@/hooks/use-preferences';
 import { SharedData, type BreadcrumbItem as BreadcrumbItemType } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
-import { BadgeCheck, Check, LogOut, Moon, Search, Shield, Sun, User as UserIcon } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import {
+    BadgeCheck,
+    Check,
+    ChevronDown,
+    Crown,
+    GraduationCap,
+    LogOut,
+    Moon,
+    Search,
+    Shield,
+    Sun,
+    UserCheck,
+    User as UserIcon,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrumbs?: BreadcrumbItemType[] }) {
@@ -66,6 +79,57 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
             .toUpperCase();
     };
 
+    // Role display mappings (Addressing item 4 from simulation)
+    const getRoleInfo = (role?: string) => {
+        switch (role) {
+            case 'pengusul':
+                return {
+                    label: 'Mahasiswa (Pengaju)',
+                    fullTitle: 'Raihan Iqbal (Mahasiswa SI FSTI)',
+                    badgeColor: 'bg-emerald-500',
+                    textColor: 'text-emerald-700 dark:text-emerald-400',
+                    icon: GraduationCap,
+                };
+            case 'staf_keuangan':
+                return {
+                    label: 'Tendik (Verifikator)',
+                    fullTitle: 'Dwitami, S.E. (Tendik Verifikator FSTI)',
+                    badgeColor: 'bg-amber-500',
+                    textColor: 'text-amber-700 dark:text-amber-400',
+                    icon: UserCheck,
+                };
+            case 'pimpinan':
+                return {
+                    label: 'Pimpinan / Dekan',
+                    fullTitle: 'Prof. Dr. Ir. Dekan FSTI ITK',
+                    badgeColor: 'bg-purple-500',
+                    textColor: 'text-purple-700 dark:text-purple-400',
+                    icon: Crown,
+                };
+            case 'admin':
+            default:
+                return {
+                    label: 'Admin Sistem',
+                    fullTitle: 'Administrator Sistem SAK ITK',
+                    badgeColor: 'bg-blue-500',
+                    textColor: 'text-blue-700 dark:text-blue-400',
+                    icon: Shield,
+                };
+        }
+    };
+
+    const currentRoleInfo = getRoleInfo(user?.role);
+
+    const switchRole = (roleKey: string, email?: string) => {
+        router.post(
+            '/demo-switch-user',
+            { role: roleKey, email },
+            {
+                preserveScroll: true,
+            }
+        );
+    };
+
     return (
         <header
             className={`border-border/80 bg-background/50 flex h-12 shrink-0 items-center border-b px-4 backdrop-blur-md transition-[width,height] ease-linear lg:px-6 ${
@@ -94,20 +158,91 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                     </button>
                 </div>
 
-                {/* Right section: Theme Switcher, GitHub, Account Switcher */}
+                {/* Right section: Role Quick Switcher, Theme Switcher, Account Switcher */}
                 <div className="flex items-center gap-1 sm:gap-2">
-                    {/* Role Indicator Badge */}
-                    <div className="border-border/70 bg-muted/30 hidden items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs md:flex">
-                        <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
-                        <span className="text-muted-foreground font-normal">Role:</span>
-                        <strong className="text-foreground font-semibold">
-                            {user?.role === 'admin' || user?.role === 'staf_keuangan'
-                                ? 'Admin Keuangan'
-                                : user?.role === 'pimpinan'
-                                  ? 'Pimpinan'
-                                  : 'Pengaju (Dosen)'}
-                        </strong>
-                    </div>
+                    {/* Live Role Switcher Dropdown in Header */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <button
+                                type="button"
+                                className="border-border/70 bg-muted/40 hover:bg-muted/70 hidden sm:flex items-center gap-2 rounded-full border px-3 py-1 text-xs cursor-pointer transition-colors shadow-2xs"
+                                title="Klik untuk beralih peran demo simulasi (Mahasiswa, Tendik, Admin)"
+                            >
+                                <span className={`size-2 animate-pulse rounded-full ${currentRoleInfo.badgeColor}`} />
+                                <span className="text-muted-foreground font-normal">Peran:</span>
+                                <strong className="text-foreground font-semibold">{currentRoleInfo.label}</strong>
+                                <ChevronDown className="size-3 text-muted-foreground" />
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-64 p-1.5 rounded-xl shadow-lg">
+                            <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-2 py-1">
+                                Simulasi Peran (Live Switcher)
+                            </DropdownMenuLabel>
+                            <DropdownMenuItem
+                                onClick={() => switchRole('mahasiswa', 'mahasiswa@itk.ac.id')}
+                                className="flex items-center justify-between px-2.5 py-2 cursor-pointer rounded-lg text-xs"
+                            >
+                                <div className="flex items-center gap-2.5">
+                                    <div className="size-7 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                                        <GraduationCap className="size-4" />
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-foreground">1. Mahasiswa (Pengaju)</div>
+                                        <div className="text-[10px] text-muted-foreground">Raihan Iqbal (NIM: 10211068)</div>
+                                    </div>
+                                </div>
+                                {user?.role === 'pengusul' && <Check className="size-4 text-emerald-600 shrink-0" />}
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                                onClick={() => switchRole('tendik', 'tendik@itk.ac.id')}
+                                className="flex items-center justify-between px-2.5 py-2 cursor-pointer rounded-lg text-xs"
+                            >
+                                <div className="flex items-center gap-2.5">
+                                    <div className="size-7 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                                        <UserCheck className="size-4" />
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-foreground">2. Tendik (Verifikator FSTI)</div>
+                                        <div className="text-[10px] text-muted-foreground">Dwitami, S.E. (Subbag Keuangan)</div>
+                                    </div>
+                                </div>
+                                {user?.role === 'staf_keuangan' && <Check className="size-4 text-amber-600 shrink-0" />}
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                                onClick={() => switchRole('admin', 'admin@itk.ac.id')}
+                                className="flex items-center justify-between px-2.5 py-2 cursor-pointer rounded-lg text-xs"
+                            >
+                                <div className="flex items-center gap-2.5">
+                                    <div className="size-7 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center">
+                                        <Shield className="size-4" />
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-foreground">3. Admin Sistem SAK</div>
+                                        <div className="text-[10px] text-muted-foreground">Administrator SAK ITK</div>
+                                    </div>
+                                </div>
+                                {user?.role === 'admin' && <Check className="size-4 text-blue-600 shrink-0" />}
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                                onClick={() => switchRole('pimpinan', 'pimpinan@itk.ac.id')}
+                                className="flex items-center justify-between px-2.5 py-2 cursor-pointer rounded-lg text-xs"
+                            >
+                                <div className="flex items-center gap-2.5">
+                                    <div className="size-7 rounded-lg bg-purple-500/10 text-purple-600 flex items-center justify-center">
+                                        <Crown className="size-4" />
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-foreground">4. Pimpinan / Dekan</div>
+                                        <div className="text-[10px] text-muted-foreground">Dekanat FSTI ITK</div>
+                                    </div>
+                                </div>
+                                {user?.role === 'pimpinan' && <Check className="size-4 text-purple-600 shrink-0" />}
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
 
                     {/* Notifications Dropdown for Newly Submitted Proposals */}
                     <NotificationDropdown />
@@ -157,7 +292,7 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                                         <span className="text-foreground truncate text-sm font-semibold">{user?.name}</span>
                                         <span className="text-muted-foreground truncate text-[11px]">{user?.email}</span>
                                         <span className="text-primary mt-0.5 truncate text-[11px] font-medium">
-                                            {user?.unit || 'Fakultas'} &bull; {user?.role}
+                                            {user?.unit || 'Fakultas'} &bull; {currentRoleInfo.label}
                                         </span>
                                     </div>
                                 </div>
@@ -169,23 +304,35 @@ export function AppSidebarHeader({ breadcrumbs: _breadcrumbs = [] }: { breadcrum
                                 <DropdownMenuLabel className="text-muted-foreground px-2 py-1 text-[10px] font-bold uppercase">
                                     Beralih Peran (Demo Switcher)
                                 </DropdownMenuLabel>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/dashboard" className="flex cursor-pointer items-center justify-between px-2 py-1.5">
-                                        <div className="flex items-center gap-2 text-xs">
-                                            <Shield className="size-3.5 text-indigo-500" />
-                                            <span>Budi Pratama (Admin Keuangan)</span>
-                                        </div>
-                                        {(user?.role === 'admin' || user?.role === 'staf_keuangan') && <Check className="text-primary size-3.5" />}
-                                    </Link>
+                                <DropdownMenuItem
+                                    onClick={() => switchRole('mahasiswa', 'mahasiswa@itk.ac.id')}
+                                    className="flex cursor-pointer items-center justify-between px-2 py-1.5 text-xs"
+                                >
+                                    <div className="flex items-center gap-2 text-xs">
+                                        <GraduationCap className="size-3.5 text-emerald-500" />
+                                        <span>Raihan Iqbal (Mahasiswa)</span>
+                                    </div>
+                                    {user?.role === 'pengusul' && <Check className="text-primary size-3.5" />}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/dashboard" className="flex cursor-pointer items-center justify-between px-2 py-1.5">
-                                        <div className="flex items-center gap-2 text-xs">
-                                            <UserIcon className="size-3.5 text-emerald-500" />
-                                            <span>Dr. Siti Rahmawati (Pengaju)</span>
-                                        </div>
-                                        {user?.role === 'pengusul' && <Check className="text-primary size-3.5" />}
-                                    </Link>
+                                <DropdownMenuItem
+                                    onClick={() => switchRole('tendik', 'tendik@itk.ac.id')}
+                                    className="flex cursor-pointer items-center justify-between px-2 py-1.5 text-xs"
+                                >
+                                    <div className="flex items-center gap-2 text-xs">
+                                        <UserCheck className="size-3.5 text-amber-500" />
+                                        <span>Dwitami, S.E. (Tendik Verifikator)</span>
+                                    </div>
+                                    {user?.role === 'staf_keuangan' && <Check className="text-primary size-3.5" />}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => switchRole('admin', 'admin@itk.ac.id')}
+                                    className="flex cursor-pointer items-center justify-between px-2 py-1.5 text-xs"
+                                >
+                                    <div className="flex items-center gap-2 text-xs">
+                                        <Shield className="size-3.5 text-blue-500" />
+                                        <span>Admin Sistem SAK ITK</span>
+                                    </div>
+                                    {user?.role === 'admin' && <Check className="text-primary size-3.5" />}
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />

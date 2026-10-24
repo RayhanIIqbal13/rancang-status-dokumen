@@ -31,6 +31,8 @@ class DokumenPengajuan extends Model
     protected $appends = [
         'id_dokumen',
         'id_user',
+        'file_proposal_url',
+        'has_file_proposal',
     ];
 
     protected function casts(): array
@@ -50,6 +52,20 @@ class DokumenPengajuan extends Model
     public function getIdUserAttribute(): ?int
     {
         return $this->user_id;
+    }
+
+    public function getFileProposalUrlAttribute(): ?string
+    {
+        if (! $this->file_proposal) {
+            return null;
+        }
+
+        return route('dokumen-pengajuan.proposal.view', $this->id);
+    }
+
+    public function getHasFileProposalAttribute(): bool
+    {
+        return ! empty($this->file_proposal);
     }
 
     /**

@@ -1,9 +1,7 @@
 <div align="center">
 
 # 🏛️ SAK ITK — Financial Document Status Tracking System
-### *Sistem Informasi Pelacakan & Transparansi Status Dokumen Pengajuan Anggaran SAK ITK*
-
-[![CI Tests](https://img.shields.io/badge/CI%20Tests-40%20Pest%20PHP%20PASS-emerald?style=for-the-badge&logo=pest)](https://github.com/RayhanIIqbal13/rancang-status-dokumen/actions)
+### *Sistem Informasi Pelacakan & Transparansi Status Dokumen Pengajuan Anggaran SAK[![CI Tests](https://img.shields.io/badge/CI%20Tests-43%20Pest%20PHP%20PASS-emerald?style=for-the-badge&logo=pest)](https://github.com/RayhanIIqbal13/rancang-status-dokumen/actions)
 [![Code Quality](https://img.shields.io/badge/Code%20Style-Pint%20%26%20ESLint-blue?style=for-the-badge&logo=eslint)](https://github.com/RayhanIIqbal13/rancang-status-dokumen/actions)
 [![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
 [![React](https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
@@ -16,7 +14,7 @@
 
 **SAK ITK Document Status Tracking System** adalah platform web modern untuk manajemen, pelacakan real-time, dan audit transparan alur dokumen pengajuan anggaran kegiatan di lingkungan kampus **Institut Teknologi Kalimantan (ITK)**. 
 
-Dirancang untuk mengeliminasi ketidakpastian *"black box"* administrasi manual dengan menghadirkan **Siklus Transparansi 8 Tahap**, validasi kepatuhan **Standar Biaya Masukan (SBM) Kemenkeu**, manajemen direktori pengguna terpusat, rekonsiliasi SPJ, serta integrasi alur pencairan dana aplikasi **SAKTI**.
+Dirancang untuk mengeliminasi ketidakpastian *"black box"* administrasi manual dengan menghadirkan **Siklus Transparansi 8 Tahap**, validasi kepatuhan **Standar Biaya Masukan (SBM) Kemenkeu**, preview PDF Proposal & RAB interaktif bagi verifikator Tendik, manajemen direktori pengguna terpusat, rekonsiliasi SPJ pasca-kegiatan (H+3), serta integrasi alur pencairan dana aplikasi **SAKTI**.
 
 [Fitur Utama](#-fitur-utama) • [Siklus 8 Tahap](#-siklus-alur-8-tahap-dokumen) • [Arsitektur](#-arsitektur--teknologi) • [Akun Demo](#-akun-demo-untuk-pengujian) • [Instalasi](#-panduan-instalasi--menjalankan-aplikasi) • [Pengujian](#-otomatisasi-pengujian--kualitas-kode)
 
@@ -29,9 +27,11 @@ Dirancang untuk mengeliminasi ketidakpastian *"black box"* administrasi manual d
 | Masalah Administrasi Konvensional | Solusi Cerdas SAK ITK |
 | :--- | :--- |
 | **Berkas Fisik Sulit Dilacak:** Pengusul tidak tahu di meja siapa berkas proposal mereka berhenti. | **Pelacakan Posisi Berkas Real-time:** Menampilkan secara transparan instansi/unit pemegang berkas dan riwayat audit trail setiap detik. |
-| **Revisi Berulang Tanpa Catatan Jelas:** Catatan koreksi lisan/kertas sering hilang dan membingungkan. | **Revision Loop & Historical Notes:** Notifikasi revisi otomatis dengan daftar poin perbaikan terpusat dari verifikator. |
-| **Pelanggaran Batas Pagu & Tarif SBM:** Pengusulan honor/akomodasi kerap melebihi standar pemerintah. | **Validasi SBM Kemenkeu Otomatis:** Sistem mengecek kesesuaian plafon honor narasumber, konsumsi, dan transport secara sistemik. |
-| **Keterlambatan SPJ & Pencairan SAKTI:** Rekapitulasi bukti kuitansi terpisah dari sistem pencairan dana. | **Siklus SPJ Terpadu hingga Dana Cair:** Modul unggah bukti digital, approval pimpinan, integrasi status SAKTI, dan pencairan SP2D. |
+| **Revisi Berulang Tanpa Catatan Jelas:** Catatan koreksi lisan/kertas sering hilang dan membingungkan. | **Revision Loop & Historical Notes:** Notifikasi revisi otomatis dengan daftar poin perbaikan terpusat dari verifikator dan unggah ulang berkas proposal perbaikan. |
+| **Verifikator Tidak Dapat Membaca Berkas Proposal:** Staf harus meminta berkas manual sebelum verifikasi. | **Preview PDF Proposal & RAB Interaktif:** Modal peninjauan dokumen PDF langsung di halaman verifikasi dan dialog disposisi sebelum mengambil keputusan. |
+| **Pelanggaran Batas Pagu & Tarif SBM:** Pengusulan honor/akomodasi kerap melebihi standar pemerintah. | **Validasi SBM Kemenkeu Otomatis:** Sistem mengecek kesesuaian plafon honor narasumber, konsumsi (mis. batas Rp40.000), dan transport secara sistemik. |
+| **Ketidakjelasan Alur Dokumen:** Berkas SPJ sering tertukar diunggah di awal sebelum kegiatan berlangsung. | **Alur Dokumen Berurutan Sesuai SOP:** Proposal & RAB PNBP di awal sebelum kegiatan, SPJ/LPJ diunggah pasca kegiatan (batas H+3). |
+| **Pemisahan Peran yang Membingungkan:** Staf verifikator tercampur dengan administrator teknis. | **RBAC Terpisah & Live Demo Switcher:** Pemisahan tegas Mahasiswa (Pengusul), Tendik (Staf Keuangan Verifikator), dan Administrator Sistem dengan sakelar 1-klik untuk presentasi. |
 | **Registrasi Akun Manual & Kaku:** Penambahan pengguna harus lewat database langsung. | **Direktori Pengguna Mandiri:** Registrasi pengguna baru dengan pemetaan peran, toggle show/hide password, dan konfirmasi kata sandi aman. |
 
 ---
@@ -51,12 +51,12 @@ flowchart TD
     classDef sakti fill:#f97316,stroke:#c2410c,color:#fff;
     classDef disbursed fill:#14b8a6,stroke:#0f766e,color:#fff;
 
-    T1("1. Diajukan<br/><i>(Sistem Otomatis)</i>"):::submitted --> T2("2. Verifikasi Fakultas<br/><i>(Staf Keuangan)</i>"):::review
-    T2 -->|Ada Catatan Koreksi| T3("3. Perlu Revisi<br/><i>(Pengusul Memperbaiki)</i>"):::revision
+    T1("1. Diajukan<br/><i>(Mahasiswa upload Proposal & RAB)</i>"):::submitted --> T2("2. Verifikasi Fakultas<br/><i>(Tendik Periksa Dokumen & SBM)</i>"):::review
+    T2 -->|Ada Catatan Koreksi| T3("3. Perlu Revisi<br/><i>(Pengusul Memperbaiki & Re-upload)</i>"):::revision
     T3 -->|Ajukan Ulang Revisi| T2
     T2 -->|Lengkap & Sesuai SBM| T4("4. Menunggu SK Universitas<br/><i>(Biro Keuangan / Dekanat)</i>"):::sk
     T4 --> T5("5. Disetujui, Kegiatan Berjalan<br/><i>(Pimpinan / Dekan)</i>"):::approved
-    T5 --> T6("6. SPJ Diterima & Diverifikasi<br/><i>(Staf Keuangan)</i>"):::spj
+    T5 --> T6("6. SPJ Diterima & Diverifikasi<br/><i>(Mahasiswa serahkan SPJ H+3)</i>"):::spj
     T6 --> T7("7. Diproses di SAKTI<br/><i>(Operator SAKTI / PPK)</i>"):::sakti
     T7 --> T8("8. Dana Cair / SP2D Selesai<br/><i>(Bendahara Pengeluaran)</i>"):::disbursed
 ```
@@ -65,97 +65,49 @@ flowchart TD
 
 | No | Tahap Status | Aktor Penanggung Jawab | Default Posisi Berkas | Deskripsi Operasional |
 | :---: | :--- | :--- | :--- | :--- |
-| **1** | **Diajukan** | Sistem (Otomatis) | Subbag Keuangan Fakultas | Proposal kegiatan dan rincian usulan anggaran didaftarkan oleh pengusul. |
-| **2** | **Verifikasi Fakultas** | Staf Keuangan | Subbag Keuangan Fakultas | Staf memeriksa kelengkapan administrasi dan validasi kepatuhan tarif SBM. |
-| **3** | **Perlu Revisi** | Staf Keuangan & Pengusul | Pengusul | Berkas dikembalikan dengan catatan perbaikan resmi untuk diajukan ulang. |
-| **4** | **Menunggu SK** | Staf Keuangan | Biro Perencanaan & Keuangan | Berkas diteruskan untuk penerbitan SK Rektor / Keputusan Dekan. |
-| **5** | **Disetujui** | Pimpinan (Dekan / Wadek) | Pelaksana Kegiatan / Pengusul | SK terbit dan alokasi disetujui; pengusul dapat mengeksekusi kegiatan. |
-| **6** | **SPJ Diverifikasi** | Staf Keuangan | Subbag Keuangan Fakultas | Pengusul menyerahkan berkas SPJ; bukti transaksi fisik & digital divalidasi. |
-| **7** | **Diproses di SAKTI** | Staf Keuangan / Operator | PPK / BPP (Operator SAKTI) | Dokumen dicatat ke aplikasi SAKTI Kemenkeu untuk penerbitan SPP/SPM. |
-| **8** | **Dana Cair** | Staf Keuangan | Selesai (Bendahara) | SP2D terbit, dana ditransfer ke rekening pengusul, siklus tuntas. |
+| **1** | **Diajukan** | Mahasiswa / Pengusul | Subbag Keuangan Fakultas | Proposal kegiatan dan rincian usulan RAB (PNBP/BOPTN) diunggah dalam format PDF. |
+| **2** | **Verifikasi Fakultas** | Tendik (Staf Keuangan) | Subbag Keuangan Fakultas | Tendik membuka PDF proposal, memeriksa kelengkapan & validasi batas SBM (misal konsumsi). |
+| **3** | **Perlu Revisi** | Tendik & Pengusul | Pengusul | Berkas dikembalikan dengan catatan perbaikan resmi; mahasiswa mengunggah revisi proposal. |
+| **4** | **Menunggu SK** | Tendik / Subbag Keuangan | Biro Perencanaan & Keuangan | Berkas diteruskan untuk penerbitan SK Rektor / Keputusan Dekan FSTI. |
+| **5** | **Disetujui** | Pimpinan (Dekan / Wadek) | Pelaksana Kegiatan / Pengusul | SK terbit dan alokasi disetujui; mahasiswa dapat mengeksekusi kegiatan. |
+| **6** | **SPJ Diverifikasi** | Mahasiswa & Tendik | Subbag Keuangan Fakultas | Pasca kegiatan (maks. H+3), mahasiswa menyerahkan berkas SPJ/LPJ untuk divalidasi. |
+| **7** | **Diproses di SAKTI** | Tendik / Operator | PPK / BPP (Operator SAKTI) | Dokumen dicatat ke aplikasi SAKTI Kemenkeu untuk penerbitan SPP/SPM. |
+| **8** | **Dana Cair** | Bendahara Pengeluaran | Selesai (Bendahara) | SP2D terbit, dana ditransfer ke rekening pengusul, siklus tuntas. |
 
 ---
 
 ## ⚡ Fitur Utama
 
-- 📋 **Pengajuan Usulan Proposal Online:** Formulir interaktif dengan kalkulasi otomatis total usulan pagu belanja (BOPTN, PNBP, RKA-K/L, Hibah Pengabdian, dll).
+- 📋 **Pengajuan Usulan Proposal & RAB Online (Mahasiswa):** Formulir interaktif dengan unggah berkas PDF terverifikasi (drag & drop, kapasitas hingga 25 MB, multipart FormData aman), pagu PNBP/BOPTN, serta kalkulasi otomatis.
+- 👁️ **Preview & Tinjau Berkas PDF Proposal & RAB (Tendik & Admin):**
+  - Modal peninjauan berkas PDF langsung dalam aplikasi (*inline iframe* & buka tab baru).
+  - Terintegrasi langsung pada antrean daftar verifikasi (`/verifikasi-dokumen`) dan di dalam dialog modal pengambilan keputusan status (*Setuju / Revisi / Tolak*).
+  - Verifikator dapat memeriksa rincian item belanja (seperti konsumsi, honor narasumber) terhadap batas SBM sebelum menyetujui atau meminta revisi.
 - 🧭 **Dedicated Status Tracking & Timeline:** Halaman khusus pelacakan audit trail per dokumen dengan stepper visual, riwayat tanggal/jam, nama petugas pengubah status, dan catatan rinci.
-- 📐 **Standar Biaya Masukan (SBM) Compliance Engine:** Katalog acuan biaya standar pemerintah (Honor narasumber, paket meeting, konsumsi, akomodasi, transportasi) beserta validasi kepatuhan transaksi.
-- 🔁 **Workflow Interaktif & Modal Update Status:** Dialog modal bagi staf keuangan dan pimpinan untuk mengubah status, memilih posisi berkas berikutnya, dan memasukkan catatan disposisi.
-- 🧾 **Manajemen Bukti Pengeluaran & Realisasi Anggaran:** Pencatatan kuitansi/faktur, kelengkapan fisik, persentase serapan anggaran, dan tanggal pencairan SP2D.
-- 👥 **Direktori & Manajemen Pengguna (User Management):**
-  - **Pendaftaran Akun Baru:** Modal pendaftaran dengan form nama, email universitas, NIP/NIDN/NIM, unit kerja, serta penetapan hak akses peran (*Pengusul, Staf Keuangan, Pimpinan, Administrator*).
-  - **Verifikasi Sandi Ganda:** Kolom *Kata Sandi* & *Konfirmasi Kata Sandi* dilengkapi indikator kecocokan real-time.
-  - **Toggle Mata (Show/Hide Password):** Kemudahan melihat/menyembunyikan kata sandi dengan ikon interaktif.
-  - **Default Password Helper:** Pendaftaran cepat dengan kata sandi bawaan `password` yang dapat diganti sewaktu-waktu.
-  - **Edit & Hapus Pengguna:** Perbaruan data akun serta perlindungan protektif agar pengguna tidak dapat menghapus akunnya sendiri.
-- 🔍 **Command Palette & Global Search (`Ctrl + K` / `Cmd + K`):** Pencarian instan dokumen pengajuan, pagu anggaran, nomor proposal, dan katalog SBM langsung dari keyboard.
-- 🖨️ **Format Cetak Laporan Resmi (Print-Ready):** Tampilan cetak laporan dokumen pengajuan dan realisasi anggaran berstandar dokumen resmi universitas (otomatis membersihkan navigasi dan sidebar saat dicetak).
-- ⚙️ **Panel Pengaturan Tampilan (Preferences):** Kustomisasi varian sidebar (*inset* atau *sidebar*), mode runtuh (*collapsible*), dan tata letak konten (*centered* atau *full-width*).
-- 📊 **Executive Dashboard Analytics:**
-  - Ringkasan KPI: Total usulan, total realisasi cair, dokumen aktif menunggu tindakan, dan status perlu revisi.
-  - Grafik tren pengajuan vs pencairan interaktif berbasis **Recharts** dengan filter rentang waktu (1 bulan, 3 bulan, semester).
-- 🔐 **Role-Based Access Control (RBAC):** Proteksi hak akses bertingkat untuk **Pengusul**, **Staf Keuangan**, **Pimpinan**, dan **Admin Keuangan Pusat**.
-- 🌓 **Desain Modern & Responsif:** Menggunakan Tailwind CSS v4, Radix UI Primitives, Lucide Icons, serta tema light/dark mode yang elegan.
+- 📐 **Standar Biaya Masukan (SBM) Compliance Engine:** Acuan biaya standar pemerintah (honor, konsumsi, transport) dan notifikasi peringatan jika melebihi plafon.
+- 🔁 **Workflow Interaktif & Unggah Ulang Berkas Revisi:** Fitur bagi pengusul untuk memperbarui berkas PDF proposal saat status berstatus *Perlu Revisi*.
+- 🔀 **Live Role Switcher Bar (Demo Mode):** Dropdown sakelar peran di header aplikasi untuk beralih instan antara Mahasiswa, Tendik (Verifikator), Admin, dan Pimpinan tanpa perlu logout/login ulang saat simulasi.
+- 👥 **Direktori & Manajemen Pengguna (User Management):** Pendaftaran akun baru, pemetaan peran, toggle show/hide password, dan konfirmasi kata sandi.
+- 🔍 **Command Palette & Global Search (`Ctrl + K`):** Pencarian instan proposal, anggaran, dan SBM langsung dari keyboard.
+- 🖨️ **Format Cetak Laporan Resmi (Print-Ready):** Format cetak dokumen resmi universitas.
+- 📊 **Executive Dashboard Analytics:** KPI analitik pengajuan dan grafik tren anggaran interaktif.
 
 ---
 
-## 🛠️ Arsitektur & Teknologi
+## 👥 Akun Demo untuk Pengujian (Simulasi Capstone)
 
-Sistem dibangun dengan arsitektur modern **Hybrid Monolith SPA** menggunakan Laravel dan React yang dihubungkan secara mulus oleh Inertia.js v2 tanpa latensi routing API terpisah:
-
-```mermaid
-graph LR
-    subgraph Client [Frontend Layer - React 19]
-        A[Inertia.js React App] --> B[Tailwind CSS v4]
-        A --> C[Radix UI & Lucide Icons]
-        A --> D[Recharts Data Visualizations]
-        A --> E[TypeScript Interfaces]
-    end
-
-    subgraph Server [Backend Layer - Laravel 12]
-        F[Routing & Web Middleware] --> G[Inertia Response Adapter]
-        G --> H[Domain Controllers & Services]
-        H --> I[Eloquent ORM & Enums]
-        H --> J[DashboardAnalyticsService]
-    end
-
-    subgraph Data [Storage Layer]
-        K[(SQLite / MySQL Database)]
-        L[Local Storage / Receipts Storage]
-    end
-
-    Client <==>|Inertia Bridge Protocol| Server
-    Server <--> Data
-```
-
-### Rincian Stack Teknologi
-
-* **Backend Framework:** [Laravel 12](https://laravel.com) (PHP 8.2+)
-* **Single Page App Protocol:** [Inertia.js v2](https://inertiajs.com)
-* **Frontend Library:** [React 19](https://react.dev) + [TypeScript](https://www.typescriptlang.org)
-* **Styling & Design System:** [Tailwind CSS v4](https://tailwindcss.com) + [Radix UI](https://www.radix-ui.com)
-* **Charts & Visualisasi Data:** [Recharts 3.x](https://recharts.org)
-* **Icon Set:** [Lucide React](https://lucide.dev)
-* **Pustaka Form & Routing:** Inertia Form Helpers + Ziggy Route Helper
-* **Testing Framework:** [Pest PHP 3.8](https://pestphp.com) + Inertia Testing Finder (40 Tests, 176 Assertions)
-* **Code Formatter & Linter:** [Laravel Pint](https://laravel.com/docs/pint), [ESLint 9](https://eslint.org), [Prettier](https://prettier.io)
-
----
-
-## 👥 Akun Demo untuk Pengujian
-
-Database seeder telah dilengkapi dengan akun representatif dan data pengajuan realistis untuk seluruh peran:
+Database seeder telah dilengkapi akun representatif untuk pengujian alur simulasi Capstone Project FSTI ITK:
 
 > **Password default untuk semua akun demo:** `password`
 
-| Peran (Role) | Email | Nama Pengguna | Hak Akses Utama |
+| Peran (Role) | Email | Nama Pengguna / Identitas | Hak Akses Utama |
 | :--- | :--- | :--- | :--- |
-| **Pengusul (Dosen/Unit)** | `pengusul@univ.ac.id` | Dr. Ahmad Hidayat, M.Kom. | Membuat proposal baru, memantau berkas sendiri, mengajukan revisi. |
-| **Pengusul (Fakultas Lain)** | `dosen.teknik@univ.ac.id` | Dr. Eng. Siti Nurhaliza, S.T. | Mengelola proposal kegiatan jurusan Teknik Elektro. |
-| **Staf Keuangan** | `stafkeuangan@univ.ac.id` | Siti Rahmawati, S.E. | Verifikasi proposal, minta revisi, validasi SBM, input SPJ, proses SAKTI, catat pencairan. |
-| **Pimpinan (Dekan)** | `pimpinan@univ.ac.id` | Prof. Dr. Ir. Bambang Sutrisno | Memberikan persetujuan resmi (*Disetujui, Kegiatan Berjalan*), melihat laporan eksekutif. |
-| **Administrator Pusat** | `admin@univ.ac.id` | Administrator Keuangan Pusat | Akses penuh direktori pengguna (tambah/edit/hapus), data master SBM, dan seluruh laporan universitas. |
+| **Mahasiswa (Pengusul)** | `mahasiswa@itk.ac.id` | **Raihan Iqbal**<br/>*(NIM 10211068 - S1 SI FSTI)* | Input data kegiatan, upload Proposal & RAB (PDF), pantau status tracking, ajukan perbaikan revisi. |
+| **Tendik (Verifikator FSTI)** | `tendik@itk.ac.id` | **Dwitami, S.E.**<br/>*(NIP 199304122019032014 - Keuangan FSTI)* | Antrean verifikasi dokumen, **preview PDF Proposal & RAB**, validasi SBM, beri catatan revisi / persetujuan. |
+| **Administrator Sistem** | `admin@itk.ac.id` | **Administrator SAK ITK** | Akses penuh manajemen pengguna, data master SBM, pengaturan sistem, dan preview berkas. |
+| **Pimpinan (Dekan)** | `pimpinan@itk.ac.id` | **Prof. Dr. Ir. Dekan FSTI ITK** | Memberikan persetujuan akhir (*Disetujui, Kegiatan Berjalan*), monitoring dashboard eksekutif. |
+
+> 💡 **Tips Simulasi:** Gunakan menu **"Ganti Peran Demo"** pada header pojok kanan atas untuk berpindah aktor (*Mahasiswa ↔ Tendik ↔ Admin*) secara instan dengan satu kali klik.
 
 ---
 
@@ -205,7 +157,7 @@ Anda dapat menjalankan server aplikasi dan aset Vite secara bersamaan dengan sat
 composer run dev
 ```
 
-Atau jalankan di terminal terpisah:
+Or jalankan di terminal terpisah:
 ```bash
 # Terminal 1: Laravel Backend Server
 php artisan serve
@@ -223,7 +175,7 @@ Buka peramban Anda di: **`http://127.0.0.1:8000`**
 Proyek ini menerapkan standar Continuous Integration (CI) yang ketat melalui **GitHub Actions** untuk menjamin kestabilan kode:
 
 ```bash
-# Menjalankan seluruh test suite Pest (40 Tests, 176 Assertions - PASS 100%)
+# Menjalankan seluruh test suite Pest (43 Tests, 196 Assertions - PASS 100%)
 php artisan test
 
 # Memeriksa dan merapikan style kode PHP dengan Laravel Pint
@@ -273,33 +225,6 @@ rancang-status-dokumen/
         ├── DokumenStatusTrackingTest.php  # Test suite lengkap alur 8 tahap, SBM, SAKTI, & User Management
         └── DashboardTest.php              # Test suite dasbor analitik
 ```
-
----
-
-## 👥 Tim Pengembang & Kontributor
-
-Terima kasih dan apresiasi kepada seluruh kontributor yang telah berkolaborasi dalam merancang, membangun, dan mengembangkan platform **SAK ITK**:
-
-<div align="center">
-  <table>
-    <tr>
-      <td align="center" width="180px">
-        <a href="https://github.com/RayhanIIqbal13">
-          <img src="https://github.com/RayhanIIqbal13.png?size=100" width="90px;" alt="Rayhan Iqbal" style="border-radius: 50%;" /><br />
-          <sub><b>Rayhan Iqbal</b></sub>
-        </a><br />
-        <span style="font-size: 11px; color: #888;">Project Lead & Developer</span>
-      </td>
-      <td align="center" width="180px">
-        <a href="https://github.com/justdyn">
-          <img src="https://github.com/justdyn.png?size=100" width="90px;" alt="justdyn" style="border-radius: 50%;" /><br />
-          <sub><b>justdyn</b></sub>
-        </a><br />
-        <span style="font-size: 11px; color: #888;">Core Contributor</span>
-      </td>
-    </tr>
-  </table>
-</div>
 
 ---
 

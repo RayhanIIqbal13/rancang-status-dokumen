@@ -7,6 +7,9 @@ use App\Models\DokumenPengajuan;
 use App\Models\StandarBiaya;
 use App\Models\StatusTracking;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     $this->applicant = User::factory()->create([
@@ -421,7 +424,7 @@ test('administrator or staff can register, update, and delete users from directo
         ->and($newUser->role)->toBe(UserRole::Pengusul);
 
     // Verify default password was hashed
-    expect(\Illuminate\Support\Facades\Hash::check('password', $newUser->password))->toBeTrue();
+    expect(Hash::check('password', $newUser->password))->toBeTrue();
 
     // 2. Update user
     $updateResponse = $this->actingAs($this->financeStaff)
@@ -441,7 +444,7 @@ test('administrator or staff can register, update, and delete users from directo
     $newUser->refresh();
     expect($newUser->name)->toBe('Prof. Dr. Budi Santoso, M.Eng.')
         ->and($newUser->role)->toBe(UserRole::Pimpinan);
-    expect(\Illuminate\Support\Facades\Hash::check('newpassword123', $newUser->password))->toBeTrue();
+    expect(Hash::check('newpassword123', $newUser->password))->toBeTrue();
 
     // 3. User cannot delete themselves
     $selfDeleteResponse = $this->actingAs($this->financeStaff)
@@ -460,3 +463,107 @@ test('administrator or staff can register, update, and delete users from directo
     expect(User::find($newUser->id))->toBeNull();
 });
 
+test('applicant can upload proposal PDF file and verifier can view and download it', function () {
+    Storage::fake('public');
+
+    $file = UploadedFile::fake()->create('proposal_kegiatan_mahasiswa.pdf', 1024, 'application/pdf');
+
+    $payload = [
+        'nama_kegiatan' => 'Lomba Inovasi Mahasiswa FSTI 2026',
+        'jenis_anggaran' => 'PNBP Fakultas (RAB Mahasiswa/Fakultas)',
+        'uraian' => 'Pelaksanaan lomba inovasi mahasiswa ITK.',
+        'tgl_pelaksanaan' => now()->addDays(20)->format('Y-m-d'),
+        'total_usulan' => 12000000,
+        'file_proposal' => $file,
+    ];
+
+    $response = $this->actingAs($this->applicant)
+        ->post(route('dokumen-pengajuan.store'), $payload);
+
+    $document = DokumenPengajuan::where('nama_kegiatan', 'Lomba Inovasi Mahasiswa FSTI 2026')->first();
+    expect($document)->not->toBeNull();
+    expect($document->file_proposal)->not->toBeNull();
+    Storage::disk('public')->assertExists($document->file_proposal);
+
+    // Tendik (Verifikator) can view proposal PDF inline
+    $viewResponse = $this->actingAs($this->financeStaff)
+        ->get(route('dokumen-pengajuan.proposal.view', $document));
+
+    $viewResponse->assertOk()
+        ->assertHeader('Content-Type', 'application/pdf');
+
+    // Tendik (Verifikator) can download proposal PDF
+    $downloadResponse = $this->actingAs($this->financeStaff)
+        ->get(route('dokumen-pengajuan.proposal.download', $document));
+
+    $downloadResponse->assertOk();
+});
+
+test('applicant can re-upload revised proposal file when resubmitting revision', function () {
+    Storage::fake('public');
+
+    $initialFile = UploadedFile::fake()->create('initial_proposal.pdf', 500, 'application/pdf');
+    $initialPath = $initialFile->store('proposals', 'public');
+
+    $doc = DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => 'PROP/2026/9999',
+        'nama_kegiatan' => 'Kegiatan Revisi RAB Mahasiswa',
+        'jenis_anggaran' => 'PNBP Fakultas',
+        'uraian' => 'Rincian kegiatan yang direvisi.',
+        'tgl_pelaksanaan' => now()->addDays(20)->format('Y-m-d'),
+        'total_usulan' => 10000000,
+        'status_terkini' => DocumentStatus::PerluRevisi,
+        'file_proposal' => $initialPath,
+    ]);
+
+    $revisedFile = UploadedFile::fake()->create('revised_proposal_fixed_rab.pdf', 750, 'application/pdf');
+
+    $response = $this->actingAs($this->applicant)
+        ->post(route('dokumen-pengajuan.status.store', $doc), [
+            'tahap' => DocumentStatus::VerifikasiFakultas->value,
+            'posisi_berkas' => 'Subbag Keuangan Fakultas',
+            'catatan' => 'Sudah direvisi sesuai catatan SBM konsumsi.',
+            'file_proposal' => $revisedFile,
+        ]);
+
+    $response->assertRedirect()
+        ->assertSessionHas('success');
+
+    $doc->refresh();
+    expect($doc->status_terkini)->toBe(DocumentStatus::VerifikasiFakultas);
+    expect($doc->file_proposal)->not->toBe($initialPath);
+    Storage::disk('public')->assertExists($doc->file_proposal);
+});
+
+test('demo switch user endpoint allows switching between Mahasiswa, Tendik, and Admin roles', function () {
+    $mahasiswa = User::factory()->create([
+        'name' => 'Raihan Iqbal',
+        'email' => 'mahasiswa.demo@itk.ac.id',
+        'role' => UserRole::Pengusul,
+    ]);
+
+    $tendik = User::factory()->create([
+        'name' => 'Dwitami, S.E.',
+        'email' => 'tendik.demo@itk.ac.id',
+        'role' => UserRole::StafKeuangan,
+    ]);
+
+    // Switch to Mahasiswa
+    $responseMahasiswa = $this->actingAs($this->applicant)
+        ->post(route('demo.switch-user'), [
+            'email' => 'mahasiswa.demo@itk.ac.id',
+        ]);
+
+    $responseMahasiswa->assertRedirect();
+    $this->assertAuthenticatedAs($mahasiswa);
+
+    // Switch to Tendik
+    $responseTendik = $this->actingAs($mahasiswa)
+        ->post(route('demo.switch-user'), [
+            'email' => 'tendik.demo@itk.ac.id',
+        ]);
+
+    $responseTendik->assertRedirect();
+    $this->assertAuthenticatedAs($tendik);
+});
