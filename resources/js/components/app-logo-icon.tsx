@@ -1,17 +1,13 @@
-import { SVGAttributes } from 'react';
+import React from 'react';
 
-export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
+export default function AppLogoIcon({ className = 'h-8 w-auto', ...props }: React.HTMLAttributes<HTMLDivElement>) {
     return (
-        <svg {...props} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="8" fill="#09090b" />
-            <path
-                d="M19 10v12a3 3 0 1 0 3-3H10a3 3 0 1 0 3 3V10a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"
-                fill="none"
-                stroke="#ffffff"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+        <div className={`inline-flex items-center justify-center shrink-0 ${className}`} {...props}>
+            <img
+                src="/images/logofsti.png"
+                alt="FSTI ITK"
+                className="max-h-full max-w-full object-contain"
             />
-        </svg>
+        </div>
     );
 }

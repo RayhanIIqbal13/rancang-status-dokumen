@@ -50,7 +50,7 @@ export default function Dashboard({
     performanceChartData = [],
 }: DashboardProps) {
     const { auth } = usePage<{ auth: { user: User } }>().props;
-    const _user = auth.user;
+    const user = auth.user;
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, _setStatusFilter] = useState('all');
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
@@ -103,6 +103,61 @@ export default function Dashboard({
             <Head title="Default Dashboard — Studio Admin" />
 
             <div className="@container/main flex w-full flex-col gap-4 p-4 md:gap-6 md:p-6">
+                {/* FSTI Characteristic Header Banner */}
+                <div
+                    className="relative overflow-hidden rounded-2xl p-5 sm:p-6 text-white shadow-md"
+                    style={{ backgroundColor: '#2f4dd3' }}
+                >
+                    <div className="pola-titik pointer-events-none absolute inset-0 opacity-35" />
+
+                    <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div className="flex items-center gap-3.5 sm:gap-4">
+                            <div className="flex h-12 w-auto shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-sm">
+                                <img src="/images/logofsti.png" alt="FSTI ITK" className="h-full w-auto object-contain" />
+                            </div>
+                            <div>
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <span className="rounded-full bg-amber-400 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-900">
+                                        SIM-Keuangan FSTI ITK
+                                    </span>
+                                    <span className="text-xs text-blue-100">
+                                        TA 2026 · Standar Biaya Masukan
+                                    </span>
+                                </div>
+                                <h1 className="mt-1 text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+                                    Selamat Datang, {user.name}
+                                </h1>
+                                <p className="text-xs sm:text-sm text-blue-100 max-w-xl">
+                                    Unit: {user.unit || 'Fakultas Sains dan Teknologi Informasi'} · Peran:{' '}
+                                    <span className="font-semibold capitalize">{user.role?.replace('_', ' ')}</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                            <Button
+                                asChild
+                                size="sm"
+                                className="rounded-xl bg-white text-slate-900 hover:bg-blue-50 font-semibold shadow-xs"
+                            >
+                                <Link href="/dokumen-pengajuan/create">
+                                    + Ajukan Usulan Baru
+                                </Link>
+                            </Button>
+                            <Button
+                                asChild
+                                variant="outline"
+                                size="sm"
+                                className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 backdrop-blur"
+                            >
+                                <Link href="/status-tracking">
+                                    Lacak 8 Tahap
+                                </Link>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
                 {/* 1. MetricCards - Exact match with next-shadcn-admin-dashboard */}
                 <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs sm:grid-cols-2 xl:grid-cols-4">
                     {/* Card 1: Total Revenue / Pagu Usulan */}

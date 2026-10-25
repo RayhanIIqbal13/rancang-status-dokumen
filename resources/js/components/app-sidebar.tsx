@@ -136,12 +136,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild className="hover:bg-sidebar-accent transition-colors">
                             <Link href="/dashboard" onClick={closeMobileSidebar}>
-                                <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg shadow-xs">
-                                    <Command className="size-4" />
+                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-white p-0.5 shadow-xs ring-1 ring-border dark:bg-card">
+                                    <img src="/images/logofsti.png" alt="FSTI ITK" className="h-full w-auto object-contain" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="text-foreground truncate font-semibold tracking-tight">SIM-KEUANGAN SBM</span>
-                                    <span className="text-muted-foreground truncate text-xs">Pelacakan Dokumen & SAKTI</span>
+                                    <span className="text-foreground truncate font-extrabold tracking-tight">SIM-KEUANGAN FSTI</span>
+                                    <span className="text-muted-foreground truncate text-[11px]">Fakultas Sains & Teknologi Informasi</span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>

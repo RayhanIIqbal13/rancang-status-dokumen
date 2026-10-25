@@ -44,8 +44,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     };
 
     return (
-        <AuthLayout title="Masuk ke Akun SAK ITK" description="Masukkan email dan kata sandi untuk mengakses layanan status dokumen">
-            <Head title="Masuk - Studio Admin SAK ITK" />
+        <AuthLayout title="Masuk ke SIM-Keuangan FSTI" description="Masukkan email dan kata sandi untuk mengakses layanan status usulan & anggaran">
+            <Head title="Masuk — SIM-Keuangan FSTI ITK" />
 
             <form className="flex flex-col gap-4" onSubmit={submit}>
                 <div className="space-y-1.5">

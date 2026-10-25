@@ -79,32 +79,32 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
+    --primary: oklch(0.488 0.243 264.376);
     --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
+    --accent: oklch(0.96 0.02 264);
+    --accent-foreground: oklch(0.35 0.18 264);
     --destructive: oklch(0.577 0.245 27.325);
     --destructive-foreground: oklch(0.985 0 0);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
+    --ring: oklch(0.488 0.243 264.376);
+    --chart-1: oklch(0.488 0.243 264.376);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
     --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-accent: oklch(0.96 0.02 264);
+    --sidebar-accent-foreground: oklch(0.35 0.18 264);
     --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --sidebar-ring: oklch(0.488 0.243 264.376);
 
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -117,8 +117,8 @@
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.205 0 0);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
+    --primary: oklch(0.62 0.22 264.376);
+    --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.269 0 0);
     --secondary-foreground: oklch(0.985 0 0);
     --muted: oklch(0.269 0 0);
@@ -129,20 +129,20 @@
     --destructive-foreground: oklch(0.985 0 0);
     --border: oklch(0.269 0 0);
     --input: oklch(0.269 0 0);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
+    --ring: oklch(0.62 0.22 264.376);
+    --chart-1: oklch(0.62 0.22 264.376);
     --chart-2: oklch(0.696 0.17 162.48);
     --chart-3: oklch(0.769 0.188 70.08);
     --chart-4: oklch(0.627 0.265 303.9);
     --chart-5: oklch(0.645 0.246 16.439);
     --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary: oklch(0.62 0.22 264.376);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(0.269 0 0);
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    --sidebar-ring: oklch(0.62 0.22 264.376);
 }
 
 @layer base {
@@ -242,6 +242,61 @@
 ::-webkit-scrollbar-thumb:hover {
     background: var(--muted-foreground);
 }
+
+/* FSTI ITK Characteristic Styles & Brand Tokens */
+.pola-titik {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.22) 1.5px, transparent 1.5px);
+    background-size: 16px 16px;
+}
+
+.pola-titik-dark {
+    background-image: radial-gradient(rgba(47, 77, 211, 0.15) 1.5px, transparent 1.5px);
+    background-size: 16px 16px;
+}
+
+.shadow-angkat {
+    box-shadow: 0 14px 34px -4px rgba(18, 30, 84, 0.14), 0 4px 12px -2px rgba(18, 30, 84, 0.06);
+}
+
+.shadow-kartu {
+    box-shadow: 0 1px 4px 0 rgba(18, 30, 84, 0.05), 0 1px 2px -1px rgba(18, 30, 84, 0.05);
+}
+
+.label-kecil {
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.bg-fsti-blue {
+    background-color: #2f4dd3;
+}
+
+.text-fsti-blue {
+    color: #2f4dd3;
+}
+
+.bg-fsti-dark {
+    background-color: #121e54;
+}
+
+.bg-sorot-400 {
+    background-color: #fbbf24;
+}
+
+.bg-sorot-100 {
+    background-color: #fef3c7;
+}
+
+.text-sorot-300 {
+    color: #fcd34d;
+}
+
+.text-sorot-700 {
+    color: #b45309;
+}
+
 
 /* Global Print Styles for Official Documents & Reports */
 @media print {

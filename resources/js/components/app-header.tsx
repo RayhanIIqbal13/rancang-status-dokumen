@@ -67,7 +67,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             <SheetContent side="left" className="bg-sidebar flex h-full w-64 flex-col items-stretch justify-between">
                                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                                 <SheetHeader className="flex justify-start text-left">
-                                    <AppLogoIcon className="h-6 w-6 fill-current text-black dark:text-white" />
+                                    <div className="flex items-center gap-2">
+                                        <img src="/images/logofsti.png" alt="FSTI ITK" className="h-7 w-auto object-contain" />
+                                        <div className="leading-tight">
+                                            <span className="block text-xs font-bold text-foreground">SIM-Keuangan FSTI</span>
+                                            <span className="block text-[10px] text-muted-foreground">Fakultas Sains & Teknologi Informasi</span>
+                                        </div>
+                                    </div>
                                 </SheetHeader>
                                 <div className="mt-6 flex h-full flex-1 flex-col space-y-4">
                                     <div className="flex h-full flex-col justify-between text-sm">
@@ -100,8 +106,17 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         </Sheet>
                     </div>
 
-                    <Link href="/dashboard" prefetch className="flex items-center space-x-2">
-                        <AppLogo />
+                    <Link href="/dashboard" prefetch className="flex shrink-0 items-center gap-2.5">
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                            <img src="/images/logotut.png" alt="Tut Wuri Handayani" className="h-6 w-auto sm:h-8 object-contain" />
+                            <img src="/images/logosaintek.png" alt="Diktisaintek" className="h-6 w-auto sm:h-8 object-contain" />
+                            <img src="/images/logoitk.png" alt="ITK" className="h-6 w-auto sm:h-8 object-contain" />
+                            <img src="/images/logofsti.png" alt="FSTI ITK" className="h-6 w-auto sm:h-8 object-contain" />
+                        </div>
+                        <div className="hidden border-l border-border pl-2.5 leading-tight lg:block">
+                            <span className="block text-[13px] font-extrabold tracking-tight text-foreground">SIM-Keuangan FSTI</span>
+                            <span className="block text-[10px] text-muted-foreground">Fakultas Sains & Teknologi Informasi · ITK</span>
+                        </div>
                     </Link>
 
                     {/* Desktop Navigation */}
