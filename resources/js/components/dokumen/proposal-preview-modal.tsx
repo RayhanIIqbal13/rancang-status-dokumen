@@ -22,6 +22,7 @@ import {
     Scale,
     Sparkles,
     User as UserIcon,
+    X,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -86,7 +87,10 @@ export function ProposalPreviewModal({
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             {triggerButton && <DialogTrigger asChild>{triggerButton}</DialogTrigger>}
 
-            <DialogContent className="max-w-5xl w-[95vw] h-[92vh] max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden rounded-2xl border-border shadow-2xl">
+            <DialogContent
+                hideCloseButton
+                className="max-w-5xl w-[95vw] h-[92vh] max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden rounded-2xl border-border shadow-2xl"
+            >
                 {/* Header Section */}
                 <DialogHeader className="p-4 sm:p-5 border-b shrink-0 bg-card">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -165,6 +169,22 @@ export function ProposalPreviewModal({
                                     </a>
                                 </Button>
                             )}
+
+                            {/* Separator */}
+                            <div className="h-4 w-px bg-border/80 hidden sm:block mx-0.5" />
+
+                            {/* Properly aligned, distinct Close Button */}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setIsOpen(false)}
+                                className="h-8 px-2.5 sm:px-3 text-xs gap-1.5 font-medium border-border/80 bg-background hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-all rounded-lg"
+                                title="Tutup Modal Pratinjau (Esc)"
+                            >
+                                <X className="size-3.5" />
+                                <span className="hidden sm:inline">Tutup</span>
+                            </Button>
                         </div>
                     </div>
                 </DialogHeader>
