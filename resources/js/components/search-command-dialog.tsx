@@ -310,7 +310,7 @@ export function SearchCommandDialog({ open, onOpenChange }: SearchCommandDialogP
             <DialogContent
                 hideCloseButton={true}
                 overlayClassName="backdrop-blur-md bg-black/60 dark:bg-black/75"
-                className="border-border/80 bg-background/95 top-[8%] sm:top-[18%] max-h-[85vh] w-[95vw] max-w-2xl -translate-y-0 overflow-hidden rounded-2xl p-0 shadow-2xl backdrop-blur-xl transition-all sm:rounded-2xl"
+                className="border-border/80 bg-background/95 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[85vh] w-[95vw] max-w-2xl overflow-hidden rounded-2xl p-0 shadow-2xl backdrop-blur-xl transition-all sm:rounded-2xl"
                 onKeyDown={handleKeyDown}
             >
                 <DialogTitle className="sr-only">Search documents, dashboards, and SBM</DialogTitle>
@@ -373,7 +373,7 @@ export function SearchCommandDialog({ open, onOpenChange }: SearchCommandDialogP
                 </div>
 
                 {/* Results List Container */}
-                <div className="max-h-[60vh] overflow-y-auto px-2 py-2 text-xs">
+                <div className="max-h-[min(52vh,440px)] overflow-y-auto px-2 py-2 text-xs">
                     {/* 1. Dashboards & Pages */}
                     {filteredDashboards.length > 0 && (
                         <div className="mb-3">
@@ -616,7 +616,7 @@ export function SearchCommandDialog({ open, onOpenChange }: SearchCommandDialogP
                     </div>
                     <div className="hidden items-center gap-1 sm:flex">
                         <Clock className="size-3" />
-                        <span>SAK ITK Quick Command</span>
+                        <span>FSTI ITK Quick Search</span>
                     </div>
                 </div>
             </DialogContent>
