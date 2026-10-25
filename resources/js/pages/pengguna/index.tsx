@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, PaginatedData, SharedData, User } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
@@ -389,115 +390,113 @@ export default function PenggunaIndex({ users, filters, stats }: PenggunaIndexPr
                     </div>
 
                     {/* Table */}
-                    <div className="overflow-x-auto scrollbar-thin">
-                        <table className="w-full min-w-[760px] text-left text-xs">
-                            <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
-                                <tr>
-                                    <th className="px-4 py-3">Pengguna</th>
-                                    <th className="px-4 py-3">NIP / Identitas</th>
-                                    <th className="px-4 py-3">Unit Kerja</th>
-                                    <th className="px-4 py-3 text-center">Peran</th>
-                                    <th className="px-4 py-3 text-center">Total Usulan</th>
-                                    <th className="px-4 py-3 text-center">Terdaftar</th>
-                                    <th className="px-4 py-3 text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y">
-                                {users.data.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={7} className="text-muted-foreground p-8 text-center">
-                                            Tidak ada data pengguna yang sesuai pencarian.
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    users.data.map((u) => {
-                                        const isCurrentUser = auth?.user?.id === u.id;
-                                        return (
-                                            <tr key={u.id} className="hover:bg-muted/30 transition-colors">
-                                                <td className="px-4 py-3">
-                                                    <div className="flex items-center gap-2.5">
-                                                        <Avatar className="size-7 rounded-lg border">
-                                                            <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-semibold">
-                                                                {getInitials(u.name)}
-                                                            </AvatarFallback>
-                                                        </Avatar>
-                                                        <div>
-                                                            <div className="flex items-center gap-1.5">
-                                                                <p className="text-foreground font-medium">{u.name}</p>
-                                                                {isCurrentUser && (
-                                                                    <span className="rounded-full bg-primary/15 px-1.5 py-0.2 text-[9px] font-medium text-primary">
-                                                                        Anda
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                            <div className="text-muted-foreground flex items-center gap-1 text-[11px]">
-                                                                <Mail className="size-3" />
-                                                                <span>{u.email}</span>
-                                                            </div>
+                    <Table className="min-w-[760px] text-xs" scrollHintText="Daftar pengguna dapat digeser horizontal">
+                        <TableHeader className="bg-muted/50 text-[11px] font-medium tracking-wider uppercase">
+                            <TableRow className="hover:bg-transparent">
+                                <TableHead className="px-4 py-3">Pengguna</TableHead>
+                                <TableHead className="px-4 py-3">NIP / Identitas</TableHead>
+                                <TableHead className="px-4 py-3">Unit Kerja</TableHead>
+                                <TableHead className="px-4 py-3 text-center">Peran</TableHead>
+                                <TableHead className="px-4 py-3 text-center">Total Usulan</TableHead>
+                                <TableHead className="px-4 py-3 text-center">Terdaftar</TableHead>
+                                <TableHead className="px-4 py-3 text-right">Aksi</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody className="divide-y">
+                            {users.data.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-muted-foreground p-8 text-center">
+                                        Tidak ada data pengguna yang sesuai pencarian.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                users.data.map((u) => {
+                                    const isCurrentUser = auth?.user?.id === u.id;
+                                    return (
+                                        <TableRow key={u.id} className="hover:bg-muted/30 transition-colors">
+                                            <TableCell className="px-4 py-3">
+                                                <div className="flex items-center gap-2.5">
+                                                    <Avatar className="size-7 rounded-lg border">
+                                                        <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-semibold">
+                                                            {getInitials(u.name)}
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                    <div>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <p className="text-foreground font-medium">{u.name}</p>
+                                                            {isCurrentUser && (
+                                                                <span className="rounded-full bg-primary/15 px-1.5 py-0.2 text-[9px] font-medium text-primary">
+                                                                    Anda
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <div className="text-muted-foreground flex items-center gap-1 text-[11px]">
+                                                            <Mail className="size-3" />
+                                                            <span>{u.email}</span>
                                                         </div>
                                                     </div>
-                                                </td>
+                                                </div>
+                                            </TableCell>
 
-                                                <td className="text-muted-foreground px-4 py-3 font-mono text-[11px]">{u.nip_nim || '-'}</td>
+                                            <TableCell className="text-muted-foreground px-4 py-3 font-mono text-[11px]">{u.nip_nim || '-'}</TableCell>
 
-                                                <td className="text-muted-foreground px-4 py-3">
-                                                    <div className="flex items-center gap-1.5">
-                                                        <Building2 className="text-muted-foreground/70 size-3" />
-                                                        <span>{u.unit || '-'}</span>
-                                                    </div>
-                                                </td>
+                                            <TableCell className="text-muted-foreground px-4 py-3">
+                                                <div className="flex items-center gap-1.5">
+                                                    <Building2 className="text-muted-foreground/70 size-3" />
+                                                    <span>{u.unit || '-'}</span>
+                                                </div>
+                                            </TableCell>
 
-                                                <td className="px-4 py-3 text-center">{getRoleBadge(u.role)}</td>
+                                            <TableCell className="px-4 py-3 text-center">{getRoleBadge(u.role)}</TableCell>
 
-                                                <td className="px-4 py-3 text-center">
-                                                    <span className="bg-muted inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium tabular-nums">
-                                                        <FileText className="text-muted-foreground size-3" />
-                                                        {u.dokumen_pengajuans_count || 0}
-                                                    </span>
-                                                </td>
+                                            <TableCell className="px-4 py-3 text-center">
+                                                <span className="bg-muted inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium tabular-nums">
+                                                    <FileText className="text-muted-foreground size-3" />
+                                                    {u.dokumen_pengajuans_count || 0}
+                                                </span>
+                                            </TableCell>
 
-                                                <td className="text-muted-foreground px-4 py-3 text-center text-[11px]">
-                                                    {new Date(u.created_at).toLocaleDateString('id-ID', {
-                                                        day: 'numeric',
-                                                        month: 'short',
-                                                        year: 'numeric',
-                                                    })}
-                                                </td>
+                                            <TableCell className="text-muted-foreground px-4 py-3 text-center text-[11px]">
+                                                {new Date(u.created_at).toLocaleDateString('id-ID', {
+                                                    day: 'numeric',
+                                                    month: 'short',
+                                                    year: 'numeric',
+                                                })}
+                                            </TableCell>
 
-                                                <td className="px-4 py-3 text-right">
-                                                    <div className="flex items-center justify-end gap-1">
-                                                        <Button
-                                                            type="button"
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            onClick={() => handleOpenEdit(u)}
-                                                            className="h-7 w-7 text-muted-foreground hover:text-foreground"
-                                                            title="Edit Pengguna"
-                                                        >
-                                                            <Pencil className="size-3.5" />
-                                                            <span className="sr-only">Edit</span>
-                                                        </Button>
-                                                        <Button
-                                                            type="button"
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            onClick={() => handleOpenDelete(u)}
-                                                            disabled={isCurrentUser}
-                                                            className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 disabled:opacity-30"
-                                                            title={isCurrentUser ? 'Tidak dapat menghapus akun sendiri' : 'Hapus Pengguna'}
-                                                        >
-                                                            <Trash2 className="size-3.5" />
-                                                            <span className="sr-only">Hapus</span>
-                                                        </Button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                            <TableCell className="px-4 py-3 text-right">
+                                                <div className="flex items-center justify-end gap-1">
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => handleOpenEdit(u)}
+                                                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                                                        title="Edit Pengguna"
+                                                    >
+                                                        <Pencil className="size-3.5" />
+                                                        <span className="sr-only">Edit</span>
+                                                    </Button>
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => handleOpenDelete(u)}
+                                                        disabled={isCurrentUser}
+                                                        className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 disabled:opacity-30"
+                                                        title={isCurrentUser ? 'Tidak dapat menghapus akun sendiri' : 'Hapus Pengguna'}
+                                                    >
+                                                        <Trash2 className="size-3.5" />
+                                                        <span className="sr-only">Hapus</span>
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })
+                            )}
+                        </TableBody>
+                    </Table>
 
                     {/* Pagination */}
                     {users.links && users.links.length > 3 && (

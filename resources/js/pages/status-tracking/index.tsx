@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DocumentStatusType, DokumenPengajuan, PaginatedData, SharedData, StatusStageInfo, StatusTracking } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
@@ -559,64 +560,64 @@ export default function StatusTrackingIndex({ activeDocument, accessibleDocument
                             </div>
                         </CardContent>
 
-                        {/* Audit Trail Table */}
-                        <div className="overflow-x-auto scrollbar-thin">
-                            <table className="w-full min-w-[720px] text-left text-sm">
-                                <thead className="bg-muted/40 border-border/60 text-muted-foreground border-b text-xs font-medium uppercase">
-                                    <tr>
-                                        <th className="px-4 py-3">Dokumen</th>
-                                        <th className="px-4 py-3 text-center">Tahap Status</th>
-                                        <th className="px-4 py-3">Posisi Berkas</th>
-                                        <th className="px-4 py-3">Petugas Pembaruan</th>
-                                        <th className="px-4 py-3">Catatan / Catatan Revisi</th>
-                                        <th className="px-4 py-3 text-right">Waktu Update</th>
-                                        <th className="px-4 py-3 text-right">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-border/60 divide-y">
+                        {/* Audit Trail Grid Table */}
+                        <div className="p-4 pt-0">
+                            <Table className="min-w-[720px]" scrollHintText="Jejak audit dapat digeser horizontal">
+                                <TableHeader>
+                                    <TableRow className="bg-muted/40">
+                                        <TableHead>Dokumen</TableHead>
+                                        <TableHead className="text-center">Tahap Status</TableHead>
+                                        <TableHead>Posisi Berkas</TableHead>
+                                        <TableHead>Petugas Pembaruan</TableHead>
+                                        <TableHead>Catatan / Catatan Revisi</TableHead>
+                                        <TableHead className="text-right">Waktu Update</TableHead>
+                                        <TableHead className="text-right">Aksi</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
                                     {trackings.data.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={7} className="text-muted-foreground px-4 py-12 text-center text-xs">
+                                        <TableRow>
+                                            <TableCell colSpan={7} className="text-muted-foreground h-28 text-center text-xs">
                                                 Tidak ada rekaman jejak audit ditemukan.
-                                            </td>
-                                        </tr>
+                                            </TableCell>
+                                        </TableRow>
                                     ) : (
                                         trackings.data.map((item) => (
-                                            <tr key={item.id} className="hover:bg-muted/30 transition-colors">
-                                                <td className="px-4 py-3">
+                                            <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
+                                                <TableCell className="max-w-xs">
                                                     <div className="text-primary font-mono text-xs font-bold">
                                                         {item.dokumen_pengajuan?.nomor_pengajuan || '-'}
                                                     </div>
-                                                    <div className="text-foreground line-clamp-1 max-w-xs text-xs font-medium">
+                                                    <div className="text-foreground line-clamp-1 text-xs font-medium">
                                                         {item.dokumen_pengajuan?.nama_kegiatan || '-'}
                                                     </div>
-                                                </td>
-                                                <td className="px-4 py-3 text-center">
+                                                </TableCell>
+                                                <TableCell className="text-center">
                                                     <StatusBadge status={item.tahap} size="sm" />
-                                                </td>
-                                                <td className="px-4 py-3 text-xs">
+                                                </TableCell>
+                                                <TableCell className="text-xs">
                                                     <div className="text-foreground flex items-center gap-1 font-semibold">
                                                         <MapPin className="text-primary size-3.5 shrink-0" />
                                                         {item.posisi_berkas}
                                                     </div>
-                                                </td>
-                                                <td className="px-4 py-3 text-xs">
+                                                </TableCell>
+                                                <TableCell className="text-xs">
                                                     <div className="text-foreground font-medium">{item.updater_name}</div>
                                                     <div className="text-muted-foreground text-[11px]">{item.updater_role}</div>
-                                                </td>
-                                                <td className="max-w-xs px-4 py-3 text-xs">
+                                                </TableCell>
+                                                <TableCell className="max-w-xs text-xs">
                                                     {item.catatan ? (
                                                         <span className="bg-muted/60 text-foreground line-clamp-2 rounded px-1.5 py-0.5 font-mono text-[11px]">
-                                                            {item.catatan}
+                                                             {item.catatan}
                                                         </span>
                                                     ) : (
                                                         <span className="text-muted-foreground/60">-</span>
                                                     )}
-                                                </td>
-                                                <td className="text-muted-foreground px-4 py-3 text-right font-mono text-xs whitespace-nowrap">
+                                                </TableCell>
+                                                <TableCell className="text-muted-foreground text-right font-mono text-xs">
                                                     {formatDate(item.waktu_update)}
-                                                </td>
-                                                <td className="px-4 py-3 text-right">
+                                                </TableCell>
+                                                <TableCell className="text-right">
                                                     {item.dokumen_pengajuan?.id && (
                                                         <button
                                                             type="button"
@@ -630,12 +631,12 @@ export default function StatusTrackingIndex({ activeDocument, accessibleDocument
                                                             <ArrowUpRight className="size-3" />
                                                         </button>
                                                     )}
-                                                </td>
-                                            </tr>
+                                                </TableCell>
+                                            </TableRow>
                                         ))
                                     )}
-                                </tbody>
-                            </table>
+                                </TableBody>
+                            </Table>
                         </div>
 
                         {/* Pagination */}

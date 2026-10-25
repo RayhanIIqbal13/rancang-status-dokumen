@@ -301,8 +301,7 @@ export default function Dashboard({
                     </CardHeader>
 
                     <CardContent className="pt-0">
-                        <div className="border-border/70 overflow-x-auto scrollbar-thin rounded-lg border">
-                            <Table className="min-w-[700px]">
+                        <Table className="min-w-[700px]">
                                 <TableHeader>
                                     <TableRow className="bg-muted/30">
                                         <TableHead className="w-10">
@@ -375,7 +374,6 @@ export default function Dashboard({
                                     )}
                                 </TableBody>
                             </Table>
-                        </div>
                     </CardContent>
                 </Card>
             </div>

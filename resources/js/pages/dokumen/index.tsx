@@ -229,8 +229,7 @@ export default function DokumenIndex({ documents, filters, stats, stages: _stage
                     </div>
 
                     <CardContent className="pt-0">
-                        <div className="border-border/70 overflow-x-auto scrollbar-thin rounded-lg border">
-                            <Table className="min-w-[720px]">
+                        <Table className="min-w-[720px]">
                                 <TableHeader>
                                     <TableRow className="bg-muted/30">
                                         <TableHead>Nomor & Nama Kegiatan</TableHead>
@@ -313,7 +312,6 @@ export default function DokumenIndex({ documents, filters, stats, stages: _stage
                                     )}
                                 </TableBody>
                             </Table>
-                        </div>
                     </CardContent>
 
                     {/* Pagination Footer */}

@@ -1,5 +1,6 @@
 import { StatusBadge } from '@/components/dokumen/status-badge';
 import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DocumentStatusType, DokumenPengajuan } from '@/types';
 import { Head, Link } from '@inertiajs/react';
@@ -311,72 +312,70 @@ export default function LaporanIndex({ summary, anggaranByType, statusDistributi
                                 </div>
                             </div>
 
-                            <div className="overflow-x-auto scrollbar-thin">
-                                <table className="w-full min-w-[700px] text-left text-xs">
-                                    <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
-                                        <tr>
-                                            <th className="px-4 py-3">Nama Usulan Kegiatan</th>
-                                            <th className="px-4 py-3">Pengusul / Unit</th>
-                                            <th className="px-4 py-3">Sumber Anggaran</th>
-                                            <th className="px-4 py-3 text-right">Pagu Usulan</th>
-                                            <th className="px-4 py-3 text-right">Realisasi Cair</th>
-                                            <th className="px-4 py-3 text-center">Status</th>
-                                            <th className="px-4 py-3 text-right">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y">
-                                        {recentDisbursed.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={7} className="text-muted-foreground px-4 py-8 text-center text-xs">
-                                                    Belum ada dokumen yang mencapai status pencairan dana.
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            recentDisbursed.map((doc) => (
-                                                <tr key={doc.id} className="hover:bg-muted/30 transition-colors">
-                                                    <td className="text-foreground max-w-xs px-4 py-3.5 font-medium">
-                                                        <p className="truncate">{doc.nama_kegiatan}</p>
-                                                        <span className="text-primary font-mono text-[11px]">{doc.nomor_pengajuan}</span>
-                                                    </td>
+                            <Table className="min-w-[700px] text-xs" scrollHintText="Tabel realisasi pencairan dapat digeser horizontal">
+                                <TableHeader className="bg-muted/50 text-[11px] font-medium tracking-wider uppercase">
+                                    <TableRow className="hover:bg-transparent">
+                                        <TableHead className="px-4 py-3">Nama Usulan Kegiatan</TableHead>
+                                        <TableHead className="px-4 py-3">Pengusul / Unit</TableHead>
+                                        <TableHead className="px-4 py-3">Sumber Anggaran</TableHead>
+                                        <TableHead className="px-4 py-3 text-right">Pagu Usulan</TableHead>
+                                        <TableHead className="px-4 py-3 text-right">Realisasi Cair</TableHead>
+                                        <TableHead className="px-4 py-3 text-center">Status</TableHead>
+                                        <TableHead className="px-4 py-3 text-right">Aksi</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody className="divide-y">
+                                    {recentDisbursed.length === 0 ? (
+                                        <TableRow>
+                                            <TableCell colSpan={7} className="text-muted-foreground px-4 py-8 text-center text-xs">
+                                                Belum ada dokumen yang mencapai status pencairan dana.
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        recentDisbursed.map((doc) => (
+                                            <TableRow key={doc.id} className="hover:bg-muted/30 transition-colors">
+                                                <TableCell className="text-foreground max-w-xs px-4 py-3.5 font-medium">
+                                                    <p className="truncate">{doc.nama_kegiatan}</p>
+                                                    <span className="text-primary font-mono text-[11px]">{doc.nomor_pengajuan}</span>
+                                                </TableCell>
 
-                                                    <td className="text-muted-foreground px-4 py-3.5 text-xs">
-                                                        <p className="text-foreground font-medium">{doc.user?.name}</p>
-                                                        <p className="text-[11px]">{doc.user?.unit || '-'}</p>
-                                                    </td>
+                                                <TableCell className="text-muted-foreground px-4 py-3.5 text-xs">
+                                                    <p className="text-foreground font-medium">{doc.user?.name}</p>
+                                                    <p className="text-[11px]">{doc.user?.unit || '-'}</p>
+                                                </TableCell>
 
-                                                    <td className="text-muted-foreground px-4 py-3.5 text-xs">
-                                                        <span className="bg-muted rounded px-1.5 py-0.5 text-[10px] font-medium">
-                                                            {doc.jenis_anggaran}
-                                                        </span>
-                                                    </td>
+                                                <TableCell className="text-muted-foreground px-4 py-3.5 text-xs">
+                                                    <span className="bg-muted rounded px-1.5 py-0.5 text-[10px] font-medium">
+                                                        {doc.jenis_anggaran}
+                                                    </span>
+                                                </TableCell>
 
-                                                    <td className="text-foreground px-4 py-3.5 text-right font-medium tabular-nums">
-                                                        {formatCurrency(doc.total_usulan)}
-                                                    </td>
+                                                <TableCell className="text-foreground px-4 py-3.5 text-right font-medium tabular-nums">
+                                                    {formatCurrency(doc.total_usulan)}
+                                                </TableCell>
 
-                                                    <td className="px-4 py-3.5 text-right font-semibold text-emerald-700 tabular-nums dark:text-emerald-400">
-                                                        {doc.realisasi_anggaran?.total_realisasi
-                                                            ? formatCurrency(doc.realisasi_anggaran.total_realisasi)
-                                                            : formatCurrency(doc.total_usulan)}
-                                                    </td>
+                                                <TableCell className="px-4 py-3.5 text-right font-semibold text-emerald-700 tabular-nums dark:text-emerald-400">
+                                                    {doc.realisasi_anggaran?.total_realisasi
+                                                        ? formatCurrency(doc.realisasi_anggaran.total_realisasi)
+                                                        : formatCurrency(doc.total_usulan)}
+                                                </TableCell>
 
-                                                    <td className="px-4 py-3.5 text-center">
-                                                        <StatusBadge status={doc.status_terkini} size="sm" />
-                                                    </td>
+                                                <TableCell className="px-4 py-3.5 text-center">
+                                                    <StatusBadge status={doc.status_terkini} size="sm" />
+                                                </TableCell>
 
-                                                    <td className="px-4 py-3.5 text-right">
-                                                        <Button asChild size="icon" variant="ghost" className="size-7">
-                                                            <Link href={route('dokumen-pengajuan.show', doc.id)}>
-                                                                <ArrowUpRight className="size-3.5" />
-                                                            </Link>
-                                                        </Button>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
+                                                <TableCell className="px-4 py-3.5 text-right">
+                                                    <Button asChild size="icon" variant="ghost" className="size-7">
+                                                        <Link href={route('dokumen-pengajuan.show', doc.id)}>
+                                                            <ArrowUpRight className="size-3.5" />
+                                                        </Link>
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
                         </div>
                     </div>
                 )}

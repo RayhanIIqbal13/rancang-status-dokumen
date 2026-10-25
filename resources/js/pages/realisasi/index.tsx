@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DokumenPengajuan, PaginatedData, User } from '@/types';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
@@ -211,98 +212,96 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                     </div>
 
                     {/* Table */}
-                    <div className="overflow-x-auto scrollbar-thin">
-                        <table className="w-full min-w-[700px] text-left text-xs">
-                            <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
-                                <tr>
-                                    <th className="px-4 py-3">Nomor & Usulan</th>
-                                    <th className="px-4 py-3">Pengusul & Unit</th>
-                                    <th className="px-4 py-3 text-right">Pagu Usulan</th>
-                                    <th className="px-4 py-3 text-right">Realisasi Cair</th>
-                                    <th className="px-4 py-3">Status SAKTI / SP2D</th>
-                                    <th className="px-4 py-3 text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y">
-                                {documents.data.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={6} className="text-muted-foreground p-8 text-center">
-                                            Tidak ada data realisasi anggaran yang sesuai pencarian.
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    documents.data.map((doc) => {
-                                        const realisasi = doc.realisasi_anggaran;
-                                        return (
-                                            <tr key={doc.id} className="hover:bg-muted/30 transition-colors">
-                                                <td className="max-w-xs space-y-1 px-4 py-3.5">
-                                                    <div className="flex items-center gap-1.5">
-                                                        <span className="text-primary font-mono text-xs font-semibold">{doc.nomor_pengajuan}</span>
-                                                        <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-[10px]">
-                                                            {doc.jenis_anggaran}
+                    <Table className="min-w-[700px] text-xs" scrollHintText="Tabel realisasi dapat digeser horizontal">
+                        <TableHeader className="bg-muted/50 text-[11px] font-medium tracking-wider uppercase">
+                            <TableRow className="hover:bg-transparent">
+                                <TableHead className="px-4 py-3">Nomor & Usulan</TableHead>
+                                <TableHead className="px-4 py-3">Pengusul & Unit</TableHead>
+                                <TableHead className="px-4 py-3 text-right">Pagu Usulan</TableHead>
+                                <TableHead className="px-4 py-3 text-right">Realisasi Cair</TableHead>
+                                <TableHead className="px-4 py-3">Status SAKTI / SP2D</TableHead>
+                                <TableHead className="px-4 py-3 text-right">Aksi</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody className="divide-y">
+                            {documents.data.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={6} className="text-muted-foreground p-8 text-center">
+                                        Tidak ada data realisasi anggaran yang sesuai pencarian.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                documents.data.map((doc) => {
+                                    const realisasi = doc.realisasi_anggaran;
+                                    return (
+                                        <TableRow key={doc.id} className="hover:bg-muted/30 transition-colors">
+                                            <TableCell className="max-w-xs space-y-1 px-4 py-3.5">
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="text-primary font-mono text-xs font-semibold">{doc.nomor_pengajuan}</span>
+                                                    <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-[10px]">
+                                                        {doc.jenis_anggaran}
+                                                    </span>
+                                                </div>
+                                                <p className="text-foreground truncate font-medium">{doc.nama_kegiatan}</p>
+                                                <StatusBadge status={doc.status_terkini} size="sm" />
+                                            </TableCell>
+
+                                            <TableCell className="text-muted-foreground px-4 py-3.5">
+                                                <p className="text-foreground font-medium">{doc.user?.name}</p>
+                                                <p className="text-[11px]">{doc.user?.unit || '-'}</p>
+                                            </TableCell>
+
+                                            <TableCell className="text-foreground px-4 py-3.5 text-right font-medium tabular-nums">
+                                                {formatCurrency(doc.total_usulan)}
+                                            </TableCell>
+
+                                            <TableCell className="px-4 py-3.5 text-right font-semibold text-teal-700 tabular-nums dark:text-teal-400">
+                                                {realisasi ? formatCurrency(realisasi.total_realisasi) : '-'}
+                                            </TableCell>
+
+                                            <TableCell className="px-4 py-3.5">
+                                                {realisasi ? (
+                                                    <div className="space-y-0.5">
+                                                        <span className="inline-flex rounded-4xl border border-teal-200 bg-teal-50 px-2 py-0.5 text-[10px] font-medium text-teal-800 dark:border-teal-800 dark:bg-teal-950/40 dark:text-teal-300">
+                                                            {realisasi.status_pencairan}
                                                         </span>
-                                                    </div>
-                                                    <p className="text-foreground truncate font-medium">{doc.nama_kegiatan}</p>
-                                                    <StatusBadge status={doc.status_terkini} size="sm" />
-                                                </td>
-
-                                                <td className="text-muted-foreground px-4 py-3.5">
-                                                    <p className="text-foreground font-medium">{doc.user?.name}</p>
-                                                    <p className="text-[11px]">{doc.user?.unit || '-'}</p>
-                                                </td>
-
-                                                <td className="text-foreground px-4 py-3.5 text-right font-medium tabular-nums">
-                                                    {formatCurrency(doc.total_usulan)}
-                                                </td>
-
-                                                <td className="px-4 py-3.5 text-right font-semibold text-teal-700 tabular-nums dark:text-teal-400">
-                                                    {realisasi ? formatCurrency(realisasi.total_realisasi) : '-'}
-                                                </td>
-
-                                                <td className="px-4 py-3.5">
-                                                    {realisasi ? (
-                                                        <div className="space-y-0.5">
-                                                            <span className="inline-flex rounded-4xl border border-teal-200 bg-teal-50 px-2 py-0.5 text-[10px] font-medium text-teal-800 dark:border-teal-800 dark:bg-teal-950/40 dark:text-teal-300">
-                                                                {realisasi.status_pencairan}
-                                                            </span>
-                                                            {realisasi.tgl_pencairan && (
-                                                                <p className="text-muted-foreground text-[10px]">
-                                                                    Tgl Cair: {formatDate(realisasi.tgl_pencairan)}
-                                                                </p>
-                                                            )}
-                                                        </div>
-                                                    ) : (
-                                                        <span className="text-muted-foreground text-xs italic">Menunggu SAKTI</span>
-                                                    )}
-                                                </td>
-
-                                                <td className="px-4 py-3.5 text-right">
-                                                    <div className="flex items-center justify-end gap-1.5">
-                                                        {isStaffOrLeader && (
-                                                            <Button
-                                                                size="sm"
-                                                                variant="outline"
-                                                                className="h-7 gap-1 px-2 text-xs"
-                                                                onClick={() => openEditDialog(doc)}
-                                                            >
-                                                                <Edit3 className="size-3" />
-                                                                <span>{realisasi ? 'Ubah' : 'Input'}</span>
-                                                            </Button>
+                                                        {realisasi.tgl_pencairan && (
+                                                            <p className="text-muted-foreground text-[10px]">
+                                                                Tgl Cair: {formatDate(realisasi.tgl_pencairan)}
+                                                            </p>
                                                         )}
-                                                        <Button asChild size="icon" variant="ghost" className="size-7">
-                                                            <Link href={`/dokumen-pengajuan/${doc.id}`}>
-                                                                <ArrowUpRight className="size-3.5" />
-                                                            </Link>
-                                                        </Button>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                                ) : (
+                                                    <span className="text-muted-foreground text-xs italic">Menunggu SAKTI</span>
+                                                )}
+                                            </TableCell>
+
+                                            <TableCell className="px-4 py-3.5 text-right">
+                                                <div className="flex items-center justify-end gap-1.5">
+                                                    {isStaffOrLeader && (
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            className="h-7 gap-1 px-2 text-xs"
+                                                            onClick={() => openEditDialog(doc)}
+                                                        >
+                                                            <Edit3 className="size-3" />
+                                                            <span>{realisasi ? 'Ubah' : 'Input'}</span>
+                                                        </Button>
+                                                    )}
+                                                    <Button asChild size="icon" variant="ghost" className="size-7">
+                                                        <Link href={`/dokumen-pengajuan/${doc.id}`}>
+                                                            <ArrowUpRight className="size-3.5" />
+                                                        </Link>
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })
+                            )}
+                        </TableBody>
+                    </Table>
 
                     {/* Pagination */}
                     {documents.links && documents.links.length > 3 && (

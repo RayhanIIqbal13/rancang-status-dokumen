@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, PaginatedData, SharedData, StandarBiaya } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
@@ -309,53 +310,51 @@ export default function StandarBiayaIndex({ items, categories, filters, stats }:
                         </div>
                     </div>
 
-                    {/* Table */}
-                    <div className="overflow-x-auto scrollbar-thin">
-                        <table className="w-full min-w-[700px] text-left text-xs">
-                            <thead className="bg-muted/50 text-muted-foreground border-b text-[11px] font-medium tracking-wider uppercase">
-                                <tr>
-                                    <th className="w-12 px-4 py-3 text-center">#</th>
-                                    <th className="px-4 py-3">Kategori</th>
-                                    <th className="px-4 py-3">Uraian Belanja</th>
-                                    <th className="px-4 py-3 text-center">Satuan</th>
-                                    <th className="px-4 py-3 text-right">Batas Tarif Maksimal</th>
-                                    <th className="px-4 py-3 text-center">Tahun</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y">
-                                {items.data.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={6} className="text-muted-foreground p-8 text-center">
-                                            Tidak ada data Standar Biaya Masukan yang sesuai kriteria pencarian.
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    items.data.map((item, index) => (
-                                        <tr key={item.id} className="hover:bg-muted/30 transition-colors">
-                                            <td className="text-muted-foreground px-4 py-3 text-center font-mono text-[11px]">
-                                                {(items.current_page - 1) * items.per_page + index + 1}
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                <span className="bg-muted text-muted-foreground rounded-md px-2 py-0.5 text-[11px] font-medium">
-                                                    {item.kategori}
-                                                </span>
-                                            </td>
-                                            <td className="text-foreground px-4 py-3 font-medium">{item.uraian_belanja}</td>
-                                            <td className="px-4 py-3 text-center">
-                                                <span className="bg-muted/60 text-muted-foreground rounded px-1.5 py-0.5 text-[10px]">
-                                                    {item.satuan}
-                                                </span>
-                                            </td>
-                                            <td className="text-foreground px-4 py-3 text-right font-semibold tabular-nums">
-                                                {formatCurrency(item.batas_tarif)}
-                                            </td>
-                                            <td className="text-muted-foreground px-4 py-3 text-center font-mono text-[11px]">{item.tahun}</td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                    {/* Grid Table */}
+                    <Table className="min-w-[700px]" scrollHintText="Katalog SBM dapat digeser horizontal">
+                        <TableHeader>
+                            <TableRow className="bg-muted/50">
+                                <TableHead className="w-12 text-center">#</TableHead>
+                                <TableHead>Kategori</TableHead>
+                                <TableHead>Uraian Belanja</TableHead>
+                                <TableHead className="text-center">Satuan</TableHead>
+                                <TableHead className="text-right">Batas Tarif Maksimal</TableHead>
+                                <TableHead className="text-center">Tahun</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {items.data.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={6} className="text-muted-foreground h-28 text-center text-xs">
+                                        Tidak ada data Standar Biaya Masukan yang sesuai kriteria pencarian.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                items.data.map((item, index) => (
+                                    <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
+                                        <TableCell className="text-muted-foreground text-center font-mono text-[11px]">
+                                            {(items.current_page - 1) * items.per_page + index + 1}
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="bg-muted text-muted-foreground rounded-md px-2 py-0.5 text-[11px] font-medium">
+                                                {item.kategori}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell className="text-foreground font-medium">{item.uraian_belanja}</TableCell>
+                                        <TableCell className="text-center">
+                                            <span className="bg-muted/60 text-muted-foreground rounded px-1.5 py-0.5 text-[10px]">
+                                                {item.satuan}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell className="text-foreground text-right font-semibold tabular-nums">
+                                            {formatCurrency(item.batas_tarif)}
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground text-center font-mono text-[11px]">{item.tahun}</TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
 
                     {/* Pagination */}
                     {items.links && items.links.length > 3 && (
