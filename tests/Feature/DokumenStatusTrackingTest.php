@@ -683,3 +683,59 @@ test('finance staff (tendik) can delete document when in Diajukan status', funct
     $response->assertRedirect(route('dokumen-pengajuan.index'));
     $this->assertDatabaseMissing('dokumen_pengajuans', ['id' => $document->id]);
 });
+
+test('submitting new proposal generates unique nomor_pengajuan even when previous documents were deleted and gaps exist', function () {
+    $year = now()->format('Y');
+
+    // Create 0001, 0002, 0004 (0003 is deleted/missing gap)
+    DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => "PROP/{$year}/0001",
+        'nama_kegiatan' => 'Kegiatan 1',
+        'jenis_anggaran' => 'PNBP Fakultas',
+        'uraian' => 'Uraian 1',
+        'tgl_pelaksanaan' => now()->addDays(10)->format('Y-m-d'),
+        'total_usulan' => 1000000,
+        'status_terkini' => DocumentStatus::Diajukan,
+    ]);
+
+    DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => "PROP/{$year}/0002",
+        'nama_kegiatan' => 'Kegiatan 2',
+        'jenis_anggaran' => 'PNBP Fakultas',
+        'uraian' => 'Uraian 2',
+        'tgl_pelaksanaan' => now()->addDays(10)->format('Y-m-d'),
+        'total_usulan' => 2000000,
+        'status_terkini' => DocumentStatus::Diajukan,
+    ]);
+
+    DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => "PROP/{$year}/0004",
+        'nama_kegiatan' => 'Kegiatan 4',
+        'jenis_anggaran' => 'PNBP Fakultas',
+        'uraian' => 'Uraian 4',
+        'tgl_pelaksanaan' => now()->addDays(10)->format('Y-m-d'),
+        'total_usulan' => 4000000,
+        'status_terkini' => DocumentStatus::Diajukan,
+    ]);
+
+    // Total count is 3. If count() + 1 was used, it would try to create 0004 and crash!
+    // With generateNextNomorPengajuan(), it must detect max 4 and safely generate 0005.
+    $payload = [
+        'nama_kegiatan' => 'Kegiatan Baru Pasca Hapus',
+        'jenis_anggaran' => 'PNBP Fakultas',
+        'uraian' => 'Uraian kegiatan baru.',
+        'tgl_pelaksanaan' => now()->addDays(20)->format('Y-m-d'),
+        'total_usulan' => 5000000,
+    ];
+
+    $response = $this->actingAs($this->applicant)
+        ->post(route('dokumen-pengajuan.store'), $payload);
+
+    $newDoc = DokumenPengajuan::where('nama_kegiatan', 'Kegiatan Baru Pasca Hapus')->first();
+    expect($newDoc)->not->toBeNull();
+    expect($newDoc->nomor_pengajuan)->toBe("PROP/{$year}/0005");
+    $response->assertRedirect(route('dokumen-pengajuan.show', $newDoc));
+});

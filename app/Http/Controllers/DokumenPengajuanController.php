@@ -7,6 +7,7 @@ use App\Http\Requests\StoreDokumenPengajuanRequest;
 use App\Models\DokumenPengajuan;
 use App\Models\StandarBiaya;
 use App\Models\StatusTracking;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -90,41 +91,51 @@ class DokumenPengajuanController extends Controller
         $validated = $request->validated();
         $user = $request->user();
 
-        // Generate sequential reference number
-        $year = now()->format('Y');
-        $countThisYear = DokumenPengajuan::whereYear('created_at', now()->year)->count() + 1;
-        $nomorPengajuan = sprintf('PROP/%s/%04d', $year, $countThisYear);
-
         $filePath = null;
         if ($request->hasFile('file_proposal')) {
             $filePath = $request->file('file_proposal')->store('proposals', 'public');
         }
 
-        $document = DB::transaction(function () use ($user, $validated, $nomorPengajuan, $filePath) {
-            $doc = DokumenPengajuan::create([
-                'user_id' => $user->id,
-                'nomor_pengajuan' => $nomorPengajuan,
-                'nama_kegiatan' => $validated['nama_kegiatan'],
-                'jenis_anggaran' => $validated['jenis_anggaran'],
-                'uraian' => $validated['uraian'],
-                'tgl_pelaksanaan' => $validated['tgl_pelaksanaan'],
-                'total_usulan' => $validated['total_usulan'],
-                'file_proposal' => $filePath,
-                'status_terkini' => DocumentStatus::Diajukan,
-            ]);
+        $maxAttempts = 5;
+        $attempt = 0;
+        $document = null;
 
-            // Stage 1: Submitted (Diajukan) - Updated by: Sistem (otomatis)
-            StatusTracking::create([
-                'dokumen_pengajuan_id' => $doc->id,
-                'user_id' => null, // Sistem (otomatis)
-                'tahap' => DocumentStatus::Diajukan,
-                'posisi_berkas' => DocumentStatus::Diajukan->defaultPosisiBerkas(),
-                'catatan' => DocumentStatus::Diajukan->description(),
-                'waktu_update' => now(),
-            ]);
+        while ($attempt < $maxAttempts && ! $document) {
+            $attempt++;
+            try {
+                $document = DB::transaction(function () use ($user, $validated, $filePath) {
+                    $nomorPengajuan = DokumenPengajuan::generateNextNomorPengajuan();
 
-            return $doc;
-        });
+                    $doc = DokumenPengajuan::create([
+                        'user_id' => $user->id,
+                        'nomor_pengajuan' => $nomorPengajuan,
+                        'nama_kegiatan' => $validated['nama_kegiatan'],
+                        'jenis_anggaran' => $validated['jenis_anggaran'],
+                        'uraian' => $validated['uraian'],
+                        'tgl_pelaksanaan' => $validated['tgl_pelaksanaan'],
+                        'total_usulan' => $validated['total_usulan'],
+                        'file_proposal' => $filePath,
+                        'status_terkini' => DocumentStatus::Diajukan,
+                    ]);
+
+                    // Stage 1: Submitted (Diajukan) - Updated by: Sistem (otomatis)
+                    StatusTracking::create([
+                        'dokumen_pengajuan_id' => $doc->id,
+                        'user_id' => null, // Sistem (otomatis)
+                        'tahap' => DocumentStatus::Diajukan,
+                        'posisi_berkas' => DocumentStatus::Diajukan->defaultPosisiBerkas(),
+                        'catatan' => DocumentStatus::Diajukan->description(),
+                        'waktu_update' => now(),
+                    ]);
+
+                    return $doc;
+                });
+            } catch (UniqueConstraintViolationException $e) {
+                if ($attempt >= $maxAttempts) {
+                    throw $e;
+                }
+            }
+        }
 
         return redirect()->route('dokumen-pengajuan.show', $document)
             ->with('success', 'Dokumen pengajuan berhasil dikirim. Status saat ini: Diajukan (Sistem otomatis).');

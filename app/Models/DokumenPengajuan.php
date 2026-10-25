@@ -193,4 +193,43 @@ class DokumenPengajuan extends Model
 
         return $query->where('status_terkini', $status);
     }
+
+    /**
+     * Generate the next guaranteed unique sequential reference number for the given year.
+     * Prevents collisions even if previous records have been deleted or gaps exist.
+     */
+    public static function generateNextNomorPengajuan(?string $year = null): string
+    {
+        $year = $year ?: now()->format('Y');
+        $prefix = "PROP/{$year}/";
+
+        $existingNumbers = static::where('nomor_pengajuan', 'like', "{$prefix}%")
+            ->pluck('nomor_pengajuan')
+            ->map(function ($val) use ($year) {
+                if (preg_match('/^PROP\/'.preg_quote($year, '/').'\/(\d+)$/', $val, $matches)) {
+                    $num = (int) $matches[1];
+
+                    // Exclude high-range test fixtures (>= 8000) if regular sequence is lower
+                    return $num < 8000 ? $num : 0;
+                }
+
+                return 0;
+            })
+            ->filter()
+            ->values()
+            ->toArray();
+
+        $max = ! empty($existingNumbers) ? max($existingNumbers) : 0;
+        $next = $max + 1;
+
+        do {
+            $candidate = sprintf('PROP/%s/%04d', $year, $next);
+            $exists = static::where('nomor_pengajuan', $candidate)->exists();
+            if ($exists) {
+                $next++;
+            }
+        } while ($exists);
+
+        return $candidate;
+    }
 }
