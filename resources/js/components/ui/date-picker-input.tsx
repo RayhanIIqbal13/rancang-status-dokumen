@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { Calendar as CalendarIcon, Check, ChevronLeft, ChevronRight, RotateCcw, X } from 'lucide-react';
+import { Calendar as CalendarIcon, Check, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import React, { useEffect, useId, useRef, useState } from 'react';
 
 interface DatePickerInputProps {
@@ -67,7 +67,6 @@ export function DatePickerInput({
     id,
     value = '',
     onChange,
-    placeholder = 'YYYY-MM-DD atau pilih kalender',
     min,
     max,
     required = false,
@@ -75,7 +74,7 @@ export function DatePickerInput({
     className,
 }: DatePickerInputProps) {
     const inputId = id || useId();
-    const nativeDateInputRef = useRef<HTMLInputElement>(null);
+    const dateInputRef = useRef<HTMLInputElement>(null);
     const [isOpen, setIsOpen] = useState(false);
 
     // Parse initial date or default to current date
@@ -96,7 +95,7 @@ export function DatePickerInput({
     const [viewYear, setViewYear] = useState(initialDate.getFullYear());
     const [viewMonth, setViewMonth] = useState(initialDate.getMonth());
 
-    // Synchronize view when value changes from outside
+    // Synchronize calendar view when value changes from outside
     useEffect(() => {
         if (value) {
             const parts = value.split('-');
@@ -150,16 +149,16 @@ export function DatePickerInput({
         setIsOpen(false);
     };
 
-    const handleNativePickerOpen = () => {
-        if (nativeDateInputRef.current) {
+    const handleOpenNativePicker = () => {
+        if (dateInputRef.current) {
             try {
-                if (typeof nativeDateInputRef.current.showPicker === 'function') {
-                    nativeDateInputRef.current.showPicker();
+                if (typeof dateInputRef.current.showPicker === 'function') {
+                    dateInputRef.current.showPicker();
                 } else {
-                    nativeDateInputRef.current.focus();
+                    dateInputRef.current.focus();
                 }
             } catch {
-                nativeDateInputRef.current.focus();
+                dateInputRef.current.focus();
             }
         }
     };
@@ -183,51 +182,48 @@ export function DatePickerInput({
 
     return (
         <div className={cn('relative space-y-1.5', className)}>
-            <div className="relative flex items-center">
-                {/* Visual/Manual Input */}
-                <Input
-                    id={inputId}
-                    type="text"
-                    value={value}
-                    onChange={(e) => {
-                        let val = e.target.value.trim();
-                        // Support DD/MM/YYYY or DD-MM-YYYY automatic conversion to YYYY-MM-DD
-                        if (/^\d{2}[/-]\d{2}[/-]\d{4}$/.test(val)) {
-                            const [d, m, y] = val.split(/[/-]/);
-                            val = `${y}-${m}-${d}`;
-                        }
-                        onChange(val);
-                    }}
-                    placeholder={placeholder}
-                    required={required}
-                    disabled={disabled}
-                    className="h-8 pr-20 text-xs font-mono"
-                />
+            <div className="flex items-center gap-2">
+                {/* Segmented Native Input with "/" separator (DD/MM/YYYY) */}
+                <div className="relative flex-1">
+                    <Input
+                        ref={dateInputRef}
+                        id={inputId}
+                        type="date"
+                        min={min}
+                        max={max}
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        required={required}
+                        disabled={disabled}
+                        className="h-8 text-xs font-mono dark:[color-scheme:dark] [color-scheme:light] pr-8"
+                    />
 
-                {/* Clear Button */}
-                {value && !disabled && (
-                    <button
-                        type="button"
-                        onClick={handleClear}
-                        className="text-muted-foreground hover:text-foreground absolute right-12 flex size-6 items-center justify-center rounded-md transition-colors"
-                        title="Kosongkan tanggal"
-                    >
-                        <X className="size-3.5" />
-                    </button>
-                )}
+                    {/* Reset button inside input */}
+                    {value && !disabled && (
+                        <button
+                            type="button"
+                            onClick={handleClear}
+                            className="text-muted-foreground hover:text-foreground absolute right-8 top-1/2 -translate-y-1/2 flex size-5 items-center justify-center rounded transition-colors"
+                            title="Kosongkan tanggal"
+                        >
+                            <X className="size-3" />
+                        </button>
+                    )}
+                </div>
 
-                {/* Popover Calendar Trigger Button */}
+                {/* Visual Popover Calendar Trigger Button */}
                 <Popover open={isOpen} onOpenChange={setIsOpen}>
                     <PopoverTrigger asChild>
                         <Button
                             type="button"
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             disabled={disabled}
-                            className="text-muted-foreground hover:text-primary hover:bg-primary/10 absolute right-1 h-6 w-9 p-0"
+                            className="h-8 px-2.5 text-xs gap-1.5 shrink-0 bg-card hover:bg-muted font-medium border-border shadow-2xs"
                             title="Buka Kalender Pemilih Tanggal"
                         >
-                            <CalendarIcon className="size-4" />
+                            <CalendarIcon className="size-3.5 text-primary" />
+                            <span>Pilih Kalender</span>
                         </Button>
                     </PopoverTrigger>
 
@@ -384,11 +380,11 @@ export function DatePickerInput({
                                     type="button"
                                     variant="ghost"
                                     size="sm"
-                                    onClick={handleNativePickerOpen}
+                                    onClick={handleOpenNativePicker}
                                     className="h-5 px-1.5 text-[10px] text-muted-foreground hover:text-primary"
-                                    title="Gunakan kalender bawaan browser"
+                                    title="Buka kalender popup bawaan peramban"
                                 >
-                                    Kalender Browser
+                                    Kalender Pop-up Browser
                                 </Button>
                                 {value && (
                                     <Button
@@ -405,19 +401,6 @@ export function DatePickerInput({
                         </div>
                     </PopoverContent>
                 </Popover>
-
-                {/* Hidden native date input for browser showPicker fallback */}
-                <input
-                    ref={nativeDateInputRef}
-                    type="date"
-                    min={min}
-                    max={max}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    className="sr-only"
-                    tabIndex={-1}
-                    aria-hidden="true"
-                />
             </div>
 
             {/* Helper preview display */}
@@ -429,7 +412,7 @@ export function DatePickerInput({
                     </span>
                 ) : (
                     <span className="text-muted-foreground text-[10.5px]">
-                        Bisa ketik manual (contoh: <code>2026-11-20</code>) atau klik ikon kalender.
+                        Format: <code>HH/BB/TTTT</code> (langsung ketik angka dengan pemisah <code>/</code>) atau klik <strong>Pilih Kalender</strong>.
                     </span>
                 )}
             </div>
