@@ -82,6 +82,11 @@ class DokumenPengajuanPolicy
             return true;
         }
 
+        // Tendik (Staf Keuangan) can delete/cancel a document when in initial submitted stage (Diajukan)
+        if ($user->isStafKeuangan() && $dokumenPengajuan->status_terkini === DocumentStatus::Diajukan) {
+            return true;
+        }
+
         return $dokumenPengajuan->user_id === $user->id && in_array($dokumenPengajuan->status_terkini, [
             DocumentStatus::Diajukan,
             DocumentStatus::PerluRevisi,

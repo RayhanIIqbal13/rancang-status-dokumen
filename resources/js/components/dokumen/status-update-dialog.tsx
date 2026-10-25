@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DocumentStatusType, DokumenPengajuan, StatusStageInfo, User } from '@/types';
-import { useForm, usePage } from '@inertiajs/react';
-import { AlertCircle, ArrowRight, Eye, FileText, FileUp, RefreshCw, Send } from 'lucide-react';
+import { router, useForm, usePage } from '@inertiajs/react';
+import { AlertCircle, ArrowRight, Eye, FileText, FileUp, RefreshCw, Send, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface StatusUpdateDialogProps {
@@ -18,6 +18,8 @@ interface StatusUpdateDialogProps {
 export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUpdateDialogProps) {
     const [open, setOpen] = useState(false);
     const [openPreview, setOpenPreview] = useState(false);
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const { auth } = usePage<{ auth: { user: User } }>().props;
     const currentUser = auth.user;
 
@@ -106,6 +108,17 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
             onSuccess: () => {
                 setOpen(false);
                 reset('catatan', 'file_proposal');
+            },
+        });
+    };
+
+    const handleDelete = () => {
+        router.delete(route('dokumen-pengajuan.destroy', document.id), {
+            onBefore: () => setIsDeleting(true),
+            onFinish: () => {
+                setIsDeleting(false);
+                setDeleteConfirmOpen(false);
+                setOpen(false);
             },
         });
     };
@@ -272,21 +285,39 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
                         {errors.catatan && <p className="text-destructive text-[11px]">{errors.catatan}</p>}
                     </div>
 
-                    <DialogFooter className="gap-2 border-t pt-3">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-8 text-xs"
-                            onClick={() => setOpen(false)}
-                            disabled={processing}
-                        >
-                            Batal
-                        </Button>
-                        <Button type="submit" disabled={processing} size="sm" className="h-8 gap-1.5 text-xs shadow-xs">
-                            <Send className="size-3.5" />
-                            <span>{processing ? 'Menyimpan...' : 'Simpan Status Baru'}</span>
-                        </Button>
+                    <DialogFooter className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2 border-t pt-3">
+                        <div>
+                            {document.can_delete && (
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 gap-1.5 text-xs text-destructive border-destructive/30 hover:bg-destructive/10 w-full sm:w-auto font-medium"
+                                    onClick={() => setDeleteConfirmOpen(true)}
+                                    disabled={processing || isDeleting}
+                                    title="Hapus / Batalkan usulan pengajuan ini"
+                                >
+                                    <Trash2 className="size-3.5" />
+                                    <span>Hapus Pengajuan</span>
+                                </Button>
+                            )}
+                        </div>
+                        <div className="flex items-center justify-end gap-2">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="h-8 text-xs"
+                                onClick={() => setOpen(false)}
+                                disabled={processing || isDeleting}
+                            >
+                                Batal
+                            </Button>
+                            <Button type="submit" disabled={processing || isDeleting} size="sm" className="h-8 gap-1.5 text-xs shadow-xs font-semibold">
+                                <Send className="size-3.5" />
+                                <span>{processing ? 'Menyimpan...' : 'Simpan Status Baru'}</span>
+                            </Button>
+                        </div>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -298,6 +329,57 @@ export function StatusUpdateDialog({ document, stages, triggerButton }: StatusUp
             onOpenChange={setOpenPreview}
             document={document}
         />
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                        <Trash2 className="size-6" />
+                    </div>
+                    <DialogTitle className="text-center text-lg font-bold">
+                        Hapus Dokumen Pengajuan?
+                    </DialogTitle>
+                    <DialogDescription className="text-center text-xs text-muted-foreground pt-1.5 space-y-2">
+                        <span>
+                            Anda akan menghapus pengajuan <strong className="text-foreground">{document.nomor_pengajuan}</strong> (<span className="text-foreground">{document.nama_kegiatan}</span>).
+                        </span>
+                        <span className="block text-[11px] bg-destructive/10 text-destructive p-2.5 rounded-lg border border-destructive/20 text-left mt-2">
+                            <strong>Perhatian:</strong> Dokumen yang berstatus <strong>{document.status_terkini}</strong> dapat dibatalkan atau dihapus. Seluruh data usulan, riwayat tracking, dan berkas proposal PDF akan dihapus secara permanen dari sistem dan tidak dapat dipulihkan.
+                        </span>
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="mt-4 gap-2 sm:gap-0">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={isDeleting}
+                        onClick={() => setDeleteConfirmOpen(false)}
+                        className="text-xs"
+                    >
+                        Batal
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        disabled={isDeleting}
+                        onClick={handleDelete}
+                        className="text-xs font-semibold gap-1.5"
+                    >
+                        {isDeleting ? (
+                            <span>Menghapus...</span>
+                        ) : (
+                            <>
+                                <Trash2 className="size-3.5" />
+                                <span>Ya, Hapus Pengajuan</span>
+                            </>
+                        )}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
         </>
     );
 }

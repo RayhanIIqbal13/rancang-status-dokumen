@@ -662,3 +662,24 @@ test('administrator can delete document in any status', function () {
     $response->assertRedirect(route('dokumen-pengajuan.index'));
     $this->assertDatabaseMissing('dokumen_pengajuans', ['id' => $document->id]);
 });
+
+test('finance staff (tendik) can delete document when in Diajukan status', function () {
+    $document = DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => 'PROP/2026/8885',
+        'nama_kegiatan' => 'Kegiatan Fiktif Dihapus Tendik',
+        'jenis_anggaran' => 'PNBP Fakultas',
+        'uraian' => 'Uraian pengajuan.',
+        'tgl_pelaksanaan' => now()->addDays(15)->format('Y-m-d'),
+        'total_usulan' => 10000000,
+        'status_terkini' => DocumentStatus::Diajukan,
+    ]);
+
+    $this->actingAs($this->financeStaff);
+    expect($document->can_delete)->toBeTrue();
+
+    $response = $this->delete(route('dokumen-pengajuan.destroy', $document));
+
+    $response->assertRedirect(route('dokumen-pengajuan.index'));
+    $this->assertDatabaseMissing('dokumen_pengajuans', ['id' => $document->id]);
+});

@@ -33,7 +33,9 @@ class DokumenTrackingSeeder extends Seeder
             ]
         );
 
-        $applicant1 = User::updateOrCreate(
+        $applicant1 = $mahasiswa;
+
+        User::updateOrCreate(
             ['email' => 'pengusul@univ.ac.id'],
             [
                 'name' => 'Raihan Iqbal (Mahasiswa)',

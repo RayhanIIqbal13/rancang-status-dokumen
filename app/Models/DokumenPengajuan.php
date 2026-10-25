@@ -80,6 +80,10 @@ class DokumenPengajuan extends Model
             return true;
         }
 
+        if ($user->isStafKeuangan() && $this->status_terkini === DocumentStatus::Diajukan) {
+            return true;
+        }
+
         return $this->user_id === $user->id && in_array($this->status_terkini, [
             DocumentStatus::Diajukan,
             DocumentStatus::PerluRevisi,
