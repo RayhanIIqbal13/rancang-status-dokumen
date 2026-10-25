@@ -23,15 +23,18 @@ export default function DokumenCreate({ budgetTypes: initialBudgetTypes }: Creat
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [isDragging, setIsDragging] = useState(false);
 
-    // Ensure PNBP Fakultas and BOPTN are at top
-    const budgetTypes = [
-        'PNBP Fakultas (RAB Mahasiswa/Fakultas)',
-        'BOPTN (Bantuan Operasional PTN)',
-        'RKA-K/L Universitas',
-        'Hibah Pengabdian Masyarakat',
-        'Dana Riset & Publikasi',
-        'Kegiatan Kemahasiswaan (FSTI ITK)',
-    ];
+    // Ensure PNBP Fakultas and BOPTN are at top or fallback to default
+    const budgetTypes =
+        initialBudgetTypes && initialBudgetTypes.length > 0
+            ? initialBudgetTypes
+            : [
+                  'PNBP Fakultas (RAB Mahasiswa/Fakultas)',
+                  'BOPTN (Bantuan Operasional PTN)',
+                  'RKA-K/L Universitas',
+                  'Hibah Pengabdian Masyarakat',
+                  'Dana Riset & Publikasi',
+                  'Kegiatan Kemahasiswaan (FSTI ITK)',
+              ];
 
     const { data, setData, post, processing, errors } = useForm({
         nama_kegiatan: '',

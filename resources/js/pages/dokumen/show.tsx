@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DokumenPengajuan, StandarBiaya, StatusStageInfo, User } from '@/types';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { ArrowLeft, ArrowUpRight, Building2, Clock, Download, Eye, FileText, Landmark, MapPin, Plus, Receipt, Sparkles, Trash2, User as UserIcon } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Building2, Clock, Download, Eye, Landmark, MapPin, Plus, Receipt, Sparkles, Trash2, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 
 interface ShowProps {

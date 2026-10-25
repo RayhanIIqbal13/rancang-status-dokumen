@@ -63,6 +63,20 @@ export function formatIndonesianDate(isoString?: string): string {
     }
 }
 
+function parseInitialDate(value?: string): Date {
+    if (value) {
+        const parts = value.split('-');
+        if (parts.length === 3) {
+            const y = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10) - 1;
+            const d = parseInt(parts[2], 10);
+            const date = new Date(y, m, d);
+            if (!isNaN(date.getTime())) return date;
+        }
+    }
+    return new Date();
+}
+
 export function DatePickerInput({
     id,
     value = '',
@@ -73,25 +87,12 @@ export function DatePickerInput({
     disabled = false,
     className,
 }: DatePickerInputProps) {
-    const inputId = id || useId();
+    const defaultId = useId();
+    const inputId = id || defaultId;
     const dateInputRef = useRef<HTMLInputElement>(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    // Parse initial date or default to current date
-    const initialDate = (() => {
-        if (value) {
-            const parts = value.split('-');
-            if (parts.length === 3) {
-                const y = parseInt(parts[0], 10);
-                const m = parseInt(parts[1], 10) - 1;
-                const d = parseInt(parts[2], 10);
-                const date = new Date(y, m, d);
-                if (!isNaN(date.getTime())) return date;
-            }
-        }
-        return new Date();
-    })();
-
+    const initialDate = parseInitialDate(value);
     const [viewYear, setViewYear] = useState(initialDate.getFullYear());
     const [viewMonth, setViewMonth] = useState(initialDate.getMonth());
 
@@ -168,17 +169,12 @@ export function DatePickerInput({
     const daysInCurrentMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
     const daysInPrevMonth = new Date(viewYear, viewMonth, 0).getDate();
 
-    const todayIso = (() => {
-        const now = new Date();
-        return formatDateToIso(now.getFullYear(), now.getMonth(), now.getDate());
-    })();
+    const now = new Date();
+    const todayIso = formatDateToIso(now.getFullYear(), now.getMonth(), now.getDate());
 
     // Generate year range for quick dropdown
-    const currentYear = new Date().getFullYear();
-    const yearOptions: number[] = [];
-    for (let y = currentYear - 2; y <= currentYear + 8; y++) {
-        yearOptions.push(y);
-    }
+    const currentYear = now.getFullYear();
+    const yearOptions = Array.from({ length: 11 }, (_, i) => currentYear - 2 + i);
 
     return (
         <div className={cn('relative space-y-1.5', className)}>

@@ -13,8 +13,6 @@ import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { LayoutGrid, Menu, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import AppLogo from './app-logo';
-import AppLogoIcon from './app-logo-icon';
 import { LayoutControls } from './layout-controls';
 import { NotificationDropdown } from './notification-dropdown';
 import { SearchCommandDialog } from './search-command-dialog';

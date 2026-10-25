@@ -9,19 +9,13 @@ import {
 } from '@/components/ui/dialog';
 import { DokumenPengajuan } from '@/types';
 import {
-    AlertCircle,
-    Building2,
-    Calendar,
     CheckCircle2,
     Download,
     ExternalLink,
-    Eye,
     FileSpreadsheet,
     FileText,
-    Maximize2,
     Scale,
     Sparkles,
-    User as UserIcon,
     X,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -79,9 +73,6 @@ export function ProposalPreviewModal({
     const downloadUrl = document.file_proposal
         ? route('dokumen-pengajuan.proposal.download', document.id)
         : null;
-
-    // Simulation reference items for RAB check
-    const isOverSbm = Number(document.total_usulan) > 20000000;
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>

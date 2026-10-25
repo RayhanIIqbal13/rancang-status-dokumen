@@ -30,7 +30,6 @@ import {
     Shield,
     Sun,
     UserCheck,
-    User as UserIcon,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
