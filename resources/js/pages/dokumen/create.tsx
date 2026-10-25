@@ -97,7 +97,7 @@ export default function DokumenCreate({ budgetTypes: initialBudgetTypes }: Creat
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Pengajuan Usulan Kegiatan (Proposal & RAB) - SAK ITK" />
 
-            <div className="flex max-w-5xl flex-col gap-5 p-4 md:p-6">
+            <div className="@container/main flex w-full flex-col gap-5 p-4 md:gap-6 md:p-6">
                 {/* Page Header */}
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
