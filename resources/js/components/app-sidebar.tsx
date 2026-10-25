@@ -136,8 +136,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild className="hover:bg-sidebar-accent transition-colors">
                             <Link href="/dashboard" onClick={closeMobileSidebar}>
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-white p-0.5 shadow-xs ring-1 ring-border dark:bg-card">
-                                    <img src="/images/logofsti.png" alt="FSTI ITK" className="h-full w-auto object-contain" />
+                                <div className="flex h-8 shrink-0 items-center gap-1 rounded-lg bg-white px-1 py-0.5 shadow-xs ring-1 ring-border dark:bg-card">
+                                    <img src="/images/logoitk.png" alt="ITK" className="h-5.5 w-auto object-contain" />
+                                    <img src="/images/logofsti.png" alt="FSTI ITK" className="h-5.5 w-auto object-contain" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
                                     <span className="text-foreground truncate font-extrabold tracking-tight">SIM-KEUANGAN FSTI</span>

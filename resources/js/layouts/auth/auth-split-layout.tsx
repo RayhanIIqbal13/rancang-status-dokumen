@@ -19,10 +19,8 @@ export default function AuthSplitLayout({ children, title, description }: AuthLa
 
                 <div className="relative z-20">
                     <Link href={route('home')} className="inline-flex items-center gap-3">
-                        <div className="flex items-center gap-2 rounded-xl bg-white/95 p-2 shadow-sm backdrop-blur">
-                            <img src="/images/logotut.png" alt="Tut Wuri Handayani" className="h-7 w-auto object-contain" />
-                            <img src="/images/logosaintek.png" alt="Diktisaintek" className="h-7 w-auto object-contain" />
-                            <img src="/images/logoitk.png" alt="ITK" className="h-7 w-auto object-contain" />
+                        <div className="flex items-center gap-2 rounded-xl bg-white/95 px-3 py-1.5 shadow-sm backdrop-blur">
+                            <img src="/images/logoitk.png" alt="Institut Teknologi Kalimantan" className="h-7 w-auto object-contain" />
                             <img src="/images/logofsti.png" alt="FSTI ITK" className="h-7 w-auto object-contain" />
                         </div>
                     </Link>

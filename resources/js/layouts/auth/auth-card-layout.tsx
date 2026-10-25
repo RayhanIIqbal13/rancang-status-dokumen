@@ -21,9 +21,7 @@ export default function AuthCardLayout({
             <div className="relative z-10 flex w-full max-w-md flex-col gap-6">
                 <Link href={route('home')} className="flex flex-col items-center gap-2 self-center text-center">
                     <div className="flex items-center gap-2 rounded-xl bg-white px-3 py-1.5 shadow-sm ring-1 ring-border dark:bg-card">
-                        <img src="/images/logotut.png" alt="Tut Wuri Handayani" className="h-7 w-auto object-contain" />
-                        <img src="/images/logosaintek.png" alt="Diktisaintek" className="h-7 w-auto object-contain" />
-                        <img src="/images/logoitk.png" alt="ITK" className="h-7 w-auto object-contain" />
+                        <img src="/images/logoitk.png" alt="Institut Teknologi Kalimantan" className="h-7 w-auto object-contain" />
                         <img src="/images/logofsti.png" alt="FSTI ITK" className="h-7 w-auto object-contain" />
                     </div>
                     <div className="leading-tight">

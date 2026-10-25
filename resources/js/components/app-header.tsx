@@ -107,13 +107,11 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     </div>
 
                     <Link href="/dashboard" prefetch className="flex shrink-0 items-center gap-2.5">
-                        <div className="flex items-center gap-1.5 sm:gap-2">
-                            <img src="/images/logotut.png" alt="Tut Wuri Handayani" className="h-6 w-auto sm:h-8 object-contain" />
-                            <img src="/images/logosaintek.png" alt="Diktisaintek" className="h-6 w-auto sm:h-8 object-contain" />
-                            <img src="/images/logoitk.png" alt="ITK" className="h-6 w-auto sm:h-8 object-contain" />
-                            <img src="/images/logofsti.png" alt="FSTI ITK" className="h-6 w-auto sm:h-8 object-contain" />
+                        <div className="flex items-center gap-2">
+                            <img src="/images/logoitk.png" alt="Institut Teknologi Kalimantan" className="h-7 w-auto sm:h-8 object-contain" />
+                            <img src="/images/logofsti.png" alt="FSTI ITK" className="h-7 w-auto sm:h-8 object-contain" />
                         </div>
-                        <div className="hidden border-l border-border pl-2.5 leading-tight lg:block">
+                        <div className="hidden border-l border-border pl-2.5 leading-tight sm:block">
                             <span className="block text-[13px] font-extrabold tracking-tight text-foreground">SIM-Keuangan FSTI</span>
                             <span className="block text-[10px] text-muted-foreground">Fakultas Sains & Teknologi Informasi · ITK</span>
                         </div>

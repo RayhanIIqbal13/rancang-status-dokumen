@@ -112,7 +112,8 @@ export default function Dashboard({
 
                     <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <div className="flex items-center gap-3.5 sm:gap-4">
-                            <div className="flex h-12 w-auto shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-sm">
+                            <div className="flex h-12 w-auto shrink-0 items-center gap-2 rounded-xl bg-white px-2.5 py-1.5 shadow-sm">
+                                <img src="/images/logoitk.png" alt="Institut Teknologi Kalimantan" className="h-full w-auto object-contain" />
                                 <img src="/images/logofsti.png" alt="FSTI ITK" className="h-full w-auto object-contain" />
                             </div>
                             <div>
