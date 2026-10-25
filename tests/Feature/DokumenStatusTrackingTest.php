@@ -567,3 +567,98 @@ test('demo switch user endpoint allows switching between Mahasiswa, Tendik, and 
     $responseTendik->assertRedirect();
     $this->assertAuthenticatedAs($tendik);
 });
+
+test('applicant can delete document when in Diajukan status', function () {
+    Storage::fake('public');
+
+    $file = UploadedFile::fake()->create('proposal_dummy.pdf', 300, 'application/pdf');
+    $filePath = $file->store('proposals', 'public');
+
+    $document = DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => 'PROP/2026/8881',
+        'nama_kegiatan' => 'Kegiatan Dibatalkan Mahasiswa',
+        'jenis_anggaran' => 'PNBP Fakultas',
+        'uraian' => 'Uraian pengajuan yang akan dihapus.',
+        'tgl_pelaksanaan' => now()->addDays(14)->format('Y-m-d'),
+        'total_usulan' => 5000000,
+        'file_proposal' => $filePath,
+        'status_terkini' => DocumentStatus::Diajukan,
+    ]);
+
+    $this->actingAs($this->applicant);
+    expect($document->can_delete)->toBeTrue();
+
+    $response = $this->delete(route('dokumen-pengajuan.destroy', $document));
+
+    $response->assertRedirect(route('dokumen-pengajuan.index'))
+        ->assertSessionHas('success');
+
+    $this->assertDatabaseMissing('dokumen_pengajuans', [
+        'id' => $document->id,
+    ]);
+
+    Storage::disk('public')->assertMissing($filePath);
+});
+
+test('applicant can delete document when in Perlu Revisi status', function () {
+    $document = DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => 'PROP/2026/8882',
+        'nama_kegiatan' => 'Kegiatan Dibatalkan Saat Revisi',
+        'jenis_anggaran' => 'BOPTN',
+        'uraian' => 'Uraian pengajuan.',
+        'tgl_pelaksanaan' => now()->addDays(20)->format('Y-m-d'),
+        'total_usulan' => 8000000,
+        'status_terkini' => DocumentStatus::PerluRevisi,
+    ]);
+
+    $response = $this->actingAs($this->applicant)
+        ->delete(route('dokumen-pengajuan.destroy', $document));
+
+    $response->assertRedirect(route('dokumen-pengajuan.index'));
+    $this->assertDatabaseMissing('dokumen_pengajuans', ['id' => $document->id]);
+});
+
+test('applicant cannot delete document once it is under Verifikasi Fakultas or further', function () {
+    $document = DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => 'PROP/2026/8883',
+        'nama_kegiatan' => 'Kegiatan Sedang Diverifikasi',
+        'jenis_anggaran' => 'PNBP Fakultas',
+        'uraian' => 'Uraian pengajuan.',
+        'tgl_pelaksanaan' => now()->addDays(20)->format('Y-m-d'),
+        'total_usulan' => 15000000,
+        'status_terkini' => DocumentStatus::VerifikasiFakultas,
+    ]);
+
+    $response = $this->actingAs($this->applicant)
+        ->delete(route('dokumen-pengajuan.destroy', $document));
+
+    $response->assertForbidden();
+    $this->assertDatabaseHas('dokumen_pengajuans', ['id' => $document->id]);
+});
+
+test('administrator can delete document in any status', function () {
+    $admin = User::factory()->create([
+        'name' => 'Admin Keuangan',
+        'role' => UserRole::Admin,
+    ]);
+
+    $document = DokumenPengajuan::create([
+        'user_id' => $this->applicant->id,
+        'nomor_pengajuan' => 'PROP/2026/8884',
+        'nama_kegiatan' => 'Dokumen Dihapus Admin',
+        'jenis_anggaran' => 'RKA-K/L',
+        'uraian' => 'Uraian pengajuan.',
+        'tgl_pelaksanaan' => now()->addDays(10)->format('Y-m-d'),
+        'total_usulan' => 20000000,
+        'status_terkini' => DocumentStatus::Disetujui,
+    ]);
+
+    $response = $this->actingAs($admin)
+        ->delete(route('dokumen-pengajuan.destroy', $document));
+
+    $response->assertRedirect(route('dokumen-pengajuan.index'));
+    $this->assertDatabaseMissing('dokumen_pengajuans', ['id' => $document->id]);
+});

@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DokumenPengajuan, StandarBiaya, StatusStageInfo, User } from '@/types';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { ArrowLeft, ArrowUpRight, Building2, Clock, Download, Eye, FileText, Landmark, MapPin, Plus, Receipt, Sparkles, Trash2, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -21,12 +21,26 @@ interface ShowProps {
     stages: StatusStageInfo[];
     standarBiayaList: StandarBiaya[];
     canUpdateStatus: boolean;
+    canDelete?: boolean;
 }
 
-export default function DokumenShow({ document, stages, standarBiayaList, canUpdateStatus }: ShowProps) {
+export default function DokumenShow({ document, stages, standarBiayaList, canUpdateStatus, canDelete: propCanDelete }: ShowProps) {
     const { auth } = usePage<{ auth: { user: User } }>().props;
     const _currentUser = auth.user;
+    const canDelete = propCanDelete ?? document.can_delete ?? false;
     const [activeTab, setActiveTab] = useState<'timeline' | 'spj' | 'realisasi'>('timeline');
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDeleteDocument = () => {
+        router.delete(route('dokumen-pengajuan.destroy', document.id), {
+            onBefore: () => setIsDeleting(true),
+            onFinish: () => {
+                setIsDeleting(false);
+                setDeleteDialogOpen(false);
+            },
+        });
+    };
 
     // SPJ Receipt form
     const [openSpjDialog, setOpenSpjDialog] = useState(false);
@@ -130,6 +144,19 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
 
                         <StatusBadge status={document.status_terkini} size="lg" />
                         {canUpdateStatus && <StatusUpdateDialog document={document} stages={stages} />}
+
+                        {canDelete && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setDeleteDialogOpen(true)}
+                                className="h-8 gap-1.5 text-xs font-semibold text-destructive border-destructive/30 hover:bg-destructive/10"
+                                title="Hapus atau batalkan usulan ini"
+                            >
+                                <Trash2 className="size-3.5" />
+                                <span>Hapus Pengajuan</span>
+                            </Button>
+                        )}
                     </div>
                 </div>
 
@@ -629,6 +656,57 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                     </div>
                 </div>
             </div>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                            <Trash2 className="size-6" />
+                        </div>
+                        <DialogTitle className="text-center text-lg font-bold">
+                            Hapus Dokumen Pengajuan?
+                        </DialogTitle>
+                        <DialogDescription className="text-center text-xs text-muted-foreground pt-1.5 space-y-2">
+                            <span>
+                                Anda akan menghapus pengajuan <strong className="text-foreground">{document.nomor_pengajuan}</strong> (<span className="text-foreground">{document.nama_kegiatan}</span>).
+                            </span>
+                            <span className="block text-[11px] bg-destructive/10 text-destructive p-2.5 rounded-lg border border-destructive/20 text-left mt-2">
+                                <strong>Perhatian:</strong> Dokumen yang berstatus <strong>{document.status_terkini}</strong> dapat dibatalkan atau dihapus. Seluruh data usulan, riwayat tracking, dan berkas proposal PDF akan dihapus secara permanen dari sistem dan tidak dapat dipulihkan.
+                            </span>
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="mt-4 gap-2 sm:gap-0">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            disabled={isDeleting}
+                            onClick={() => setDeleteDialogOpen(false)}
+                            className="text-xs"
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            disabled={isDeleting}
+                            onClick={handleDeleteDocument}
+                            className="text-xs font-semibold gap-1.5"
+                        >
+                            {isDeleting ? (
+                                <span>Menghapus...</span>
+                            ) : (
+                                <>
+                                    <Trash2 className="size-3.5" />
+                                    <span>Ya, Hapus Pengajuan</span>
+                                </>
+                            )}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }

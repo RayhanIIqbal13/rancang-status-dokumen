@@ -33,6 +33,7 @@ class DokumenPengajuan extends Model
         'id_user',
         'file_proposal_url',
         'has_file_proposal',
+        'can_delete',
     ];
 
     protected function casts(): array
@@ -66,6 +67,23 @@ class DokumenPengajuan extends Model
     public function getHasFileProposalAttribute(): bool
     {
         return ! empty($this->file_proposal);
+    }
+
+    public function getCanDeleteAttribute(): bool
+    {
+        $user = auth()->user();
+        if (! $user) {
+            return false;
+        }
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $this->user_id === $user->id && in_array($this->status_terkini, [
+            DocumentStatus::Diajukan,
+            DocumentStatus::PerluRevisi,
+        ]);
     }
 
     /**

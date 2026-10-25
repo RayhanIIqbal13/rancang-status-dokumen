@@ -6,7 +6,7 @@ import { WorkflowStepper } from '@/components/dokumen/workflow-stepper';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DocumentStatusType, DokumenPengajuan, PaginatedData, SharedData, StatusStageInfo, StatusTracking } from '@/types';
@@ -25,6 +25,7 @@ import {
     Layers,
     MapPin,
     Search,
+    Trash2,
     User as UserIcon,
     Wallet,
 } from 'lucide-react';
@@ -72,6 +73,19 @@ export default function StatusTrackingIndex({ activeDocument, accessibleDocument
     const [viewMode, setViewMode] = useState<'tracker' | 'global_audit'>('tracker');
     const [searchTerm, setSearchTerm] = useState(filters.search || '');
     const [selectorModalOpen, setSelectorModalOpen] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDeleteActiveDocument = () => {
+        if (!activeDocument) return;
+        router.delete(route('dokumen-pengajuan.destroy', activeDocument.id), {
+            onBefore: () => setIsDeleting(true),
+            onFinish: () => {
+                setIsDeleting(false);
+                setDeleteDialogOpen(false);
+            },
+        });
+    };
 
     const handleSelectDocument = (docId: string | number) => {
         router.get(
@@ -257,12 +271,27 @@ export default function StatusTrackingIndex({ activeDocument, accessibleDocument
                                     </Dialog>
 
                                     {activeDocument && (
-                                        <Button asChild variant="secondary" size="sm" className="gap-1.5 text-xs">
-                                            <Link href={route('dokumen-pengajuan.show', activeDocument.id)}>
-                                                Detail Lengkap
-                                                <ArrowUpRight className="size-3.5" />
-                                            </Link>
-                                        </Button>
+                                        <div className="flex items-center gap-2">
+                                            <Button asChild variant="secondary" size="sm" className="gap-1.5 text-xs">
+                                                <Link href={route('dokumen-pengajuan.show', activeDocument.id)}>
+                                                    Detail Lengkap
+                                                    <ArrowUpRight className="size-3.5" />
+                                                </Link>
+                                            </Button>
+
+                                            {activeDocument.can_delete && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => setDeleteDialogOpen(true)}
+                                                    className="gap-1.5 text-xs text-destructive border-destructive/30 hover:bg-destructive/10"
+                                                    title="Hapus atau batalkan usulan ini"
+                                                >
+                                                    <Trash2 className="size-3.5" />
+                                                    Hapus
+                                                </Button>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -639,6 +668,59 @@ export default function StatusTrackingIndex({ activeDocument, accessibleDocument
                     </Card>
                 )}
             </div>
+
+            {/* Delete Confirmation Dialog */}
+            {activeDocument && (
+                <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                                <Trash2 className="size-6" />
+                            </div>
+                            <DialogTitle className="text-center text-lg font-bold">
+                                Hapus Dokumen Pengajuan?
+                            </DialogTitle>
+                            <DialogDescription className="text-center text-xs text-muted-foreground pt-1.5 space-y-2">
+                                <span>
+                                    Anda akan menghapus pengajuan <strong className="text-foreground">{activeDocument.nomor_pengajuan}</strong> (<span className="text-foreground">{activeDocument.nama_kegiatan}</span>).
+                                </span>
+                                <span className="block text-[11px] bg-destructive/10 text-destructive p-2.5 rounded-lg border border-destructive/20 text-left mt-2">
+                                    <strong>Perhatian:</strong> Dokumen yang berstatus <strong>{activeDocument.status_terkini}</strong> dapat dibatalkan atau dihapus. Seluruh riwayat dan berkas PDF terkait akan dihapus secara permanen dari sistem dan tidak dapat dipulihkan.
+                                </span>
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter className="mt-4 gap-2 sm:gap-0">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                disabled={isDeleting}
+                                onClick={() => setDeleteDialogOpen(false)}
+                                className="text-xs"
+                            >
+                                Batal
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                disabled={isDeleting}
+                                onClick={handleDeleteActiveDocument}
+                                className="text-xs font-semibold gap-1.5"
+                            >
+                                {isDeleting ? (
+                                    <span>Menghapus...</span>
+                                ) : (
+                                    <>
+                                        <Trash2 className="size-3.5" />
+                                        <span>Ya, Hapus Pengajuan</span>
+                                    </>
+                                )}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
         </AppLayout>
     );
 }

@@ -82,6 +82,9 @@ class DokumenPengajuanPolicy
             return true;
         }
 
-        return $dokumenPengajuan->user_id === $user->id && $dokumenPengajuan->status_terkini === DocumentStatus::Diajukan;
+        return $dokumenPengajuan->user_id === $user->id && in_array($dokumenPengajuan->status_terkini, [
+            DocumentStatus::Diajukan,
+            DocumentStatus::PerluRevisi,
+        ]);
     }
 }

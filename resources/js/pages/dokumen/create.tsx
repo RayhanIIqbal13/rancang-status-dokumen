@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, CheckCircle2, FileText, FileUp, Info, Send, Sparkles, X } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, FileText, FileUp, Info, RotateCcw, Send, Sparkles, X } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 
 interface CreateProps {
@@ -78,6 +78,20 @@ export default function DokumenCreate({ budgetTypes: initialBudgetTypes }: Creat
         }
     };
 
+    const handleResetForm = () => {
+        setData({
+            nama_kegiatan: '',
+            jenis_anggaran: budgetTypes[0],
+            uraian: '',
+            tgl_pelaksanaan: '',
+            total_usulan: '',
+            file_proposal: null,
+        });
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Pengajuan Usulan Kegiatan (Proposal & RAB) - SAK ITK" />
@@ -107,6 +121,17 @@ export default function DokumenCreate({ budgetTypes: initialBudgetTypes }: Creat
                     </div>
 
                     <div className="flex items-center gap-2">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleResetForm}
+                            className="h-8 gap-1.5 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                            title="Hapus dan bersihkan seluruh isian form"
+                        >
+                            <RotateCcw className="size-3.5" />
+                            <span>Reset Form</span>
+                        </Button>
                         <Button asChild variant="outline" size="sm" className="h-8 text-xs">
                             <Link href={route('dokumen-pengajuan.index')}>Batal</Link>
                         </Button>
@@ -310,6 +335,17 @@ export default function DokumenCreate({ budgetTypes: initialBudgetTypes }: Creat
 
                         {/* Bottom Actions */}
                         <div className="flex items-center justify-end gap-2 pt-2">
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleResetForm}
+                                className="h-8 gap-1.5 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                title="Hapus dan bersihkan seluruh isian form"
+                            >
+                                <RotateCcw className="size-3.5" />
+                                <span>Reset Form</span>
+                            </Button>
                             <Button asChild variant="outline" size="sm" className="h-8 text-xs">
                                 <Link href={route('dokumen-pengajuan.index')}>Batal</Link>
                             </Button>

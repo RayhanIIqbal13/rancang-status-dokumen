@@ -150,12 +150,14 @@ class DokumenPengajuanController extends Controller
             ->get();
 
         $canUpdateStatus = $request->user()->can('updateStatus', $dokumenPengajuan);
+        $canDelete = $request->user()->can('delete', $dokumenPengajuan);
 
         return Inertia::render('dokumen/show', [
             'document' => $dokumenPengajuan,
             'stages' => DocumentStatus::stages(),
             'standarBiayaList' => $standarBiayaList,
             'canUpdateStatus' => $canUpdateStatus,
+            'canDelete' => $canDelete,
         ]);
     }
 
@@ -166,14 +168,15 @@ class DokumenPengajuanController extends Controller
     {
         $this->authorize('delete', $dokumenPengajuan);
 
-        if ($dokumenPengajuan->file_proposal) {
+        if ($dokumenPengajuan->file_proposal && Storage::disk('public')->exists($dokumenPengajuan->file_proposal)) {
             Storage::disk('public')->delete($dokumenPengajuan->file_proposal);
         }
 
+        $nomorPengajuan = $dokumenPengajuan->nomor_pengajuan;
         $dokumenPengajuan->delete();
 
         return redirect()->route('dokumen-pengajuan.index')
-            ->with('success', 'Dokumen pengajuan berhasil dihapus.');
+            ->with('success', "Dokumen pengajuan {$nomorPengajuan} berhasil dihapus.");
     }
 
     /**

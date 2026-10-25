@@ -2,11 +2,12 @@ import { StatusBadge } from '@/components/dokumen/status-badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, DokumenPengajuan, PaginatedData, StatusStageInfo } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { AlertTriangle, CheckCircle2, Clock, FileText, Filter, Layers, MapPin, PlusCircle, Search, Wallet, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Clock, FileText, Filter, Layers, MapPin, PlusCircle, Search, Trash2, Wallet, X } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface IndexProps {
@@ -35,6 +36,20 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function DokumenIndex({ documents, filters, stats, stages: _stages }: IndexProps) {
     const [searchTerm, setSearchTerm] = useState(filters.search || '');
+    const [documentToDelete, setDocumentToDelete] = useState<DokumenPengajuan | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = () => {
+        if (!documentToDelete) return;
+        router.delete(route('dokumen-pengajuan.destroy', documentToDelete.id), {
+            preserveScroll: true,
+            onBefore: () => setIsDeleting(true),
+            onFinish: () => {
+                setIsDeleting(false);
+                setDocumentToDelete(null);
+            },
+        });
+    };
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -280,6 +295,17 @@ export default function DokumenIndex({ documents, filters, stats, stages: _stage
                                                         <Button asChild size="sm" className="h-7 rounded-lg px-2.5 text-xs">
                                                             <Link href={route('dokumen-pengajuan.show', doc.id)}>Detail</Link>
                                                         </Button>
+                                                        {doc.can_delete && (
+                                                            <Button
+                                                                variant="outline"
+                                                                size="icon"
+                                                                onClick={() => setDocumentToDelete(doc)}
+                                                                className="h-7 w-7 rounded-lg text-muted-foreground hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive"
+                                                                title="Hapus / Batalkan Pengajuan"
+                                                            >
+                                                                <Trash2 className="size-3.5" />
+                                                            </Button>
+                                                        )}
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -319,6 +345,57 @@ export default function DokumenIndex({ documents, filters, stats, stages: _stage
                     )}
                 </Card>
             </div>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={Boolean(documentToDelete)} onOpenChange={(open) => !open && setDocumentToDelete(null)}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                            <Trash2 className="size-6" />
+                        </div>
+                        <DialogTitle className="text-center text-lg font-bold">
+                            Hapus Dokumen Pengajuan?
+                        </DialogTitle>
+                        <DialogDescription className="text-center text-xs text-muted-foreground pt-1.5 space-y-2">
+                            <span>
+                                Anda akan menghapus pengajuan <strong className="text-foreground">{documentToDelete?.nomor_pengajuan}</strong> (<span className="text-foreground">{documentToDelete?.nama_kegiatan}</span>).
+                            </span>
+                            <span className="block text-[11px] bg-destructive/10 text-destructive p-2.5 rounded-lg border border-destructive/20 text-left mt-2">
+                                <strong>Perhatian:</strong> Dokumen yang berstatus <strong>{documentToDelete?.status_terkini}</strong> dapat dibatalkan atau dihapus oleh pengusul/admin. Seluruh riwayat dan berkas proposal PDF terkait akan dihapus secara permanen.
+                            </span>
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="mt-4 gap-2 sm:gap-0">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            disabled={isDeleting}
+                            onClick={() => setDocumentToDelete(null)}
+                            className="text-xs"
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            disabled={isDeleting}
+                            onClick={handleDelete}
+                            className="text-xs font-semibold gap-1.5"
+                        >
+                            {isDeleting ? (
+                                <span>Menghapus...</span>
+                            ) : (
+                                <>
+                                    <Trash2 className="size-3.5" />
+                                    <span>Ya, Hapus Pengajuan</span>
+                                </>
+                            )}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }
