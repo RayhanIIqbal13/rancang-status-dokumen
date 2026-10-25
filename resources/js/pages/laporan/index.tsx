@@ -480,24 +480,17 @@ function FormalReportDocument({
             {/* KOP SURAT RESMI ITK */}
             <div className="flex items-center justify-between pb-2">
                 <div className="flex w-full items-center gap-4">
-                    {/* ITK Official Seal / Crest */}
-                    <div className="size-18 shrink-0 flex items-center justify-center">
-                        <svg viewBox="0 0 100 100" className="size-full text-black" fill="currentColor">
-                            <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                            <circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3,2" />
-                            <path d="M50 15 L58 35 L80 35 L62 48 L69 70 L50 56 L31 70 L38 48 L20 35 L42 35 Z" fill="currentColor" opacity="0.12" />
-                            <path d="M50 20 L56 36 L73 36 L59 47 L64 64 L50 53 L36 64 L41 47 L27 36 L44 36 Z" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                            <text x="50" y="55" textAnchor="middle" fontSize="13" fontWeight="900" fill="currentColor" fontFamily="sans-serif">
-                                ITK
-                            </text>
-                            <text x="50" y="86" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill="currentColor" letterSpacing="1">
-                                BALIKPAPAN
-                            </text>
-                        </svg>
+                    {/* ITK Official Seal / Logo */}
+                    <div className="w-20 h-24 sm:w-22 sm:h-26 shrink-0 flex items-center justify-center">
+                        <img
+                            src="/logo-itk.png"
+                            alt="Logo Resmi Institut Teknologi Kalimantan"
+                            className="h-full w-auto object-contain"
+                        />
                     </div>
 
                     {/* University Letterhead Heading */}
-                    <div className="flex-1 text-center">
+                    <div className="flex-1 text-center pr-2 sm:pr-4">
                         <h3 className="text-xs sm:text-[13px] font-semibold tracking-wider uppercase text-black">
                             KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI
                         </h3>
@@ -508,10 +501,10 @@ function FormalReportDocument({
                             BAGIAN PERENCANAAN DAN KEUANGAN
                         </h4>
                         <p className="text-[10px] text-neutral-800 mt-0.5">
-                            Jalan Soekarno-Hatta Km. 15, Karang Joang, Balikpapan, Kalimantan Timur 76127
+                            Kampus ITK Karang Joang, Balikpapan 76127
                         </p>
                         <p className="text-[10px] text-neutral-800">
-                            Laman: https://itk.ac.id | Pos-el: keuangan@itk.ac.id | Narahubung: (0542) 8530801
+                            Telp. 0542-8530801, Fax. 0542-8530800 | Surat elektronik: keuangan@itk.ac.id | Website: itk.ac.id
                         </p>
                     </div>
                 </div>
