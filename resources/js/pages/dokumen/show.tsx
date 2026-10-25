@@ -6,6 +6,7 @@ import { StatusUpdateDialog } from '@/components/dokumen/status-update-dialog';
 import { WorkflowStepper } from '@/components/dokumen/workflow-stepper';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DatePickerInput } from '@/components/ui/date-picker-input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -481,18 +482,21 @@ export default function DokumenShow({ document, stages, standarBiayaList, canUpd
                                                         <Input
                                                             id="total_realisasi"
                                                             type="number"
+                                                            min="0"
+                                                            step="any"
                                                             value={realisasiForm.data.total_realisasi}
                                                             onChange={(e) => realisasiForm.setData('total_realisasi', e.target.value)}
+                                                            placeholder="Contoh: 18500000"
                                                             required
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label htmlFor="tgl_pencairan">Tanggal Pencairan / SP2D</Label>
-                                                        <Input
+                                                        <DatePickerInput
                                                             id="tgl_pencairan"
-                                                            type="date"
                                                             value={realisasiForm.data.tgl_pencairan}
-                                                            onChange={(e) => realisasiForm.setData('tgl_pencairan', e.target.value)}
+                                                            onChange={(val) => realisasiForm.setData('tgl_pencairan', val)}
+                                                            placeholder="YYYY-MM-DD atau pilih dari kalender"
                                                         />
                                                     </div>
                                                     <div className="space-y-2">

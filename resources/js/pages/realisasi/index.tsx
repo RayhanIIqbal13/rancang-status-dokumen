@@ -1,5 +1,6 @@
 import { StatusBadge } from '@/components/dokumen/status-badge';
 import { Button } from '@/components/ui/button';
+import { DatePickerInput } from '@/components/ui/date-picker-input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -350,10 +351,11 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                                     id="total_realisasi"
                                     type="number"
                                     min="0"
-                                    step="1000"
+                                    step="any"
                                     value={form.data.total_realisasi}
                                     onChange={(e) => form.setData('total_realisasi', e.target.value)}
-                                    className="h-8 text-xs"
+                                    placeholder="Contoh: 18500000"
+                                    className="h-8 text-xs font-mono"
                                     required
                                 />
                                 <p className="text-muted-foreground text-[11px]">
@@ -365,12 +367,11 @@ export default function RealisasiIndex({ documents, filters, stats }: RealisasiI
                                 <Label htmlFor="tgl_pencairan" className="text-xs font-medium">
                                     Tanggal Terbit SP2D / Pencairan <span className="text-destructive">*</span>
                                 </Label>
-                                <Input
+                                <DatePickerInput
                                     id="tgl_pencairan"
-                                    type="date"
                                     value={form.data.tgl_pencairan}
-                                    onChange={(e) => form.setData('tgl_pencairan', e.target.value)}
-                                    className="h-8 text-xs"
+                                    onChange={(val) => form.setData('tgl_pencairan', val)}
+                                    placeholder="YYYY-MM-DD atau pilih dari kalender"
                                     required
                                 />
                             </div>

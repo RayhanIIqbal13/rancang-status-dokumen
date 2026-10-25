@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { DatePickerInput } from '@/components/ui/date-picker-input';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -208,35 +209,55 @@ export default function DokumenCreate({ budgetTypes: initialBudgetTypes }: Creat
                                     <Label htmlFor="tgl_pelaksanaan" className="text-xs font-medium">
                                         Tanggal Pelaksanaan <span className="text-destructive">*</span>
                                     </Label>
-                                    <Input
+                                    <DatePickerInput
                                         id="tgl_pelaksanaan"
-                                        type="date"
                                         value={data.tgl_pelaksanaan}
-                                        onChange={(e) => setData('tgl_pelaksanaan', e.target.value)}
-                                        className="h-8 text-xs"
+                                        onChange={(val) => setData('tgl_pelaksanaan', val)}
+                                        placeholder="YYYY-MM-DD atau pilih dari kalender"
                                         required
                                     />
                                     {errors.tgl_pelaksanaan && <p className="text-destructive text-[11px]">{errors.tgl_pelaksanaan}</p>}
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label htmlFor="total_usulan" className="text-xs font-medium">
-                                        Estimasi Total Biaya RAB (Rp) <span className="text-destructive">*</span>
-                                    </Label>
-                                    <Input
-                                        id="total_usulan"
-                                        type="number"
-                                        min="0"
-                                        step="1000"
-                                        value={data.total_usulan}
-                                        onChange={(e) => setData('total_usulan', e.target.value)}
-                                        placeholder="Contoh: 18500000"
-                                        className="h-8 text-xs"
-                                        required
-                                    />
+                                    <div className="flex items-center justify-between">
+                                        <Label htmlFor="total_usulan" className="text-xs font-medium">
+                                            Estimasi Total Biaya RAB (Rp) <span className="text-destructive">*</span>
+                                        </Label>
+                                        <span className="text-muted-foreground text-[10.5px]">Bebas ketik nominal berapapun</span>
+                                    </div>
+                                    <div className="relative flex items-center">
+                                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
+                                            <span className="text-muted-foreground text-xs font-semibold">Rp</span>
+                                        </div>
+                                        <Input
+                                            id="total_usulan"
+                                            type="number"
+                                            min="0"
+                                            step="any"
+                                            value={data.total_usulan}
+                                            onChange={(e) => setData('total_usulan', e.target.value)}
+                                            placeholder="Contoh: 1231313 atau 18500000"
+                                            className="h-8 pl-8 text-xs font-mono"
+                                            required
+                                        />
+                                    </div>
                                     <div className="flex items-center justify-between">
                                         <p className="text-muted-foreground text-[11px]">Konversi nominal:</p>
                                         <p className="text-primary text-[11px] font-semibold tabular-nums">{formatCurrency(data.total_usulan)}</p>
+                                    </div>
+                                    {/* Preset nominal buttons */}
+                                    <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                                        {[1000000, 2500000, 5000000, 10000000, 20000000].map((amt) => (
+                                            <button
+                                                key={amt}
+                                                type="button"
+                                                onClick={() => setData('total_usulan', String(amt))}
+                                                className="text-[10px] px-1.5 py-0.5 rounded border border-border bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                            >
+                                                Rp {(amt / 1000000).toLocaleString('id-ID')} Juta
+                                            </button>
+                                        ))}
                                     </div>
                                     {errors.total_usulan && <p className="text-destructive text-[11px]">{errors.total_usulan}</p>}
                                 </div>
